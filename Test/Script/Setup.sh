@@ -72,7 +72,7 @@ cp -v Test/Fixtures/phpunit.xml "${BUILD_DIR}/dev/tests/integration/phpunit.xml"
 
 zip --exclude=node_modules/* --exclude=vendor/* --exclude=.git/* -r build.zip .
 
-REPOSITORY_CONFIG="{\"type\": \"package\",\"package\": { \"name\": \"tig/vendiro_travis\", \"version\": \"master\", \"dist\": {\"type\": \"zip\",\"url\": \"${TRAVIS_BUILD_DIR}/build.zip\",\"reference\": \"master\" }, \"autoload\": {\"files\": [\"registration.php\"],\"psr-4\": {\"TIG\\\\Vendiro\\\\\": \"\"}}}}}"
+REPOSITORY_CONFIG="{\"type\": \"package\",\"package\": { \"name\": \"tig/vendiro_travis\", \"version\": \"master\", \"dist\": {\"type\": \"zip\",\"url\": \"${TRAVIS_BUILD_DIR}/build.zip\",\"reference\": \"master\" }, \"autoload\": {\"files\": [\"registration.php\"],\"psr-4\": {\"TIG\\\\Vendiro\\\\\": \"\"}}}}"
 
 if [ -d "$HOME/.cache/composer/files/tig/" ]; then
     rm -rf $HOME/.cache/composer/files/tig/;
