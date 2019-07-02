@@ -35,7 +35,7 @@ module.exports = function (grunt) {
 
     if (grunt.file.isDir('/tmp/magento2/')) {
         magento2path = '/tmp/magento2/';
-        phpunitXmlPath = '/tmp/magento2/vendor/tig/vendiro/phpunit.xml.dist';
+        phpunitXmlPath = '/tmp/magento2/vendor/tig/vendiro_travis/phpunit.xml.dist';
     }
 
     var phpcsCommand = 'php -ddisplay_errors=1 vendor/bin/phpcs -p ' +
@@ -61,7 +61,7 @@ module.exports = function (grunt) {
                 'php -ddisplay_errors=1 ../../../vendor/phpunit/phpunit/phpunit',
 
             phraseTest:
-                'cd ' + magento2path + ' && php bin/magento i18n:collect-phrases vendor/tig/vendiro',
+                'cd ' + magento2path + ' && php bin/magento i18n:collect-phrases vendor/tig/vendiro_travis',
 
             phplint: 'if find . -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n 1 -P 8 php -l | grep -v "No syntax errors detected"; then exit 1; fi',
 
