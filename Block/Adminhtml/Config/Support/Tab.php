@@ -50,8 +50,8 @@ class Tab extends Template implements RendererInterface
     
     /** @var array */
     private $phpVersionSupport = [
-        '2.2' => ['7.0' => ['2', '5', '6', '+'], '7.1' => ['+']],
-        '2.3' => ['7.1' => ['+'], ['7.2' => ['+']]]
+        '2.2' => ['7.1' => ['+']],
+        '2.3' => ['7.1' => ['+'], '7.2' => ['+']]
     ];
     
     /** @var GeneralConfiguration */

@@ -41,44 +41,8 @@ class Configuration extends AbstractConfigProvider
     /**
      * @return mixed
      */
-    public function getMode()
-    {
-        return $this->getConfigValue(static::VENDIRO_GENERAL_MODE);
-    }
-    
-    /**
-     * @return bool
-     */
-    public function liveModeEnabled()
-    {
-        if ($this->getMode() == 1) {
-            return true;
-        }
-        
-        return false;
-    }
-    
-    /**
-     * @return bool
-     */
-    public function testModeEnabled()
-    {
-        if ($this->getMode() == 2) {
-            return true;
-        }
-        
-        return false;
-    }
-    
-    /**
-     * @return bool
-     */
     public function isEnabled()
     {
-        if ($this->testModeEnabled() || $this->liveModeEnabled()) {
-            return true;
-        }
-        
-        return false;
+        return $this->getConfigValue(static::VENDIRO_GENERAL_MODE);
     }
 }

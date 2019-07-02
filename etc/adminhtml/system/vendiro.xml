@@ -44,7 +44,7 @@
             <comment><![CDATA[Fill in your Vendiro API password.]]></comment>
         </field>
         <field id="orders" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Import Orders</label>
+            <label>Import orders</label>
             <comment><![CDATA[]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
