@@ -38,7 +38,6 @@ before_script:
 script:
   - if [ $CODE_COVERAGE == false ] && [ $DI_COMPILE == true ]; then php /tmp/magento2/bin/magento setup:di:compile; fi # Check for compilation errors
   - grunt phpcs
-  - grunt lint
   - grunt exec:phraseTest
   - grunt exec:ciTests
 
