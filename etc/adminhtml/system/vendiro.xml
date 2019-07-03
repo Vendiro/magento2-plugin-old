@@ -35,11 +35,11 @@
     <!-- Vendiro Configuration -->
     <group id="vendiro" translate="label" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Vendiro Configuration</label>
-        <field id="username" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="key" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>API key</label>
             <comment><![CDATA[Fill in your Vendiro API key.]]></comment>
         </field>
-        <field id="password" translate="label comment" type="obscure" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="token" translate="label comment" type="obscure" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>API token</label>
             <comment><![CDATA[Fill in your Vendiro API token.]]></comment>
         </field>
