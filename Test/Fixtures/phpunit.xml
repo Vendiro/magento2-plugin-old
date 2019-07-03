@@ -40,7 +40,7 @@
     <testsuites>
         <testsuite name="TIG Vendiro Tests">
             <directory>../../../app/code/TIG/Vendiro/Test</directory>
-            <directory>../../../vendor/tig/vendiro/Test</directory>
+            <directory>../../../vendor/tig/vendiro_travis/Test</directory>
             <exclude>../../../app/code/Magento</exclude>
             <exclude>../../../vendor/magento</exclude>
         </testsuite>
@@ -48,10 +48,10 @@
     <!-- Code coverage filters -->
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../../../vendor/tig/vendiro</directory>
+            <directory suffix=".php">../../../vendor/tig/vendiro_travis</directory>
             <directory suffix=".php">../../../app/code/TIG/Vendiro</directory>
             <exclude>
-                <directory>../../../vendor/tig/vendiro/Test</directory>
+                <directory>../../../vendor/tig/vendiro_travis/Test</directory>
                 <directory>../../../app/code/TIG/Vendiro/Test</directory>
                 <directory>../../../app/code/*/*/Test</directory>
                 <directory>../../../app/code/*/*/vendor</directory>
