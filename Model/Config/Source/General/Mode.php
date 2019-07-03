@@ -29,56 +29,24 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-
-namespace TIG\Vendiro\Model\Config\Provider\General;
-
-use TIG\Vendiro\Model\AbstractConfigProvider;
-
-class Configuration extends AbstractConfigProvider
+namespace TIG\Vendiro\Model\Config\Source\General;
+use Magento\Framework\Option\ArrayInterface;
+class Mode implements ArrayInterface
 {
-    const VENDIRO_GENERAL_MODE = 'tig_vendiro/general/mode';
-    
     /**
-     * @return mixed
+     * Return option array for the extension mode.
+     * @return array
      */
-    public function getMode()
+    public function toOptionArray()
     {
-        return $this->getConfigValue(static::VENDIRO_GENERAL_MODE);
-    }
-    
-    /**
-     * @return bool
-     */
-    public function liveModeEnabled()
-    {
-        if ($this->getMode() == 1) {
-            return true;
-        }
+        // @codingStandardsIgnoreStart
+        $options = [
+            ['value' => '0', 'label' => __('Off')],
+            ['value' => '1', 'label' => __('Live')],
+            ['value' => '2', 'label' => __('Test')]
+        ];
         
-        return false;
-    }
-    
-    /**
-     * @return bool
-     */
-    public function testModeEnabled()
-    {
-        if ($this->getMode() == 2) {
-            return true;
-        }
-        
-        return false;
-    }
-    
-    /**
-     * @return bool
-     */
-    public function isEnabled()
-    {
-        if ($this->testModeEnabled() || $this->liveModeEnabled()) {
-            return true;
-        }
-        
-        return false;
+        // @codingStandardsIgnoreEnd
+        return $options;
     }
 }

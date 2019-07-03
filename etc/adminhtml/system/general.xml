@@ -36,8 +36,8 @@
     <group id="general" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>General Configuration</label>
         <field id="mode" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Enabled</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <label>Mode</label>
+            <source_model>TIG\Vendiro\Model\Config\Source\General\Mode</source_model>
             <config_path>tig_vendiro/general/mode</config_path>
         </field>
     </group>
