@@ -46,7 +46,7 @@ class Inventory implements ArrayInterface
         $options = [
             ['value' => '0', 'label' => __('Off')],
             ['value' => '1', 'label' => __('Regular quantity')],
-            ['value' => '1', 'label' => __('Salable quantity')]
+            ['value' => '1', 'label' => __('Saleable quantity')]
         ];
         
         // @codingStandardsIgnoreEnd
