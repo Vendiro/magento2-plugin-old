@@ -43,11 +43,17 @@ abstract class EndpointAbstract implements EndpointInterface
     /** @var Rest */
     private $restApi;
 
+    /**
+     * @param Rest $restApi
+     */
     public function __construct(Rest $restApi)
     {
         $this->restApi = $restApi;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function call()
     {
         return $this->restApi->getRequest($this);

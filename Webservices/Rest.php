@@ -68,8 +68,8 @@ class Rest
         $this->setParameters($endpoint);
 
         try {
-            //TODO: possible response convert?
             $response = $this->zendClient->request();
+            $response = $this->formatResponse($response->getBody());
         } catch (\Zend_Http_Client_Exception $e) {
             $response = [
                 'success' => false,
@@ -130,5 +130,23 @@ class Rest
                 $this->zendClient->setRawData(json_encode($endpointData), 'application/json');
                 break;
         }
+    }
+
+    /**
+     * @param $response
+     *
+     * @return array
+     */
+    private function formatResponse($response)
+    {
+        if (is_string($response)) {
+            $response = json_decode($response, true);
+        }
+
+        if (!is_array($response)) {
+            $response = [$response];
+        }
+
+        return $response;
     }
 }
