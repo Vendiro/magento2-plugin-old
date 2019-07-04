@@ -69,7 +69,7 @@ class ApiConfiguration extends AbstractConfigProvider
      */
     public function getTestApiBaseUrl()
     {
-        return $this->getConfigValue(static::XPATH_ENDPOINTS_API_BASE_URL);
+        return $this->getConfigValue(static::XPATH_ENDPOINTS_TEST_API_BASE_URL);
     }
 
     /**

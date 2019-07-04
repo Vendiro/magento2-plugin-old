@@ -38,9 +38,8 @@ use Magento\Framework\Exception\LocalizedException;
 
 class TestApi extends Field
 {
-    /**
-     * @var string
-     */
+    /** @var string */
+    //@codingStandardsIgnoreLine
     protected $_template = 'TIG_Vendiro::config/testApi.phtml';
 
     /**
@@ -51,7 +50,9 @@ class TestApi extends Field
      */
     public function render(AbstractElement $element)
     {
-        $element->unsScope()->unsCanUseWebsiteValue()->unsCanUseDefaultValue();
+        $element->unsScope();
+        $element->unsCanUseWebsiteValue();
+        $element->unsCanUseDefaultValue();
 
         return parent::render($element);
     }
@@ -62,6 +63,7 @@ class TestApi extends Field
      * @param  AbstractElement $element
      * @return string
      */
+    //@codingStandardsIgnoreLine
     protected function _getElementHtml(AbstractElement $element)
     {
         return $this->_toHtml();
@@ -86,15 +88,16 @@ class TestApi extends Field
      */
     public function getButtonHtml()
     {
-        $button = $this->getLayout()
-            ->createBlock(Button::class)
-            ->setData(
-                [
-                    'id' => 'test_api',
-                    'label' => __('Test API Credentials'),
+        $layout = $this->getLayout();
+        $buttonBlock = $layout->createBlock(Button::class);
+        $buttonBlock->setData(
+            [
+                'id' => 'test_api',
+                //@codingStandardsIgnoreLine
+                'label' => __('Test API Credentials'),
                 ]
-            );
+        );
 
-        return $button->toHtml();
+        return $buttonBlock->toHtml();
     }
 }

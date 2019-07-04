@@ -70,10 +70,10 @@ class Rest
         try {
             $response = $this->zendClient->request();
             $response = $this->formatResponse($response->getBody());
-        } catch (\Zend_Http_Client_Exception $e) {
+        } catch (\Zend_Http_Client_Exception $exception) {
             $response = [
                 'success' => false,
-                'error' => __('%1 : Zend Http Client exception', $e->getCode())
+                'error' => __('%1 : Zend Http Client exception', $exception->getCode())
             ];
         }
 
