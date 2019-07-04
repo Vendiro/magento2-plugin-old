@@ -11388,16 +11388,6 @@ CREATE TABLE `store_website` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `store_website`
---
-
-LOCK TABLES `store_website` WRITE;
-/*!40000 ALTER TABLE `store_website` DISABLE KEYS */;
-INSERT INTO `store_website` VALUES (0,'admin','Admin',0,0,0),(1,'base','Main Website',0,1,1);
-/*!40000 ALTER TABLE `store_website` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `tax_calculation`
 --
 

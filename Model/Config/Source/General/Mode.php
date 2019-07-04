@@ -29,8 +29,11 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+
 namespace TIG\Vendiro\Model\Config\Source\General;
+
 use Magento\Framework\Option\ArrayInterface;
+
 class Mode implements ArrayInterface
 {
     /**
@@ -45,7 +48,7 @@ class Mode implements ArrayInterface
             ['value' => '1', 'label' => __('Live')],
             ['value' => '2', 'label' => __('Test')]
         ];
-        
+
         // @codingStandardsIgnoreEnd
         return $options;
     }
