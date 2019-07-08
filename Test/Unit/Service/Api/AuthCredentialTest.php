@@ -29,33 +29,25 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-?>
+namespace TIG\Vendiro\Test\Unit\Service\Api;
 
-<?php /** @var $block \TIG\Vendiro\Block\Adminhtml\Config\TestApi */ ?>
+use TIG\Vendiro\Model\Config\Provider\General\Configuration;
+use TIG\Vendiro\Service\Api\AuthCredential;
+use TIG\Vendiro\Test\TestCase;
 
-<?php echo $block->getButtonHtml() ?>
-<span id="message_span"></span>
+class DataTest extends TestCase
+{
+    protected $instanceClass = AuthCredential::class;
 
-<script>
-    require([
-        'jquery',
-        'prototype'
-    ], function(jQuery){
-        jQuery('#test_api').click(function () {
-            var params = {
-                form_key: "<?php echo $block->getFormKey() ?>",
-                isAjax: true
-            };
+    public function testGet()
+    {
+        $configurationMock = $this->getFakeMock(Configuration::class)->setMethods(['getKey', 'getToken'])->getMock();
+        $configurationMock->expects($this->once())->method('getKey')->willReturn('a');
+        $configurationMock->expects($this->once())->method('getToken')->willReturn('b');
 
-            jQuery.ajax({
-                showLoader: true,
-                url: "<?php echo $block->getAjaxUrl() ?>",
-                data: params,
-                dataType: 'json'
-            }).done(function (response) {
-                jQuery('#message_span').text(response.message);
-            });
-        });
+        $instance = $this->getInstance(['configuration' => $configurationMock]);
+        $result = $instance->get();
 
-    });
-</script>
+        $this->assertEquals('YTpi', $result);
+    }
+}

@@ -33,7 +33,6 @@ namespace TIG\Vendiro\Test\Unit\Model\Config\Provider;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
-use TIG\Vendiro\Model\Config\Provider\General\Configuration;
 use TIG\Vendiro\Test\TestCase;
 
 class ApiConfigurationTest extends TestCase
@@ -68,17 +67,5 @@ class ApiConfigurationTest extends TestCase
         $instance = $this->getInstance(['scopeConfig' => $scopeConfigMock]);
         $result = $instance->getTestApiBaseUrl();
         $this->assertEquals('some test url', $result);
-    }
-
-    public function testGetAuthCredentials()
-    {
-        $configurationMock = $this->getFakeMock(Configuration::class)->setMethods(['getKey', 'getToken'])->getMock();
-        $configurationMock->expects($this->once())->method('getKey')->willReturn('a');
-        $configurationMock->expects($this->once())->method('getToken')->willReturn('b');
-
-        $insance = $this->getInstance(['configuration' => $configurationMock]);
-        $result = $insance->getAuthCredentials();
-
-        $this->assertEquals('YTpi', $result);
     }
 }

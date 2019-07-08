@@ -41,10 +41,10 @@ class Configuration extends AbstractConfigProvider
     const VENDIRO_VENDIRO_KEY   = 'tig_vendiro/vendiro/key';
     const VENDIRO_VENDIRO_TOKEN = 'tig_vendiro/vendiro/token';
 
-    const VENDIRO_VENDIRO_ORDERS             = 'tig_vendiro/vendiro/orders';
-    const VENDIRO_VENDIRO_SHIPMENT           = 'tig_vendiro/vendiro/shipment';
-    const VENDIRO_VENDIRO_INVENTORY          = 'tig_vendiro/vendiro/inventory';
-    const VENDIRO_VENDIRO_INVENTORY_QUANTITY = 'tig_vendiro/vendiro/inventory_quantity';
+    const VENDIRO_ORDER_IMPORT_ENABLED      = 'tig_vendiro/vendiro/orders';
+    const VENDIRO_REGISTER_SHIPMENT_ENABLED = 'tig_vendiro/vendiro/shipment';
+    const VENDIRO_UPDATE_INVENTORY_ENABLED  = 'tig_vendiro/vendiro/inventory';
+    const VENDIRO_INVENTORY_QUANTITY_TYPE   = 'tig_vendiro/vendiro/inventory_quantity';
 
     /**
      * @param null $store
@@ -123,9 +123,9 @@ class Configuration extends AbstractConfigProvider
      *
      * @return mixed
      */
-    public function getOrders($store = null)
+    public function isOrderImportEnabled($store = null)
     {
-        return $this->getConfigValue(static::VENDIRO_VENDIRO_ORDERS, $store);
+        return $this->getConfigValue(static::VENDIRO_ORDER_IMPORT_ENABLED, $store);
     }
 
     /**
@@ -133,9 +133,9 @@ class Configuration extends AbstractConfigProvider
      *
      * @return mixed
      */
-    public function getShipment($store = null)
+    public function isRegisterShipmentEnabled($store = null)
     {
-        return $this->getConfigValue(static::VENDIRO_VENDIRO_SHIPMENT, $store);
+        return $this->getConfigValue(static::VENDIRO_REGISTER_SHIPMENT_ENABLED, $store);
     }
 
     /**
@@ -143,9 +143,9 @@ class Configuration extends AbstractConfigProvider
      *
      * @return mixed
      */
-    public function getInventory($store = null)
+    public function isUpdateInventoryEnabled($store = null)
     {
-        return $this->getConfigValue(static::VENDIRO_VENDIRO_INVENTORY, $store);
+        return $this->getConfigValue(static::VENDIRO_UPDATE_INVENTORY_ENABLED, $store);
     }
 
     /**
@@ -153,8 +153,8 @@ class Configuration extends AbstractConfigProvider
      *
      * @return mixed
      */
-    public function getInventoryQuantity($store = null)
+    public function getInventoryQuantityType($store = null)
     {
-        return $this->getConfigValue(static::VENDIRO_VENDIRO_INVENTORY_QUANTITY, $store);
+        return $this->getConfigValue(static::VENDIRO_INVENTORY_QUANTITY_TYPE, $store);
     }
 }

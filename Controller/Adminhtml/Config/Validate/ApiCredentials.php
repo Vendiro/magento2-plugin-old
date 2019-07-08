@@ -29,12 +29,12 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Controller\Adminhtml\Config;
+namespace TIG\Vendiro\Controller\Adminhtml\Config\Validate;
 
 use Magento\Backend\App\Action;
 use TIG\Vendiro\Webservices\Endpoints\GetAccount;
 
-class TestApi extends Action
+class ApiCredentials extends Action
 {
     /** @var GetAccount */
     private $getAccount;

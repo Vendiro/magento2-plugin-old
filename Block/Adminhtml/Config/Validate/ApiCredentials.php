@@ -29,18 +29,18 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Block\Adminhtml\Config;
+namespace TIG\Vendiro\Block\Adminhtml\Config\Validate;
 
 use Magento\Backend\Block\Widget\Button;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Exception\LocalizedException;
 
-class TestApi extends Field
+class ApiCredentials extends Field
 {
     /** @var string */
     //@codingStandardsIgnoreLine
-    protected $_template = 'TIG_Vendiro::config/testApi.phtml';
+    protected $_template = 'TIG_Vendiro::config/validate/apiCredentials.phtml';
 
     /**
      * Remove scope label
@@ -76,7 +76,7 @@ class TestApi extends Field
      */
     public function getAjaxUrl()
     {
-        return $this->getUrl('tig_vendiro/config/testApi');
+        return $this->getUrl('tig_vendiro/config_validate/apiCredentials');
     }
 
     /**
@@ -92,9 +92,9 @@ class TestApi extends Field
         $buttonBlock = $layout->createBlock(Button::class);
         $buttonBlock->setData(
             [
-                'id' => 'test_api',
+                'id' => 'validate_api_credentials',
                 //@codingStandardsIgnoreLine
-                'label' => __('Test API Credentials'),
+                'label' => __('Validate API Credentials'),
                 ]
         );
 

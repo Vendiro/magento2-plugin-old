@@ -33,6 +33,7 @@ namespace TIG\Vendiro\Webservices;
 
 use Magento\Framework\HTTP\ZendClient;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
+use TIG\Vendiro\Service\Api\AuthCredential;
 use TIG\Vendiro\Service\Software\Data as SoftwareData;
 use TIG\Vendiro\Webservices\Endpoints\EndpointInterface;
 
@@ -44,20 +45,27 @@ class Rest
     /** @var ApiConfiguration */
     private $apiConfiguration;
 
+    /** @var AuthCredential */
+    private $authCredential;
+
     /** @var SoftwareData */
     private $softwareData;
 
     /**
      * @param ZendClient       $zendClient
      * @param ApiConfiguration $apiConfiguration
+     * @param AuthCredential   $authCredential
+     * @param SoftwareData     $softwareData
      */
     public function __construct(
         ZendClient $zendClient,
         ApiConfiguration $apiConfiguration,
+        AuthCredential $authCredential,
         SoftwareData $softwareData
     ) {
         $this->zendClient = $zendClient;
         $this->apiConfiguration = $apiConfiguration;
+        $this->authCredential = $authCredential;
         $this->softwareData = $softwareData;
     }
 
@@ -104,7 +112,7 @@ class Rest
     private function setHeaders()
     {
         $this->zendClient->setHeaders([
-            'Authorization' => 'Basic ' . $this->apiConfiguration->getAuthCredentials(),
+            'Authorization' => 'Basic ' . $this->authCredential->get(),
             'Accept' => 'application/json',
             'Content-Type' => 'application/json; charset=UTF-8',
             'User-Agent' => 'VendiroMagento2Plugin/' . $this->softwareData->getModuleVersion()

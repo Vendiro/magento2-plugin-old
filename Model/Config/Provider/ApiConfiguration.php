@@ -83,18 +83,4 @@ class ApiConfiguration extends AbstractConfigProvider
 
         return $this->getTestApiBaseUrl();
     }
-
-    /**
-     * @return string
-     */
-    public function getAuthCredentials()
-    {
-        $authKey = $this->configuration->getKey();
-        $authToken = $this->configuration->getToken();
-
-        $authString = $authKey . ':' . $authToken;
-        $authCredential = base64_encode($authString);
-
-        return $authCredential;
-    }
 }
