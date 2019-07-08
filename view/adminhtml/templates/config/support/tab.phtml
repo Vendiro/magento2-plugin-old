@@ -23,7 +23,7 @@
                     <span class="version">
                             <a href="http://devdocs.magento.com/guides/v<?php echo $this->getMagentoVersionTidyString() ;?>/install-gde/system-requirements-tech.html"
                                target="_blank">
-                                <?php echo $block->escapeHtml(implode('.', $this->getPhpVersionArray())); ?>
+                                <?php echo $block->escapeHtml($this->getPhpVersion()); ?>
                                 </a>
                                 &nbsp;
                         <?php switch ($this->phpVersionCheck()) {
