@@ -33,8 +33,8 @@ namespace TIG\Vendiro\Test\Unit\Webservices;
 
 use Magento\Framework\HTTP\ZendClient;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
+use TIG\Vendiro\Service\Software\Data as SoftwareData;
 use TIG\Vendiro\Test\TestCase;
-use TIG\Vendiro\Webservices\Endpoints\EndpointInterface;
 use TIG\Vendiro\Webservices\Rest;
 
 class RestTest extends TestCase
@@ -62,7 +62,8 @@ class RestTest extends TestCase
         $expectedHeaders = [
             'Authorization' => 'Basic abc==',
             'Accept' => 'application/json',
-            'Content-Type' => 'application/json; charset=UTF-8'
+            'Content-Type' => 'application/json; charset=UTF-8',
+            'User-Agent' => 'VendiroMagento2Plugin/1.2.3'
         ];
 
         $apiConfigMock = $this->getFakeMock(ApiConfiguration::class)->setMethods(['getAuthCredentials'])->getMock();
@@ -71,9 +72,13 @@ class RestTest extends TestCase
         $zendClientMock = $this->getFakeMock(ZendClient::class)->setMethods(['setHeaders'])->getMock();
         $zendClientMock->expects($this->once())->method('setHeaders')->with($expectedHeaders);
 
+        $softwareDataMock = $this->getFakeMock(SoftwareData::class)->setMethods(['getModuleVersion'])->getMock();
+        $softwareDataMock->expects($this->once())->method('getModuleVersion')->willReturn('1.2.3');
+
         $instance = $this->getInstance([
             'apiConfiguration' => $apiConfigMock,
-            'zendClient' => $zendClientMock
+            'zendClient' => $zendClientMock,
+            'softwareData' => $softwareDataMock
         ]);
 
         $this->invoke('setHeaders', $instance);
