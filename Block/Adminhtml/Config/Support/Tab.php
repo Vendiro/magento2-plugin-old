@@ -73,6 +73,7 @@ class Tab extends Template implements RendererInterface
      *
      * @return string
      */
+    // @codeCoverageIgnoreStart
     public function render(AbstractElement $element)
     {
         /** @noinspection PhpUndefinedMethodInspection */
@@ -80,6 +81,7 @@ class Tab extends Template implements RendererInterface
 
         return $this->toHtml();
     }
+    // @codeCoverageIgnoreEnd
 
     /**
      * Retrieve the version number from the database.
