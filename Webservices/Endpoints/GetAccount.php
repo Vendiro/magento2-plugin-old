@@ -31,7 +31,7 @@
  */
 namespace TIG\Vendiro\Webservices\Endpoints;
 
-class GetAccount extends EndpointAbstract
+class GetAccount extends AbstractEndpoint
 {
     const ENDPOINT_URL = 'account/';
     const METHOD       = 'GET';
