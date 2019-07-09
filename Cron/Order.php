@@ -36,7 +36,7 @@ use TIG\Vendiro\Service\Order\Data;
 
 class Order
 {
-    /** @var $orderService */
+    /** @var Data $orderService */
     private $orderService;
 
     public function __construct(Data $orderService)
@@ -44,8 +44,8 @@ class Order
         $this->orderService = $orderService;
     }
 
-    public function get()
+    public function getOrders()
     {
-        $this->orderService->get();
+        $this->orderService->getOrders();
     }
 }

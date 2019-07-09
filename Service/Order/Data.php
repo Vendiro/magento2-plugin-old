@@ -33,10 +33,21 @@
 
 namespace TIG\Vendiro\Service\Order;
 
+use TIG\Vendiro\Webservices\Endpoints\GetOrders;
+
 class Data
 {
-    public function get()
+    /** @var GetOrders $getOrders */
+    private $getOrders;
+
+    public function __construct(GetOrders $getOrders)
     {
-        return;
+        $this->getOrders = $getOrders;
+    }
+
+    public function getOrders()
+    {
+        $orders = $this->getOrders->call();
+        return $orders;
     }
 }
