@@ -18,47 +18,42 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
+ * to support@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
+ * needs please contact support@tig.nl for more information.
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+namespace TIG\Vendiro\Service\Api;
 
-namespace TIG\Vendiro\Model;
+use TIG\Vendiro\Model\Config\Provider\General\Configuration;
 
-use Magento\Framework\App\Config\ScopeConfigInterface as ScopeConfig;
-use Magento\Store\Model\ScopeInterface;
-
-abstract class AbstractConfigProvider
+class AuthCredential
 {
-    /** @var ScopeConfig ScopeConfig */
-    private $scopeConfig;
+    /** @var Configuration */
+    private $configuration;
 
-    /**
-     * Config constructor.
-     *
-     * @param ScopeConfig $scopeConfig
-     */
-    public function __construct(
-        ScopeConfig $scopeConfig
-    ) {
-        $this->scopeConfig = $scopeConfig;
+    public function __construct(Configuration $configuration)
+    {
+        $this->configuration = $configuration;
     }
 
     /**
-     * @param $path
-     * @param $store
-     *
-     * @return mixed
+     * @return string
      */
-    public function getConfigValue($path, $store = null)
+    public function get()
     {
-        return $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $store);
+        $authKey = $this->configuration->getKey();
+        $authToken = $this->configuration->getToken();
+
+        $authString = $authKey . ':' . $authToken;
+        $authCredential = base64_encode($authString);
+
+        return $authCredential;
     }
 }
