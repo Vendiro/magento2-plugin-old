@@ -63,8 +63,8 @@ class InstallSchema implements InstallSchemaInterface
     {
         $setup->startSetup();
 
-        if (version_compare($context->getVersion(), '1.1.0', '<')) {
-            $this->installSchemas($this->installSchemaObjects['v1.1.0'], $setup, $context);
+        if (version_compare($context->getVersion(), '1.0.0', '<')) {
+            $this->installSchemas($this->installSchemaObjects['v1.0.0'], $setup, $context);
         }
 
         $setup->endSetup();

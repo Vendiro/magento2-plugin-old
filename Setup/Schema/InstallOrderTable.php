@@ -45,16 +45,16 @@ class InstallOrderTable extends AbstractTableInstaller
     protected function defineTable()
     {
         $this->addEntityId();
-        $this->addInt('order_id', 'Order ID', true);
-        $this->addInt('vendiro_id', 'Vendiro ID', false);
-        $this->addInt('order_ref', 'Order reference', false);
-        $this->addInt('marketplace_order_id', 'Marketplace order ID', false);
-        $this->addTimestamp('order_date', 'Order date', false);
-        $this->addBoolean('fulfilment_by_marketplace', 'Fulfilment by marketplace', false);
-        $this->addTimestamp('created_at', 'Created at', false);
+        $this->addInt('order_id', 'Order ID');
+        $this->addInt('vendiro_id', 'Vendiro ID');
+        $this->addInt('order_ref', 'Order reference');
+        $this->addInt('marketplace_order_id', 'Marketplace order ID');
+        $this->addTimestamp('order_date', 'Order date', false, '00-00-0000 00:00:00');
+        $this->addBoolean('fulfilment_by_marketplace', 'Fulfilment by marketplace');
+        $this->addTimestamp('created_at', 'Created at', false, '00-00-0000 00:00:00');
         $this->addText('marketplace_name', 'Marketplace name', 32, false);
         $this->addText('marketplace_reference', 'Marketplace reference', 32, false);
         $this->addText('status', 'Status', 32, false);
-        $this->addTimestamp('imported_at', 'Imported at', false);
+        $this->addTimestamp('imported_at', 'Imported at', false, '00-00-0000 00:00:00');
     }
 }
