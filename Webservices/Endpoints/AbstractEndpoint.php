@@ -33,7 +33,7 @@ namespace TIG\Vendiro\Webservices\Endpoints;
 
 use TIG\Vendiro\Webservices\Rest;
 
-abstract class EndpointAbstract implements EndpointInterface
+abstract class AbstractEndpoint implements EndpointInterface
 {
     const ENDPOINT_URL = '/';
     const METHOD       = 'GET';
