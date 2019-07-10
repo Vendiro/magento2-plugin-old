@@ -39,6 +39,7 @@ class InstallOrderTable extends AbstractTableInstaller
 
     /**
      * @return void
+     * @throws \Zend_Db_Exception
      * @codingStandardsIgnoreLine
      */
     // @codingStandardsIgnoreLine
@@ -56,5 +57,6 @@ class InstallOrderTable extends AbstractTableInstaller
         $this->addText('marketplace_reference', 'Marketplace reference', 32, false);
         $this->addText('status', 'Status', 32, false);
         $this->addTimestamp('imported_at', 'Imported at', false, '00-00-0000 00:00:00');
+        $this->addIndex('vendiro_id');
     }
 }

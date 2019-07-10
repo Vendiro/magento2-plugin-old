@@ -30,7 +30,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\PostNL\Model\ResourceModel\Order;
+namespace TIG\Vendiro\Model\ResourceModel\Order;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 

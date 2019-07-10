@@ -44,8 +44,8 @@ class Order
         $this->orderService = $orderService;
     }
 
-    public function getOrders()
+    public function saveOrder()
     {
-        $this->orderService->getOrders();
+        $this->orderService->saveOrders();
     }
 }

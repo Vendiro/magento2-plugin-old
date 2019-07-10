@@ -4,7 +4,7 @@
         <job name="vendiro_inventory" instance="TIG\Vendiro\Cron\Inventory" method="execute">
             <schedule>*/5 * * * *</schedule>
         </job>
-        <job name="vendiro_get_orders" instance="TIG\Vendiro\Cron\Order" method="getOrders">
+        <job name="vendiro_get_orders" instance="TIG\Vendiro\Cron\Order" method="saveOrder">
             <schedule>*/5 * * * *</schedule>
         </job>
         <job name="vendiro_tracktrace" instance="TIG\Vendiro\Cron\TrackTrace" method="execute">

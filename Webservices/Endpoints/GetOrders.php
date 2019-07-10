@@ -32,7 +32,7 @@
 
 namespace TIG\Vendiro\Webservices\Endpoints;
 
-class GetOrders extends EndpointAbstract
+class GetOrders extends AbstractEndpoint
 {
     const ENDPOINT_URL = 'orders/';
     const METHOD       = 'GET';
