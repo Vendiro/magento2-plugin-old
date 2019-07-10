@@ -38,6 +38,13 @@ use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use TIG\Vendiro\Api\Data\OrderInterface;
 
+// @codingStandardsIgnoreFile
+
+/**
+ * Class Order - Ignore File because it mainly contains getters and setters
+ *
+ * @package TIG\Vendiro\Model
+ */
 class Order extends AbstractModel implements OrderInterface
 {
     const FIELD_ORDER_ID = 'order_id';

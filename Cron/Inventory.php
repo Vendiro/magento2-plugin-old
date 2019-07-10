@@ -34,7 +34,7 @@ namespace TIG\Vendiro\Cron;
 
 use TIG\Vendiro\Service\Inventory\Data;
 
-class Order
+class Inventory
 {
     /** @var $orderService */
     private $inventoryService;

@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  *          ..::..
@@ -69,16 +68,21 @@ abstract class AbstractRepository
     /**
      * @param $field
      * @param $value
+     * @param int $limit
      *
-     * @return AbstractModel|null
+     * @return AbstractModel|array|null
      */
-    public function getByFieldWithValue($field, $value)
+    public function getByFieldWithValue($field, $value, $limit = 1)
     {
         $searchCriteria = $this->searchCriteriaBuilder->addFilter($field, $value);
-        $searchCriteria->setPageSize(1);
+        $searchCriteria->setPageSize($limit);
 
         /** @var \Magento\Framework\Api\SearchResults $list */
         $list = $this->getList($searchCriteria->create());
+
+        if ($list->getTotalCount() > 1) {
+            return $list->getItems();
+        }
 
         if ($list->getTotalCount()) {
             $items = $list->getItems();
@@ -112,7 +116,6 @@ abstract class AbstractRepository
 
         return $searchResults;
     }
-
 
     /**
      * @param SearchCriteriaInterface $criteria

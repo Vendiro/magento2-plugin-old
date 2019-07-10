@@ -36,6 +36,6 @@ class Data
 {
     public function get()
     {
-        return;
+
     }
 }

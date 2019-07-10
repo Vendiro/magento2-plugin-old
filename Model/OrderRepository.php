@@ -108,12 +108,15 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
 
     /**
      * @param int $id
+     * @param int $limit
      *
      * @return null|Order
      */
-    public function getByOrderId($id)
+    // @codingStandardsIgnoreLine
+    public function getByOrderId($id, $limit = 1)
     {
-        return $this->getByFieldWithValue('order_id', $id);
+        // @codingStandardsIgnoreLine
+        return $this->getByFieldWithValue('order_id', $id, $limit = 1);
     }
 
     /**

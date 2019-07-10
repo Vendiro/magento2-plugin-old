@@ -35,8 +35,8 @@ namespace TIG\Vendiro\Service\Order;
 
 class Data
 {
-    public function get()
+    public function getOrdersToProcess()
     {
-        return;
+
     }
 }
