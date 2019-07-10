@@ -52,9 +52,6 @@ abstract class AbstractRepository
     /** @var SearchResultsInterfaceFactory $searchResultsFactory */
     private $searchResultsFactory;
 
-    /** @var SearchResultsInterface $searchResults */
-    private $searchResults;
-
     public function __construct(
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
@@ -101,8 +98,10 @@ abstract class AbstractRepository
      */
     public function getList(SearchCriteriaInterface $criteria)
     {
-        $searchResults = $this->getSearchResults($criteria);
+        $searchResults =  $this->searchResultsFactory->create();
+        $searchResults->setSearchCriteria($criteria);
         $collection = $this->collectionFactory->create();
+
         foreach ($criteria->getFilterGroups() as $filterGroup) {
             $this->handleFilterGroups($filterGroup, $collection);
         }
@@ -115,19 +114,6 @@ abstract class AbstractRepository
         $searchResults->setItems($collection->getItems());
 
         return $searchResults;
-    }
-
-    /**
-     * @param SearchCriteriaInterface $criteria
-     *
-     * @return SearchResultsInterface
-     */
-    private function getSearchResults(SearchCriteriaInterface $criteria)
-    {
-        $this->searchResults = $this->searchResultsFactory->create();
-        $this->searchResults->setSearchCriteria($criteria);
-
-        return $this->searchResults;
     }
 
     /**
