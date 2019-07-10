@@ -31,6 +31,7 @@
  */
 namespace TIG\Vendiro\Api\Data;
 
+// @codingStandardsIgnoreFile
 interface OrderInterface
 {
     /**
