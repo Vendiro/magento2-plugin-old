@@ -139,7 +139,10 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      * Delete a Vendiro order by Id.
      *
      * @param int $entityId
+     *
      * @return bool
+     * @throws CouldNotDeleteException
+     * @throws NoSuchEntityException
      */
     public function deleteById($entityId)
     {
