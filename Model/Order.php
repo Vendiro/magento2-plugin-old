@@ -31,11 +31,7 @@
  */
 namespace TIG\Vendiro\Model;
 
-use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\AbstractModel;
-use Magento\Framework\Model\Context;
-use Magento\Framework\Model\ResourceModel\AbstractResource;
-use Magento\Framework\Registry;
 use TIG\Vendiro\Api\Data\OrderInterface;
 
 // @codingStandardsIgnoreFile
@@ -59,25 +55,6 @@ class Order extends AbstractModel implements OrderInterface
     const FIELD_STATUS = 'status';
     const FIELD_IMPORTED_AT = 'imported_at';
 
-    /**
-     * Order constructor.
-     *
-     * @param Context               $context
-     * @param Registry              $registry
-     * @param AbstractResource|null $resource
-     * @param AbstractDb|null       $resourceCollection
-     * @param array                 $data
-     */
-    public function __construct(
-        Context $context,
-        Registry $registry,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
-        array $data = []
-    ) {
-        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
-    }
-
     protected function _construct()
     {
         $this->_init('TIG\Vendiro\Model\ResourceModel\Order');
@@ -88,7 +65,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function getOrderId()
     {
-        return $this->getData(static::FIELD_ORDER_ID);
+        return $this->getData(self::FIELD_ORDER_ID);
     }
 
     /**
@@ -98,7 +75,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function setOrderId($value)
     {
-        return $this->setData(static::FIELD_ORDER_ID, $value);
+        return $this->setData(self::FIELD_ORDER_ID, $value);
     }
 
     /**
@@ -106,7 +83,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function getVendiroId()
     {
-        return $this->getData(static::FIELD_VENDIRO_ID);
+        return $this->getData(self::FIELD_VENDIRO_ID);
     }
 
     /**
@@ -116,7 +93,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function setVendiroId($value)
     {
-        return $this->setData(static::FIELD_VENDIRO_ID, $value);
+        return $this->setData(self::FIELD_VENDIRO_ID, $value);
     }
 
     /**
@@ -124,7 +101,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function getOrderRef()
     {
-        return $this->getData(static::FIELD_ORDER_REF);
+        return $this->getData(self::FIELD_ORDER_REF);
     }
 
     /**
@@ -134,7 +111,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function setOrderRef($value)
     {
-        return $this->setData(static::FIELD_ORDER_REF, $value);
+        return $this->setData(self::FIELD_ORDER_REF, $value);
     }
 
     /**
@@ -142,7 +119,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function getMarketplaceOrderId()
     {
-        return $this->getData(static::FIELD_MARKETPLACE_ORDER_ID);
+        return $this->getData(self::FIELD_MARKETPLACE_ORDER_ID);
     }
 
     /**
@@ -152,7 +129,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function setMarketplaceOrderId($value)
     {
-        return $this->setData(static::FIELD_MARKETPLACE_ORDER_ID, $value);
+        return $this->setData(self::FIELD_MARKETPLACE_ORDER_ID, $value);
     }
 
     /**
@@ -160,7 +137,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function getOrderDate()
     {
-        return $this->getData(static::FIELD_ORDER_DATE);
+        return $this->getData(self::FIELD_ORDER_DATE);
     }
 
     /**
@@ -170,7 +147,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function setOrderDate($value)
     {
-        return $this->setData(static::FIELD_ORDER_DATE, $value);
+        return $this->setData(self::FIELD_ORDER_DATE, $value);
     }
 
     /**
@@ -178,7 +155,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function getFulfilmentByMarketplace()
     {
-        return $this->getData(static::FIELD_FULFILMENT_BY_MARKETPLACE);
+        return $this->getData(self::FIELD_FULFILMENT_BY_MARKETPLACE);
     }
 
     /**
@@ -188,7 +165,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function setFulfilmentByMarketplace($value)
     {
-        return $this->setData(static::FIELD_FULFILMENT_BY_MARKETPLACE, $value);
+        return $this->setData(self::FIELD_FULFILMENT_BY_MARKETPLACE, $value);
     }
 
     /**
@@ -196,7 +173,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function getCreatedAt()
     {
-        return $this->getData(static::FIELD_CREATED_AT);
+        return $this->getData(self::FIELD_CREATED_AT);
     }
 
     /**
@@ -206,7 +183,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function setCreatedAt($value)
     {
-        return $this->setData(static::FIELD_CREATED_AT, $value);
+        return $this->setData(self::FIELD_CREATED_AT, $value);
     }
 
     /**
@@ -214,7 +191,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function getMarketplaceName()
     {
-        return $this->getData(static::FIELD_MARKETPLACE_NAME);
+        return $this->getData(self::FIELD_MARKETPLACE_NAME);
     }
 
     /**
@@ -224,7 +201,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function setMarketplaceName($value)
     {
-        return $this->setData(static::FIELD_MARKETPLACE_NAME, $value);
+        return $this->setData(self::FIELD_MARKETPLACE_NAME, $value);
     }
 
     /**
@@ -232,7 +209,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function getMarketplaceReference()
     {
-        return $this->getData(static::FIELD_MARKETPLACE_REFERENCE);
+        return $this->getData(self::FIELD_MARKETPLACE_REFERENCE);
     }
 
     /**
@@ -242,7 +219,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function setMarketplaceReference($value)
     {
-        return $this->setData(static::FIELD_MARKETPLACE_REFERENCE, $value);
+        return $this->setData(self::FIELD_MARKETPLACE_REFERENCE, $value);
     }
 
     /**
@@ -250,7 +227,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function getStatus()
     {
-        return $this->getData(static::FIELD_STATUS);
+        return $this->getData(self::FIELD_STATUS);
     }
 
     /**
@@ -260,7 +237,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function setStatus($value)
     {
-        return $this->setData(static::FIELD_STATUS, $value);
+        return $this->setData(self::FIELD_STATUS, $value);
     }
 
     /**
@@ -268,7 +245,7 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function getImportedAt()
     {
-        return $this->getData(static::FIELD_STATUS);
+        return $this->getData(self::FIELD_STATUS);
     }
 
     /**
@@ -278,6 +255,6 @@ class Order extends AbstractModel implements OrderInterface
      */
     public function setImportedAt($value)
     {
-        return $this->setData(static::FIELD_IMPORTED_AT, $value);
+        return $this->setData(self::FIELD_IMPORTED_AT, $value);
     }
 }

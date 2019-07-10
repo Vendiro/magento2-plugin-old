@@ -78,19 +78,19 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     }
 
     /**
-     * @param $identifier
+     * @param $entityId
      *
      * @return OrderInterface
      * @throws NoSuchEntityException
      */
-    public function getById($identifier)
+    public function getById($entityId)
     {
         $order = $this->orderFactory->create();
-        $order->load($identifier);
+        $order->load($entityId);
 
         if (!$order->getId()) {
             // @codingStandardsIgnoreLine
-            throw new NoSuchEntityException(__('Order with id "%1" does not exist.', $identifier));
+            throw new NoSuchEntityException(__('Order with id "%1" does not exist.', $entityId));
         }
 
         return $order;
@@ -107,16 +107,14 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     }
 
     /**
-     * @param int $id
+     * @param int $orderId
      * @param int $limit
      *
-     * @return null|Order
+     * @return null|Order|array
      */
-    // @codingStandardsIgnoreLine
-    public function getByOrderId($id, $limit = 1)
+    public function getByOrderId($orderId, $limit = 1)
     {
-        // @codingStandardsIgnoreLine
-        return $this->getByFieldWithValue('order_id', $id, $limit = 1);
+        return $this->getByFieldWithValue('order_id', $orderId, $limit);
     }
 
     /**
@@ -140,12 +138,12 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     /**
      * Delete a Vendiro order by Id.
      *
-     * @param int $identifier
+     * @param int $entityId
      * @return bool
      */
-    public function deleteById($identifier)
+    public function deleteById($entityId)
     {
-        $order = $this->getById($identifier);
+        $order = $this->getById($entityId);
 
         return $this->delete($order);
     }

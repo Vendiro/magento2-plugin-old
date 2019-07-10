@@ -46,11 +46,10 @@ interface OrderRepositoryInterface
      * Return a specific Vendiro order.
      *
      * @api
-     * @param int $id
+     * @param int $entityId
      * @return \TIG\Vendiro\Api\Data\OrderInterface
      */
-    // @codingStandardsIgnoreLine
-    public function getById($id);
+    public function getById($entityId);
 
     /**
      * Retrieve a list of Vendiro orders.
@@ -74,11 +73,10 @@ interface OrderRepositoryInterface
      * Delete a Vendiro order by Id.
      *
      * @api
-     * @param int $id
+     * @param int $entityId
      * @return bool
      */
-    // @codingStandardsIgnoreLine
-    public function deleteById($id);
+    public function deleteById($entityId);
 
     /**
      * Create a Vendiro order.
@@ -102,10 +100,9 @@ interface OrderRepositoryInterface
     public function getByFieldWithValue($field, $value);
 
     /**
-     * @param int $id
+     * @param int $orderId
      *
      * @return \TIG\PostNL\Api\Data\OrderInterface
      */
-    // @codingStandardsIgnoreLine
-    public function getByOrderId($id);
+    public function getByOrderId($orderId);
 }
