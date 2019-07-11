@@ -45,4 +45,14 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="TIG\Vendiro\Logging\Log">
+        <arguments>
+            <argument name="name" xsi:type="string">vendiro_logging</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="exception" xsi:type="object">TIG\Vendiro\Logging\CriticalHandler</item>
+                <item name="debug" xsi:type="object">TIG\Vendiro\Logging\DebugHandler</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
