@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  *          ..::..
@@ -53,9 +52,6 @@ abstract class AbstractRepository
     /** @var SearchResultsInterfaceFactory $searchResultsFactory */
     private $searchResultsFactory;
 
-    /** @var SearchResultsInterface $searchResults */
-    private $searchResults;
-
     public function __construct(
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
@@ -69,16 +65,21 @@ abstract class AbstractRepository
     /**
      * @param $field
      * @param $value
+     * @param int $limit
      *
-     * @return AbstractModel|null
+     * @return AbstractModel|array|null
      */
-    public function getByFieldWithValue($field, $value)
+    public function getByFieldWithValue($field, $value, $limit = 1)
     {
         $searchCriteria = $this->searchCriteriaBuilder->addFilter($field, $value);
-        $searchCriteria->setPageSize(1);
+        $searchCriteria->setPageSize($limit);
 
         /** @var \Magento\Framework\Api\SearchResults $list */
         $list = $this->getList($searchCriteria->create());
+
+        if ($list->getTotalCount() > 1) {
+            return $list->getItems();
+        }
 
         if ($list->getTotalCount()) {
             $items = $list->getItems();
@@ -97,8 +98,10 @@ abstract class AbstractRepository
      */
     public function getList(SearchCriteriaInterface $criteria)
     {
-        $searchResults = $this->getSearchResults($criteria);
+        $searchResults =  $this->searchResultsFactory->create();
+        $searchResults->setSearchCriteria($criteria);
         $collection = $this->collectionFactory->create();
+
         foreach ($criteria->getFilterGroups() as $filterGroup) {
             $this->handleFilterGroups($filterGroup, $collection);
         }
@@ -111,20 +114,6 @@ abstract class AbstractRepository
         $searchResults->setItems($collection->getItems());
 
         return $searchResults;
-    }
-
-
-    /**
-     * @param SearchCriteriaInterface $criteria
-     *
-     * @return SearchResultsInterface
-     */
-    private function getSearchResults(SearchCriteriaInterface $criteria)
-    {
-        $this->searchResults = $this->searchResultsFactory->create();
-        $this->searchResults->setSearchCriteria($criteria);
-
-        return $this->searchResults;
     }
 
     /**

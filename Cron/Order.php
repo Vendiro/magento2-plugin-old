@@ -32,14 +32,14 @@
 
 namespace TIG\Vendiro\Cron;
 
-use TIG\Vendiro\Service\Order\Data;
+use TIG\Vendiro\Api\OrderRepositoryInterface;
 
 class Order
 {
     /** @var Data $orderService */
     private $orderService;
 
-    public function __construct(Data $orderService)
+    public function __construct(OrderRepositoryInterface $orderService)
     {
         $this->orderService = $orderService;
     }
