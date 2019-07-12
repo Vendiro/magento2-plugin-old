@@ -30,22 +30,10 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 
-namespace TIG\Vendiro\Cron;
+namespace TIG\Vendiro\Webservices\Endpoints;
 
-use TIG\Vendiro\Service\Inventory\Data;
-
-class Inventory
+class GetOrders extends AbstractEndpoint
 {
-    /** @var Data $orderService */
-    private $inventoryService;
-
-    public function __construct(Data $inventoryService)
-    {
-        $this->inventoryService = $inventoryService;
-    }
-
-    public function get()
-    {
-        $this->inventoryService->get();
-    }
+    const ENDPOINT_URL = 'orders/';
+    const METHOD       = 'GET';
 }
