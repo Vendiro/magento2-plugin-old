@@ -33,6 +33,7 @@ namespace TIG\Vendiro\Logging;
 
 use Monolog\Logger;
 
+//@codingStandardsIgnoreFile
 class Log extends Logger
 {
 }

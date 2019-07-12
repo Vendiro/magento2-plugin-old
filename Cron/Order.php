@@ -44,7 +44,7 @@ class Order
         $this->orderService = $orderService;
     }
 
-    public function saveOrder()
+    public function execute()
     {
         $this->orderService->saveOrders();
     }
