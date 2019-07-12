@@ -34,9 +34,10 @@
 namespace TIG\Vendiro\Service\Order;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use TIG\Vendiro\Webservices\Endpoints\GetOrders;
-use TIG\Vendiro\Api\OrderRepositoryInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
+use TIG\Vendiro\Api\OrderRepositoryInterface;
+use TIG\Vendiro\Webservices\Endpoints\GetOrders;
+use TIG\Vendiro\Logging\Log;
 
 class Data
 {
@@ -52,24 +53,47 @@ class Data
     /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
     private $searchCriteriaBuilder;
 
+    /** @var Log $logger */
+    private $logger;
+
     /**
      * Data constructor.
      *
-     * @param \TIG\Vendiro\Webservices\Endpoints\GetOrders $getOrders
-     * @param \TIG\Vendiro\Api\OrderRepositoryInterface    $orderRepository
-     * @param \Magento\Framework\Stdlib\DateTime\DateTime  $date
-     * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param GetOrders                            $getOrders
+     * @param OrderRepositoryInterface             $orderRepository
+     * @param DateTime                             $date
+     * @param SearchCriteriaBuilder                $searchCriteriaBuilder
+     * @param Log $logger
      */
     public function __construct(
         GetOrders $getOrders,
         OrderRepositoryInterface $orderRepository,
         DateTime $date,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        Log $logger
     ) {
         $this->getOrders = $getOrders;
         $this->orderRepository = $orderRepository;
         $this->date = $date;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->logger = $logger;
+    }
+
+    private function createVendiroOrder($order)
+    {
+        $vendiroOrder = $this->orderRepository->create();
+        $vendiroOrder->setVendiroId($order['id']);
+        $vendiroOrder->setOrderRef($order['order_ref']);
+        $vendiroOrder->setMarketplaceOrderId($order['marketplace_order_id']);
+        $vendiroOrder->setOrderDate($order['date_order']);
+        $vendiroOrder->setFulfilmentByMarketplace($order['fulfilment_by_marketplace']);
+        $vendiroOrder->setCreatedAt($order['created']);
+        $vendiroOrder->setMarketplaceName($order['marketplace']['name']);
+        $vendiroOrder->setMarketplaceReference($order['marketplace']['reference']);
+        $vendiroOrder->setStatus($order['status']['name']);
+        $vendiroOrder->setImportedAt($this->date->gmtDate());
+
+        return $vendiroOrder;
     }
 
     public function saveOrders()
@@ -78,31 +102,19 @@ class Data
 
         $valuesToSkip = $this->getAlreadyInsertedOrders($results);
 
-        foreach ($results as $order) {
+        array_walk($results, function ($order) use ($valuesToSkip) {
             if (!in_array($order['id'], $valuesToSkip)) {
-                continue;
+                return;
             }
 
-            $vendiroOrder = $this->orderRepository->create();
-            $vendiroOrder->setVendiroId($order['id']);
-            $vendiroOrder->setOrderRef($order['order_ref']);
-            $vendiroOrder->setMarketplaceOrderId($order['marketplace_order_id']);
-            $vendiroOrder->setOrderDate($order['date_order']);
-            $vendiroOrder->setFulfilmentByMarketplace($order['fulfilment_by_marketplace']);
-            $vendiroOrder->setCreatedAt($order['created']);
-            $vendiroOrder->setMarketplaceName($order['marketplace']['name']);
-            $vendiroOrder->setMarketplaceReference($order['marketplace']['reference']);
-            $vendiroOrder->setStatus($order['status']['name']);
-            $vendiroOrder->setImportedAt($this->date->gmtDate());
+            $vendiroOrder = $this->createVendiroOrder($order);
 
             try {
                 $vendiroOrder->save();
             } catch (\Exception $exception) {
-
+                $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
             }
-        }
-
-        return;
+        });
     }
 
     public function getAlreadyInsertedOrders($results)

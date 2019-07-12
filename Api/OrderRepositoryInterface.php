@@ -102,7 +102,7 @@ interface OrderRepositoryInterface
     /**
      * @param int $orderId
      *
-     * @return \TIG\PostNL\Api\Data\OrderInterface
+     * @return \TIG\Vendiro\Api\Data\OrderInterface
      */
     public function getByOrderId($orderId);
 }
