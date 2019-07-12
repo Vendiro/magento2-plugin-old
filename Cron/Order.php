@@ -36,7 +36,7 @@ use TIG\Vendiro\Api\OrderRepositoryInterface;
 
 class Order
 {
-    /** @var $orderService */
+    /** @var Data $orderService */
     private $orderService;
 
     public function __construct(OrderRepositoryInterface $orderService)
@@ -44,8 +44,8 @@ class Order
         $this->orderService = $orderService;
     }
 
-    public function execute()
+    public function saveOrder()
     {
-        $order = $this->orderService->getByFieldWithValue('order_id', 1, 10);
+        $this->orderService->saveOrders();
     }
 }
