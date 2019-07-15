@@ -44,7 +44,7 @@ class Inventory
         $this->inventoryService = $inventoryService;
     }
 
-    public function get()
+    public function execute()
     {
         $this->inventoryService->get();
     }

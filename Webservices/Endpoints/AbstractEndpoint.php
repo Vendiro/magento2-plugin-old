@@ -40,6 +40,8 @@ abstract class AbstractEndpoint implements EndpointInterface
 
     private $requestData = [];
 
+    private $urlArguments;
+
     /** @var Rest */
     private $restApi;
 
@@ -54,8 +56,10 @@ abstract class AbstractEndpoint implements EndpointInterface
     /**
      * {@inheritDoc}
      */
-    public function call()
+    public function call($urlParameter = null)
     {
+        $this->setUrlArguments($urlParameter);
+
         return $this->restApi->getRequest($this);
     }
 
@@ -64,7 +68,11 @@ abstract class AbstractEndpoint implements EndpointInterface
      */
     public function getEndpointUrl()
     {
-        return static::ENDPOINT_URL;
+        $endpointUrl = static::ENDPOINT_URL;
+
+        $endpointUrl = str_replace($endpointUrl, $this->getUrlArguments(), $endpointUrl);
+
+        return $endpointUrl;
     }
 
     /**
@@ -73,6 +81,22 @@ abstract class AbstractEndpoint implements EndpointInterface
     public function getMethod()
     {
         return static::METHOD;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setUrlArguments($urlArguments)
+    {
+        $this->urlArguments = $urlArguments;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUrlArguments()
+    {
+        return $this->urlArguments;
     }
 
     /**

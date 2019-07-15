@@ -49,6 +49,16 @@ interface EndpointInterface
     public function getMethod();
 
     /**
+     * @param string $urlArguments
+     */
+    public function setUrlArguments($urlArguments);
+
+    /**
+     * @return array
+     */
+    public function getUrlArguments();
+
+    /**
      * @param array $requestData
      */
     public function setRequestData(array $requestData);

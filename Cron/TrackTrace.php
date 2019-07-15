@@ -49,7 +49,7 @@ class TrackTrace
         $this->orderService = $orderService;
     }
 
-    public function get()
+    public function execute()
     {
         $this->orderService->get();
     }
