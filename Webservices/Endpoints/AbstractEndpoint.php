@@ -70,7 +70,7 @@ abstract class AbstractEndpoint implements EndpointInterface
     {
         $endpointUrl = static::ENDPOINT_URL;
 
-        $endpointUrl = str_replace($endpointUrl, $this->getUrlArguments(), $endpointUrl);
+        $endpointUrl = sprintf($endpointUrl, $this->getUrlArguments());
 
         return $endpointUrl;
     }

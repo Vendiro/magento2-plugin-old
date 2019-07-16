@@ -33,10 +33,27 @@
 
 namespace TIG\Vendiro\Service\TrackTrace;
 
+use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
+
 class Data
 {
+    /** @var ApiConfiguration */
+    private $apiConfiguration;
+
+    /**
+     * @param ApiConfiguration $apiConfiguration
+     */
+    public function __construct(ApiConfiguration $apiConfiguration)
+    {
+        $this->apiConfiguration = $apiConfiguration;
+    }
+
     public function get()
     {
+        if (!$this->apiConfiguration->canRegisterShipments()) {
+            return;
+        }
+
         return '';
     }
 }

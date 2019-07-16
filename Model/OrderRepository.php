@@ -118,6 +118,18 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getAlreadyInsertedOrders($orderIds)
+    {
+        $list = $this->getByFieldInArray('vendiro_id', $orderIds, 999);
+
+        $insertedOrders = array_diff($orderIds, array_keys($list));
+
+        return $insertedOrders;
+    }
+
+    /**
      * @param OrderInterface $order
      *
      * @return bool

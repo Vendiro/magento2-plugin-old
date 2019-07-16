@@ -32,6 +32,7 @@
 
 namespace TIG\Vendiro\Cron;
 
+use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 use TIG\Vendiro\Service\Order\Data;
 
 class Order
@@ -39,13 +40,27 @@ class Order
     /** @var Data $orderService */
     private $orderService;
 
-    public function __construct(Data $orderService)
-    {
+    /** @var ApiConfiguration */
+    private $apiConfiguration;
+
+    /**
+     * @param Data             $orderService
+     * @param ApiConfiguration $apiConfiguration
+     */
+    public function __construct(
+        Data $orderService,
+        ApiConfiguration $apiConfiguration
+    ) {
         $this->orderService = $orderService;
+        $this->apiConfiguration = $apiConfiguration;
     }
 
     public function execute()
     {
+        if (!$this->apiConfiguration->canImportOrders()) {
+            return;
+        }
+
         $this->orderService->saveOrders();
     }
 }

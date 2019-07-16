@@ -105,4 +105,11 @@ interface OrderRepositoryInterface
      * @return \TIG\Vendiro\Api\Data\OrderInterface
      */
     public function getByOrderId($orderId);
+
+    /**
+     * @param $orderIds
+     *
+     * @return array
+     */
+    public function getAlreadyInsertedOrders($orderIds);
 }

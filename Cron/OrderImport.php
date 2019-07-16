@@ -32,6 +32,7 @@
 
 namespace TIG\Vendiro\Cron;
 
+use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 use TIG\Vendiro\Service\Order\Import;
 
 class OrderImport
@@ -39,16 +40,27 @@ class OrderImport
     /** @var Import $orderImportService */
     private $orderImportService;
 
+    /** @var ApiConfiguration */
+    private $apiConfiguration;
+
     /**
-     * @param Import $orderImportService
+     * @param Import           $orderImportService
+     * @param ApiConfiguration $apiConfiguration
      */
-    public function __construct(Import $orderImportService)
-    {
+    public function __construct(
+        Import $orderImportService,
+        ApiConfiguration $apiConfiguration
+    ) {
         $this->orderImportService = $orderImportService;
+        $this->apiConfiguration = $apiConfiguration;
     }
 
     public function execute()
     {
+        if (!$this->apiConfiguration->canImportOrders()) {
+            return;
+        }
+
         $this->orderImportService->execute();
     }
 }

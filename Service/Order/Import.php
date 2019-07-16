@@ -31,25 +31,42 @@
  */
 namespace TIG\Vendiro\Service\Order;
 
-
+use TIG\Vendiro\Api\OrderRepositoryInterface;
+use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 use TIG\Vendiro\Webservices\Endpoints\GetOrders;
 
 class Import
 {
+    /** @var ApiConfiguration */
+    private $apiConfiguration;
+
     /** @var GetOrders */
     private $getOrder;
 
+    /** @var OrderRepositoryInterface */
+    private $orderRepository;
+
     /**
-     * @param GetOrders getOrder
+     * @param ApiConfiguration         $apiConfiguration
+     * @param GetOrders                $getOrder
+     * @param OrderRepositoryInterface $orderRepository
      */
-    public function __construct(GetOrders $getOrder)
-    {
+    public function __construct(
+        ApiConfiguration $apiConfiguration,
+        GetOrders $getOrder,
+        OrderRepositoryInterface $orderRepository
+    ) {
+        $this->apiConfiguration = $apiConfiguration;
         $this->getOrder = $getOrder;
+        $this->orderRepository = $orderRepository;
     }
 
     public function execute()
     {
-        return '';
-//        $apiOrderDetails = $this->getOrder->call(4);
+        if (!$this->apiConfiguration->canImportOrders()) {
+            return;
+        }
+
+        $apiOrderDetails = $this->getOrder->call(4);
     }
 }

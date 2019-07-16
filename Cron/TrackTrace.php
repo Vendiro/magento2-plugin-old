@@ -32,6 +32,7 @@
 
 namespace TIG\Vendiro\Cron;
 
+use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 use TIG\Vendiro\Service\TrackTrace\Data;
 
 class TrackTrace
@@ -39,18 +40,27 @@ class TrackTrace
     /** @var Data $orderService  */
     private $orderService;
 
+    /** @var ApiConfiguration */
+    private $apiConfiguration;
+
     /**
-     * TrackTrace constructor.
-     *
-     * @param Data $orderService
+     * @param Data             $orderService
+     * @param ApiConfiguration $apiConfiguration
      */
-    public function __construct(Data $orderService)
-    {
+    public function __construct(
+        Data $orderService,
+        ApiConfiguration $apiConfiguration
+    ) {
         $this->orderService = $orderService;
+        $this->apiConfiguration = $apiConfiguration;
     }
 
     public function execute()
     {
+        if (!$this->apiConfiguration->canRegisterShipments()) {
+            return;
+        }
+
         $this->orderService->get();
     }
 }
