@@ -119,7 +119,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      */
     public function getByStatus($status, $limit = 10)
     {
-        return $this->getByFieldWithValue('order_id', $status, $limit);
+        return $this->getByFieldWithValue('status', $status, $limit);
     }
 
     /**
