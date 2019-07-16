@@ -67,6 +67,15 @@ class Import
             return;
         }
 
-        $apiOrderDetails = $this->getOrder->call(4);
+        $orders = $this->orderRepository->getByStatus('New - Validated');
+
+        /** @var \TIG\Vendiro\Api\Data\OrderInterface $order */
+        foreach ($orders as $order) {
+            $apiOrderDetails = $this->getOrder->call($order->getVendiroId());
+
+            //TODO: Import order details into Magento
+            //TODO: Vendiro Accept API call if success
+            //TODO: Vendiro Reject API call if failure
+        }
     }
 }
