@@ -46,19 +46,25 @@ class Import
     /** @var OrderRepositoryInterface */
     private $orderRepository;
 
+    /** @var Create */
+    private $createOrder;
+
     /**
      * @param ApiConfiguration         $apiConfiguration
      * @param GetOrders                $getOrder
      * @param OrderRepositoryInterface $orderRepository
+     * @param Create                   $createOrder
      */
     public function __construct(
         ApiConfiguration $apiConfiguration,
         GetOrders $getOrder,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        Create $createOrder
     ) {
         $this->apiConfiguration = $apiConfiguration;
         $this->getOrder = $getOrder;
         $this->orderRepository = $orderRepository;
+        $this->createOrder = $createOrder;
     }
 
     public function execute()
@@ -67,13 +73,14 @@ class Import
             return;
         }
 
-        $orders = $this->orderRepository->getByStatus('New - Validated');
+        $orders = $this->orderRepository->getByStatus('New - Validated', 1);
 
         /** @var \TIG\Vendiro\Api\Data\OrderInterface $order */
         foreach ($orders as $order) {
-            $apiOrderDetails = $this->getOrder->call($order->getVendiroId());
+            $vendiroOrder = $this->getOrder->call($order->getVendiroId());
 
-            //TODO: Import order details into Magento
+            $newOrderId = $this->createOrder->execute($vendiroOrder);
+
             //TODO: Vendiro Accept API call if success
             //TODO: Vendiro Reject API call if failure
         }
