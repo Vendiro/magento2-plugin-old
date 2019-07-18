@@ -90,7 +90,7 @@ class Cart
         }
 
         $this->cart->setStoreId($store->getId());
-        $this->cart->setCurrency(); //TODO: Interface implement to set currency?
+        $this->cart->setCurrency(); //Interface implement to set currency?
         $this->cart->setCheckoutMethod(CartManagementInterface::METHOD_GUEST);
     }
 
@@ -129,7 +129,7 @@ class Cart
         $cartShippingAddress = $this->cart->getShippingAddress();
         $cartShippingAddress->setCollectShippingRates(true);
         $cartShippingAddress->collectShippingRates();
-        $cartShippingAddress->setShippingMethod($method); //TODO: Use Vendiro shipping method
+        $cartShippingAddress->setShippingMethod($method); //Use Vendiro shipping method
     }
 
     /**
@@ -142,7 +142,7 @@ class Cart
         $payment = $this->cart->getPayment();
 
         try {
-            $payment->importData(['method' => $method]); //TODO: Use Vendiro payment method?
+            $payment->importData(['method' => $method]); //Use Vendiro payment method?
         } catch (LocalizedException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
         }

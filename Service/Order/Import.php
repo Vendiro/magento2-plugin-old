@@ -81,8 +81,8 @@ class Import
 
             $newOrderId = $this->createOrder->execute($vendiroOrder);
 
-            //TODO: Vendiro Accept API call if success
-            //TODO: Vendiro Reject API call if failure
+            //Vendiro Accept API call if success
+            //Vendiro Reject API call if failure
         }
     }
 }
