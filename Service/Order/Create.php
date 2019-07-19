@@ -34,6 +34,7 @@ namespace TIG\Vendiro\Service\Order;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use TIG\Vendiro\Logging\Log;
+use TIG\Vendiro\Model\Payment\Vendiro;
 use TIG\Vendiro\Service\Order\Create\Cart;
 
 class Create
@@ -78,7 +79,7 @@ class Create
         $this->cart->addAddress($vendiroOrder['delivery_address'], 'Shipping');
 
         $this->cart->setShippingMethod('flatrate_flatrate');
-        $this->cart->setPaymentMethod('checkmo');
+        $this->cart->setPaymentMethod(Vendiro::PAYMENT_CODE);
 
         $newOrderId = $this->cart->placeOrder();
 
