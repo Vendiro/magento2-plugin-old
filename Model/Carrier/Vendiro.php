@@ -31,21 +31,62 @@
  */
 namespace TIG\Vendiro\Model\Carrier;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory;
+use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
 use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
+use Magento\Shipping\Model\Rate\ResultFactory;
+use Psr\Log\LoggerInterface;
 
 class Vendiro extends AbstractCarrier implements CarrierInterface
 {
     protected $_code = 'tig_vendiro';
 
+    /** @var ResultFactory */
+    private $resultFactory;
+
+    /** @var MethodFactory */
+    private $methodFactory;
+
+    public function __construct(
+        ScopeConfigInterface $scopeConfig,
+        ErrorFactory $rateErrorFactory,
+        LoggerInterface $logger,
+        ResultFactory $resultFactory,
+        MethodFactory $methodFactory,
+        array $data = []
+    ) {
+        parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
+
+        $this->resultFactory = $resultFactory;
+        $this->methodFactory = $methodFactory;
+    }
 
     /**
      * {@inheritDoc}
      */
     public function collectRates(RateRequest $request)
     {
-        // TODO: Implement collectRates() method.
+        $title = $this->getConfigData('title');
+        $name = $this->getConfigData('name');
+        $code = $this->getCarrierCode();
+        $amount = $this->getConfigData('amount');
+
+        $result = $this->resultFactory->create();
+        $method = $this->methodFactory->create();
+
+        $method->setCarrier($code);
+        $method->setCarrierTitle($title);
+        $method->setMethod('shipping');
+        $method->setMethodTitle($name);
+        $method->setPrice($amount);
+        $method->setCost($amount);
+
+        $result->append($method);
+
+        return $result;
     }
 
     /**

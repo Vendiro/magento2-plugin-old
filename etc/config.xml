@@ -32,6 +32,16 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
+        <carriers>
+            <tig_vendiro>
+                <active>1</active>
+                <name>Vendiro Shipping</name>
+                <model>TIG\Vendiro\Model\Carrier\Vendiro</model>
+                <sallowspecific>0</sallowspecific>
+                <title>Vendiro</title>
+                <price>0.00</price>
+            </tig_vendiro>
+        </carriers>
         <tig_vendiro>
             <stability />
             <supported_magento_version>2.2.0 - 2.2.9, 2.3.0 - 2.3.2</supported_magento_version>
