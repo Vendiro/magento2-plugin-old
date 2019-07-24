@@ -42,6 +42,7 @@ use Psr\Log\LoggerInterface;
 
 class Vendiro extends AbstractCarrier implements CarrierInterface
 {
+    // @codingStandardsIgnoreLine
     protected $_code = 'tig_vendiro';
 
     /** @var ResultFactory */
@@ -72,7 +73,7 @@ class Vendiro extends AbstractCarrier implements CarrierInterface
         $title = $this->getConfigData('title');
         $name = $this->getConfigData('name');
         $code = $this->getCarrierCode();
-        $amount = $this->getConfigData('amount');
+        $amount = $this->getShippingCost($request);
 
         $result = $this->resultFactory->create();
         $method = $this->methodFactory->create();
@@ -87,6 +88,20 @@ class Vendiro extends AbstractCarrier implements CarrierInterface
         $result->append($method);
 
         return $result;
+    }
+
+    /**
+     * @param RateRequest $request
+     *
+     * @return string|int|float
+     */
+    private function getShippingCost(RateRequest $request)
+    {
+        $quoteItem = $request->getAllItems()[0];
+        $quote = $quoteItem->getQuote();
+        $shippingCost = $quote->getVendiroShippingCost();
+
+        return $shippingCost;
     }
 
     /**

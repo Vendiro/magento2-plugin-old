@@ -77,7 +77,8 @@ class Create
         $this->cart->addAddress($vendiroOrder['invoice_address'], 'Billing');
         $this->cart->addAddress($vendiroOrder['delivery_address'], 'Shipping');
 
-        $this->cart->setShippingMethod('tig_vendiro_shipping');
+        $shippingCost = $vendiroOrder['shipping_cost'] + $vendiroOrder['administration_cost'];
+        $this->cart->setShippingMethod('tig_vendiro_shipping', $shippingCost);
         $this->cart->setPaymentMethod('checkmo');
 
         $newOrderId = $this->cart->placeOrder();
