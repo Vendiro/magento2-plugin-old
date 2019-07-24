@@ -67,7 +67,7 @@ class Import
         $this->createOrder = $createOrder;
     }
 
-    public function execute()
+    public function importToMagento()
     {
         if (!$this->apiConfiguration->canImportOrders()) {
             return;
