@@ -109,6 +109,6 @@ class Vendiro extends AbstractCarrier implements CarrierInterface
      */
     public function getAllowedMethods()
     {
-        return ['tig_vendiro' => $this->getConfigData('name')];
+        return [$this->getCarrierCode() => $this->getConfigData('name')];
     }
 }
