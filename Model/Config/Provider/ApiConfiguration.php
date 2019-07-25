@@ -89,10 +89,7 @@ class ApiConfiguration extends AbstractConfigProvider
      */
     public function canImportOrders()
     {
-        $extensionEnabled = $this->configuration->isEnabled();
-        $orderImportEnabled = $this->configuration->isOrderImportEnabled();
-
-        return ($extensionEnabled && $orderImportEnabled);
+        return ($this->configuration->isEnabled() && $this->configuration->isOrderImportEnabled());
     }
 
     /**
@@ -100,10 +97,7 @@ class ApiConfiguration extends AbstractConfigProvider
      */
     public function canRegisterShipments()
     {
-        $extensionEnabled = $this->configuration->isEnabled();
-        $registerShipmentEnabled = $this->configuration->isRegisterShipmentEnabled();
-
-        return ($extensionEnabled && $registerShipmentEnabled);
+        return ($this->configuration->isEnabled() && $this->configuration->isRegisterShipmentEnabled());
     }
 
     /**
@@ -111,9 +105,6 @@ class ApiConfiguration extends AbstractConfigProvider
      */
     public function canUpdateInventory()
     {
-        $extensionEnabled = $this->configuration->isEnabled();
-        $updateInventoryEnabled = $this->configuration->isUpdateInventoryEnabled();
-
-        return ($extensionEnabled && $updateInventoryEnabled);
+        return ($this->configuration->isEnabled() && $this->configuration->isUpdateInventoryEnabled());
     }
 }
