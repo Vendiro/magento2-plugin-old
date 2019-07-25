@@ -32,6 +32,7 @@
 
 namespace TIG\Vendiro\Cron;
 
+use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 use TIG\Vendiro\Service\Inventory\Data;
 
 class Inventory
@@ -39,13 +40,27 @@ class Inventory
     /** @var Data $orderService */
     private $inventoryService;
 
-    public function __construct(Data $inventoryService)
-    {
+    /** @var ApiConfiguration */
+    private $apiConfiguration;
+
+    /**
+     * @param Data             $inventoryService
+     * @param ApiConfiguration $apiConfiguration
+     */
+    public function __construct(
+        Data $inventoryService,
+        ApiConfiguration $apiConfiguration
+    ) {
         $this->inventoryService = $inventoryService;
+        $this->apiConfiguration = $apiConfiguration;
     }
 
-    public function get()
+    public function updateInventory()
     {
+        if (!$this->apiConfiguration->canUpdateInventory()) {
+            return;
+        }
+
         $this->inventoryService->get();
     }
 }

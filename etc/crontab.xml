@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
     <group id="default">
-        <job name="vendiro_inventory" instance="TIG\Vendiro\Cron\Inventory" method="execute">
+        <job name="vendiro_inventory" instance="TIG\Vendiro\Cron\Inventory" method="updateInventory">
             <schedule>*/5 * * * *</schedule>
         </job>
-        <job name="vendiro_get_orders" instance="TIG\Vendiro\Cron\Order" method="execute">
+        <job name="vendiro_import_to_queue" instance="TIG\Vendiro\Cron\Order" method="retrieveNewOrders">
             <schedule>*/5 * * * *</schedule>
         </job>
-        <job name="vendiro_tracktrace" instance="TIG\Vendiro\Cron\TrackTrace" method="execute">
+        <job name="vendiro_import_to_magento" instance="TIG\Vendiro\Cron\Order" method="importToMagento">
+            <schedule>*/5 * * * *</schedule>
+        </job>
+        <job name="vendiro_tracktrace" instance="TIG\Vendiro\Cron\TrackTrace" method="registerShipments">
             <schedule>*/5 * * * *</schedule>
         </job>
     </group>

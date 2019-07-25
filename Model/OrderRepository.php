@@ -107,14 +107,31 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     }
 
     /**
-     * @param int $orderId
-     * @param int $limit
-     *
-     * @return null|Order|array
+     * {@inheritDoc}
      */
     public function getByOrderId($orderId, $limit = 1)
     {
         return $this->getByFieldWithValue('order_id', $orderId, $limit);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getByStatus($status, $limit = 10)
+    {
+        return $this->getByFieldWithValue('status', $status, $limit);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAlreadyInsertedOrders($orderIds, $limit = 999)
+    {
+        $list = $this->getByFieldInArray('vendiro_id', $orderIds, $limit);
+
+        $insertedOrders = array_diff($orderIds, array_keys($list));
+
+        return $insertedOrders;
     }
 
     /**

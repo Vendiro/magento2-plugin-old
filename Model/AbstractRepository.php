@@ -90,6 +90,28 @@ abstract class AbstractRepository
     }
 
     /**
+     * @param       $field
+     * @param array $array
+     * @param int   $limit
+     *
+     * @return array|null
+     */
+    public function getByFieldInArray($field, array $array, $limit = 1)
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter($field, $array, 'in');
+        $searchCriteria->setPageSize($limit);
+
+        /** @var \Magento\Framework\Api\SearchResults $list */
+        $list = $this->getList($searchCriteria->create());
+
+        if ($list->getTotalCount() > 1) {
+            return $list->getItems();
+        }
+
+        return null;
+    }
+
+    /**
      * Retrieve a list.
      *
      * @param SearchCriteriaInterface $criteria

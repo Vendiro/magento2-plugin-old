@@ -31,23 +31,25 @@
  */
 namespace TIG\Vendiro\Api;
 
+use TIG\Vendiro\Api\Data\OrderInterface;
+
 interface OrderRepositoryInterface
 {
     /**
      * Save a Vendiro order to the queue
      *
      * @api
-     * @param \TIG\Vendiro\Api\Data\OrderInterface $order
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
+     * @param OrderInterface $order
+     * @return OrderInterface
      */
-    public function save(\TIG\Vendiro\Api\Data\OrderInterface $order);
+    public function save(OrderInterface $order);
 
     /**
      * Return a specific Vendiro order.
      *
      * @api
      * @param int $entityId
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
+     * @return OrderInterface
      */
     public function getById($entityId);
 
@@ -64,10 +66,10 @@ interface OrderRepositoryInterface
      * Delete a specific Venduro order.
      *
      * @api
-     * @param \TIG\Vendiro\Api\Data\OrderInterface $order
+     * @param OrderInterface $order
      * @return bool
      */
-    public function delete(\TIG\Vendiro\Api\Data\OrderInterface $order);
+    public function delete(OrderInterface $order);
 
     /**
      * Delete a Vendiro order by Id.
@@ -84,7 +86,7 @@ interface OrderRepositoryInterface
      * @api
      *
      * @param array $data
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
+     * @return OrderInterface
      */
     public function create(array $data = []);
 
@@ -95,14 +97,31 @@ interface OrderRepositoryInterface
      * @param string $field
      * @param string $value
      *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
+     * @return OrderInterface
      */
     public function getByFieldWithValue($field, $value);
 
     /**
      * @param int $orderId
+     * @param int $limit
      *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
+     * @return OrderInterface|array|null
      */
-    public function getByOrderId($orderId);
+    public function getByOrderId($orderId, $limit = 1);
+
+    /**
+     * @param     $status
+     * @param int $limit
+     *
+     * @return array|OrderInterface|null
+     */
+    public function getByStatus($status, $limit = 10);
+
+    /**
+     * @param array $orderIds
+     * @param int   $limit
+     *
+     * @return array
+     */
+    public function getAlreadyInsertedOrders($orderIds, $limit = 999);
 }

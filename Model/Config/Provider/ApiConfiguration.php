@@ -83,4 +83,28 @@ class ApiConfiguration extends AbstractConfigProvider
 
         return $this->getTestApiBaseUrl();
     }
+
+    /**
+     * @return bool
+     */
+    public function canImportOrders()
+    {
+        return ($this->configuration->isEnabled() && $this->configuration->isOrderImportEnabled());
+    }
+
+    /**
+     * @return bool
+     */
+    public function canRegisterShipments()
+    {
+        return ($this->configuration->isEnabled() && $this->configuration->isRegisterShipmentEnabled());
+    }
+
+    /**
+     * @return bool
+     */
+    public function canUpdateInventory()
+    {
+        return ($this->configuration->isEnabled() && $this->configuration->isUpdateInventoryEnabled());
+    }
 }

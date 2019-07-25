@@ -33,14 +33,17 @@
 
 namespace TIG\Vendiro\Service\Order;
 
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use TIG\Vendiro\Api\OrderRepositoryInterface;
+use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 use TIG\Vendiro\Webservices\Endpoints\GetOrders;
 use TIG\Vendiro\Logging\Log;
 
 class Data
 {
+    /** @var ApiConfiguration */
+    private $apiConfiguration;
+
     /** @var GetOrders $getOrders */
     private $getOrders;
 
@@ -50,32 +53,29 @@ class Data
     /** @var DateTime $date */
     private $date;
 
-    /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
-    private $searchCriteriaBuilder;
-
     /** @var Log $logger */
     private $logger;
 
     /**
      * Data constructor.
      *
-     * @param GetOrders                            $getOrders
-     * @param OrderRepositoryInterface             $orderRepository
-     * @param DateTime                             $date
-     * @param SearchCriteriaBuilder                $searchCriteriaBuilder
-     * @param Log $logger
+     * @param ApiConfiguration         $apiConfiguration
+     * @param GetOrders                $getOrders
+     * @param OrderRepositoryInterface $orderRepository
+     * @param DateTime                 $date
+     * @param Log                      $logger
      */
     public function __construct(
+        ApiConfiguration $apiConfiguration,
         GetOrders $getOrders,
         OrderRepositoryInterface $orderRepository,
         DateTime $date,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
         Log $logger
     ) {
+        $this->apiConfiguration = $apiConfiguration;
         $this->getOrders = $getOrders;
         $this->orderRepository = $orderRepository;
         $this->date = $date;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->logger = $logger;
     }
 
@@ -98,35 +98,36 @@ class Data
 
     public function saveOrders()
     {
+        if (!$this->apiConfiguration->canImportOrders()) {
+            return;
+        }
+
         $results = $this->getOrders->call();
 
-        $valuesToSkip = $this->getAlreadyInsertedOrders($results);
+        $orderIds = array_column($results, 'id');
+        $valuesToSkip = $this->orderRepository->getAlreadyInsertedOrders($orderIds);
 
-        array_walk($results, function ($order) use ($valuesToSkip) {
-            if (!in_array($order['id'], $valuesToSkip)) {
-                return;
-            }
-
-            $vendiroOrder = $this->createVendiroOrder($order);
-
-            try {
-                $vendiroOrder->save();
-            } catch (\Exception $exception) {
-                $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
-            }
-        });
+        foreach ($results as $order) {
+            $this->saveVendiroOrder($order, $valuesToSkip);
+        }
     }
 
-    public function getAlreadyInsertedOrders($results)
+    /**
+     * @param $order
+     * @param $valuesToSkip
+     */
+    private function saveVendiroOrder($order, $valuesToSkip)
     {
-        $orderIds = array_column($results, 'id');
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('vendiro_id', $orderIds, 'in');
+        if (!in_array($order['id'], $valuesToSkip)) {
+            return;
+        }
 
-        /** @var \Magento\Framework\Api\SearchResults $list */
-        $list = $this->orderRepository->getList($searchCriteria->create());
+        $vendiroOrder = $this->createVendiroOrder($order);
 
-        $valuesToSkip = array_diff($orderIds, array_keys($list->getItems()));
-
-        return $valuesToSkip;
+        try {
+            $this->orderRepository->save($vendiroOrder);
+        } catch (\Exception $exception) {
+            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
+        }
     }
 }
