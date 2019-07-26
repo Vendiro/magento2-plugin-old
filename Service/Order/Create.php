@@ -34,11 +34,12 @@ namespace TIG\Vendiro\Service\Order;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use TIG\Vendiro\Logging\Log;
-use TIG\Vendiro\Service\Order\Create\Cart;
+use TIG\Vendiro\Model\Payment\Vendiro;
+use TIG\Vendiro\Service\Order\Create\CartManager;
 
 class Create
 {
-    /** @var Cart */
+    /** @var CartManager */
     private $cart;
 
     /** @var ProductRepositoryInterface */
@@ -48,12 +49,12 @@ class Create
     private $logger;
 
     /**
-     * @param Cart                       $cart
+     * @param CartManager                $cart
      * @param ProductRepositoryInterface $productRepository
      * @param Log                        $logger
      */
     public function __construct(
-        Cart $cart,
+        CartManager $cart,
         ProductRepositoryInterface $productRepository,
         Log $logger
     ) {
@@ -72,26 +73,30 @@ class Create
         $storeCode = $vendiroOrder['marketplace']['reference'];
         $this->cart->createCart($storeCode);
 
-        array_walk($vendiroOrder['orderlines'], [$this, 'addProducts']);
+        foreach ($vendiroOrder['orderlines'] as $apiProduct) {
+            $this->addProducts($apiProduct);
+        }
 
         $this->cart->addAddress($vendiroOrder['invoice_address'], 'Billing');
         $this->cart->addAddress($vendiroOrder['delivery_address'], 'Shipping');
 
         $shippingCost = $vendiroOrder['shipping_cost'] + $vendiroOrder['administration_cost'];
         $this->cart->setShippingMethod('tig_vendiro_shipping', $shippingCost);
-        $this->cart->setPaymentMethod('checkmo');
+        $this->cart->setPaymentMethod(Vendiro::PAYMENT_CODE);
 
-        $newOrderId = $this->cart->placeOrder();
+        try {
+            $newOrderId = $this->cart->placeOrder();
+        } catch (\Exception $exception) {
+            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
+        }
 
         return $newOrderId;
     }
 
     /**
      * @param $apiProduct
-     * @param $index
      */
-    // @codingStandardsIgnoreLine
-    private function addProducts($apiProduct, $index)
+    private function addProducts($apiProduct)
     {
         try {
             $product = $this->productRepository->get($apiProduct['sku']);

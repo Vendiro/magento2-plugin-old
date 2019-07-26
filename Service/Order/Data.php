@@ -107,16 +107,16 @@ class Data
         $orderIds = array_column($results, 'id');
         $valuesToSkip = $this->orderRepository->getAlreadyInsertedOrders($orderIds);
 
-        array_walk($results, [$this, 'saveVendiroOrder'], $valuesToSkip);
+        foreach ($results as $order) {
+            $this->saveVendiroOrder($order, $valuesToSkip);
+        }
     }
 
     /**
      * @param $order
-     * @param $index
      * @param $valuesToSkip
      */
-    // @codingStandardsIgnoreLine
-    private function saveVendiroOrder($order, $index, $valuesToSkip)
+    private function saveVendiroOrder($order, $valuesToSkip)
     {
         if (!in_array($order['id'], $valuesToSkip)) {
             return;

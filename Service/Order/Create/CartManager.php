@@ -39,7 +39,7 @@ use Magento\Quote\Api\Data\CartInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use TIG\Vendiro\Logging\Log;
 
-class Cart
+class CartManager
 {
     /** @var StoreManagerInterface */
     private $storeManager;

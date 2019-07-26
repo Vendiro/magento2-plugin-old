@@ -42,6 +42,15 @@
                 <price>0.00</price>
             </tig_vendiro>
         </carriers>
+        <payment>
+            <tig_vendiro>
+                <active>1</active>
+                <model>TIG\Vendiro\Model\Payment\Vendiro</model>
+                <order_status>pending</order_status>
+                <title>Vendiro Payment</title>
+                <allowspecific>0</allowspecific>
+            </tig_vendiro>
+        </payment>
         <tig_vendiro>
             <stability />
             <supported_magento_version>2.2.0 - 2.2.9, 2.3.0 - 2.3.2</supported_magento_version>

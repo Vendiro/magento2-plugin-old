@@ -112,7 +112,9 @@ class ApiConfigurationTest extends TestCase
             ->setMethods(['isEnabled', 'isOrderImportEnabled'])
             ->getMock();
         $vendiroConfigMock->expects($this->once())->method('isEnabled')->willReturn($extensionEnabled);
-        $vendiroConfigMock->expects($this->once())->method('isOrderImportEnabled')->willReturn($configEnabled);
+        $vendiroConfigMock->expects($this->exactly((int)$extensionEnabled))
+            ->method('isOrderImportEnabled')
+            ->willReturn($configEnabled);
 
         $instance = $this->getInstance(['configuration' => $vendiroConfigMock]);
         $result = $instance->canImportOrders();
@@ -133,7 +135,9 @@ class ApiConfigurationTest extends TestCase
             ->setMethods(['isEnabled', 'isRegisterShipmentEnabled'])
             ->getMock();
         $vendiroConfigMock->expects($this->once())->method('isEnabled')->willReturn($extensionEnabled);
-        $vendiroConfigMock->expects($this->once())->method('isRegisterShipmentEnabled')->willReturn($configEnabled);
+        $vendiroConfigMock->expects($this->exactly((int)$extensionEnabled))
+            ->method('isRegisterShipmentEnabled')
+            ->willReturn($configEnabled);
 
         $instance = $this->getInstance(['configuration' => $vendiroConfigMock]);
         $result = $instance->canRegisterShipments();
@@ -154,7 +158,9 @@ class ApiConfigurationTest extends TestCase
             ->setMethods(['isEnabled', 'isUpdateInventoryEnabled'])
             ->getMock();
         $vendiroConfigMock->expects($this->once())->method('isEnabled')->willReturn($extensionEnabled);
-        $vendiroConfigMock->expects($this->once())->method('isUpdateInventoryEnabled')->willReturn($configEnabled);
+        $vendiroConfigMock->expects($this->exactly((int)$extensionEnabled))
+            ->method('isUpdateInventoryEnabled')
+            ->willReturn($configEnabled);
 
         $instance = $this->getInstance(['configuration' => $vendiroConfigMock]);
         $result = $instance->canUpdateInventory();

@@ -55,7 +55,7 @@ class Inventory
         $this->apiConfiguration = $apiConfiguration;
     }
 
-    public function execute()
+    public function updateInventory()
     {
         if (!$this->apiConfiguration->canUpdateInventory()) {
             return;

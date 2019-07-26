@@ -35,6 +35,7 @@
     <module name="TIG_Vendiro" setup_version="1.0.0">
         <sequence>
             <module name="Magento_Sales"/>
+            <module name="Magento_Payment"/>
             <module name="Magento_CatalogInventory"/>
         </sequence>
     </module>

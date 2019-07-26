@@ -55,7 +55,7 @@ class TrackTrace
         $this->apiConfiguration = $apiConfiguration;
     }
 
-    public function execute()
+    public function registerShipments()
     {
         if (!$this->apiConfiguration->canRegisterShipments()) {
             return;

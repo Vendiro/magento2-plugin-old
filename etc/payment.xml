@@ -1,5 +1,5 @@
-<?php
-/**
+<?xml version="1.0"?>
+<!--
  *
  *          ..::..
  *     ..::::::::::::..
@@ -28,39 +28,12 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
-
-namespace TIG\Vendiro\Cron;
-
-use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
-use TIG\Vendiro\Service\Order\Import;
-
-class OrderImport
-{
-    /** @var Import $orderImportService */
-    private $orderImportService;
-
-    /** @var ApiConfiguration */
-    private $apiConfiguration;
-
-    /**
-     * @param Import           $orderImportService
-     * @param ApiConfiguration $apiConfiguration
-     */
-    public function __construct(
-        Import $orderImportService,
-        ApiConfiguration $apiConfiguration
-    ) {
-        $this->orderImportService = $orderImportService;
-        $this->apiConfiguration = $apiConfiguration;
-    }
-
-    public function execute()
-    {
-        if (!$this->apiConfiguration->canImportOrders()) {
-            return;
-        }
-
-        $this->orderImportService->execute();
-    }
-}
+ -->
+<payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
+    <methods>
+        <method name="tig_vendiro">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+    </methods>
+</payment>

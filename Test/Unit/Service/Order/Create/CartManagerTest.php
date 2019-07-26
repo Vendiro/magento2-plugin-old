@@ -31,12 +31,12 @@
  */
 namespace TIG\Vendiro\Test\Unit\Service\Order\Create;
 
-use TIG\Vendiro\Service\Order\Create\Cart;
+use TIG\Vendiro\Service\Order\Create\CartManager;
 use TIG\Vendiro\Test\TestCase;
 
-class CartTest extends TestCase
+class CartManagerTest extends TestCase
 {
-    protected $instanceClass = Cart::class;
+    protected $instanceClass = CartManager::class;
 
     public function testFormatAddress()
     {
