@@ -32,6 +32,7 @@
 namespace TIG\Vendiro\Service\Order;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\DataObject\Factory as DataObjectFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Payment\Vendiro;
@@ -45,6 +46,9 @@ class Create
     /** @var ProductRepositoryInterface */
     private $productRepository;
 
+    /** @var DataObjectFactory */
+    private $dataObjectFactory;
+
     /** @var Log */
     private $logger;
 
@@ -56,10 +60,12 @@ class Create
     public function __construct(
         CartManager $cart,
         ProductRepositoryInterface $productRepository,
+        DataObjectFactory $dataObjectFactory,
         Log $logger
     ) {
         $this->cart = $cart;
         $this->productRepository = $productRepository;
+        $this->dataObjectFactory = $dataObjectFactory;
         $this->logger = $logger;
     }
 
@@ -92,9 +98,16 @@ class Create
      */
     private function addProducts($apiProduct)
     {
+        $data = [
+            'qty' => (int)$apiProduct['amount'],
+            'custom_price' => $apiProduct['value'],
+        ];
+
         try {
             $product = $this->productRepository->get($apiProduct['sku']);
-            $this->cart->addProduct($product, (int)$apiProduct['amount']);
+            $quoteProductData = $this->dataObjectFactory->create($data);
+
+            $this->cart->addProduct($product, $quoteProductData);
         } catch (NoSuchEntityException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
         }
