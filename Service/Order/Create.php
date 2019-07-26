@@ -84,13 +84,7 @@ class Create
         $this->cart->setShippingMethod('tig_vendiro_shipping', $shippingCost);
         $this->cart->setPaymentMethod(Vendiro::PAYMENT_CODE);
 
-        try {
-            $newOrderId = $this->cart->placeOrder();
-        } catch (\Exception $exception) {
-            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
-        }
-
-        return $newOrderId;
+        return $this->placeOrder();
     }
 
     /**
@@ -104,5 +98,21 @@ class Create
         } catch (NoSuchEntityException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
         }
+    }
+
+    /**
+     * @return bool|int
+     */
+    private function placeOrder()
+    {
+        $newOrderId = false;
+
+        try {
+            $newOrderId = $this->cart->placeOrder();
+        } catch (\Exception $exception) {
+            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
+        }
+
+        return $newOrderId;
     }
 }
