@@ -79,16 +79,12 @@ class Create
 
         $this->cart->addAddress($vendiroOrder['invoice_address'], 'Billing');
         $this->cart->addAddress($vendiroOrder['delivery_address'], 'Shipping');
-        $this->cart->setShippingMethod('flatrate_flatrate');
+
+        $shippingCost = $vendiroOrder['shipping_cost'] + $vendiroOrder['administration_cost'];
+        $this->cart->setShippingMethod('tig_vendiro_shipping', $shippingCost);
         $this->cart->setPaymentMethod(Vendiro::PAYMENT_CODE);
 
-        try {
-            $newOrderId = $this->cart->placeOrder();
-        } catch (\Exception $exception) {
-            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
-        }
-
-        return $newOrderId;
+        return $this->placeOrder();
     }
 
     /**
@@ -102,5 +98,21 @@ class Create
         } catch (NoSuchEntityException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
         }
+    }
+
+    /**
+     * @return bool|int
+     */
+    private function placeOrder()
+    {
+        $newOrderId = false;
+
+        try {
+            $newOrderId = $this->cart->placeOrder();
+        } catch (\Exception $exception) {
+            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
+        }
+
+        return $newOrderId;
     }
 }

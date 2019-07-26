@@ -122,14 +122,17 @@ class CartManager
     }
 
     /**
-     * @param string $method
+     * @param string           $method
+     * @param string|int|float $shippingCost
      */
-    public function setShippingMethod($method)
+    public function setShippingMethod($method, $shippingCost)
     {
+        $this->cart->setVendiroShippingCost($shippingCost);
+
         $cartShippingAddress = $this->cart->getShippingAddress();
         $cartShippingAddress->setCollectShippingRates(true);
         $cartShippingAddress->collectShippingRates();
-        $cartShippingAddress->setShippingMethod($method); //Use Vendiro shipping method
+        $cartShippingAddress->setShippingMethod($method);
     }
 
     /**
