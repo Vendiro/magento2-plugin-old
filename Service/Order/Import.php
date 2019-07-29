@@ -33,6 +33,7 @@ namespace TIG\Vendiro\Service\Order;
 
 use TIG\Vendiro\Api\OrderRepositoryInterface;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
+use TIG\Vendiro\Webservices\Endpoints\AcceptOrder;
 use TIG\Vendiro\Webservices\Endpoints\GetOrders;
 
 class Import
@@ -42,6 +43,8 @@ class Import
 
     /** @var GetOrders */
     private $getOrder;
+
+    private $acceptOrder;
 
     /** @var OrderRepositoryInterface */
     private $orderRepository;
@@ -58,11 +61,13 @@ class Import
     public function __construct(
         ApiConfiguration $apiConfiguration,
         GetOrders $getOrder,
+        AcceptOrder $acceptOrder,
         OrderRepositoryInterface $orderRepository,
         Create $createOrder
     ) {
         $this->apiConfiguration = $apiConfiguration;
         $this->getOrder = $getOrder;
+        $this->acceptOrder = $acceptOrder;
         $this->orderRepository = $orderRepository;
         $this->createOrder = $createOrder;
     }
@@ -81,6 +86,9 @@ class Import
 
             $newOrderId = $this->createOrder->execute($vendiroOrder);
 
+
+            $this->acceptOrder->setRequestData(['order_ref' => '2000000044']);
+            $this->acceptOrder->call($order->getVendiroId());
             //Vendiro Accept API call if success
             //Vendiro Reject API call if failure
         }

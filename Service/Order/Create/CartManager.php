@@ -145,7 +145,7 @@ class CartManager
         $payment = $this->cart->getPayment();
 
         try {
-            $payment->importData(['method' => $method]); //Use Vendiro payment method?
+            $payment->importData(['method' => $method]);
         } catch (LocalizedException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
         }
