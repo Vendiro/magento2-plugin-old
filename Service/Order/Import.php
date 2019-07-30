@@ -31,20 +31,17 @@
  */
 namespace TIG\Vendiro\Service\Order;
 
+use TIG\Vendiro\Api\Data\OrderInterface;
 use TIG\Vendiro\Api\OrderRepositoryInterface;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
-use TIG\Vendiro\Webservices\Endpoints\AcceptOrder;
-use TIG\Vendiro\Webservices\Endpoints\GetOrders;
 
 class Import
 {
     /** @var ApiConfiguration */
     private $apiConfiguration;
 
-    /** @var GetOrders */
-    private $getOrder;
-
-    private $acceptOrder;
+    /** @var ApiStatusManager */
+    private $apiStatusManager;
 
     /** @var OrderRepositoryInterface */
     private $orderRepository;
@@ -54,20 +51,18 @@ class Import
 
     /**
      * @param ApiConfiguration         $apiConfiguration
-     * @param GetOrders                $getOrder
+     * @param ApiStatusManager         $apiStatusManager
      * @param OrderRepositoryInterface $orderRepository
      * @param Create                   $createOrder
      */
     public function __construct(
         ApiConfiguration $apiConfiguration,
-        GetOrders $getOrder,
-        AcceptOrder $acceptOrder,
+        ApiStatusManager $apiStatusManager,
         OrderRepositoryInterface $orderRepository,
         Create $createOrder
     ) {
         $this->apiConfiguration = $apiConfiguration;
-        $this->getOrder = $getOrder;
-        $this->acceptOrder = $acceptOrder;
+        $this->apiStatusManager = $apiStatusManager;
         $this->orderRepository = $orderRepository;
         $this->createOrder = $createOrder;
     }
@@ -78,19 +73,51 @@ class Import
             return;
         }
 
-        $orders = $this->orderRepository->getByStatus('New - Validated', 1);
+        $orders = $this->orderRepository->getNewOrders();
 
-        /** @var \TIG\Vendiro\Api\Data\OrderInterface $order */
         foreach ($orders as $order) {
-            $vendiroOrder = $this->getOrder->call($order->getVendiroId());
+            $this->createOrder($order);
+        }
+    }
 
+    /**
+     * @param OrderInterface $order
+     */
+    private function createOrder($order)
+    {
+        $vendiroId = $order->getVendiroId();
+
+        $vendiroOrder = $this->apiStatusManager->getOrders($vendiroId);
+
+        try {
             $newOrderId = $this->createOrder->execute($vendiroOrder);
 
+            $this->apiStatusManager->acceptOrder($vendiroId, $newOrderId);
 
-            $this->acceptOrder->setRequestData(['order_ref' => '2000000044']);
-            $this->acceptOrder->call($order->getVendiroId());
-            //Vendiro Accept API call if success
-            //Vendiro Reject API call if failure
+        } catch (\Exception $exception) {
+            $this->apiStatusManager->rejectOrder($vendiroId, 'Order could not be imported');
+        } finally {
+            //re-retrieve the Vendiro Order in order to get the updated data
+            $vendiroOrder = $this->apiStatusManager->getOrders($vendiroId);
+
+            $order->setOrderId($newOrderId);
+            $order->setStatus($vendiroOrder['status']['name']);
+            $this->orderRepository->save($order);
         }
+
+//        $newOrderId = $this->createOrder->execute($vendiroOrder);
+//
+//        if ($newOrderId !== false && $newOrderId !== null) {
+//            $this->apiStatusManager->acceptOrder($vendiroId, $newOrderId);
+//
+//            //re-retrieve the Vendiro Order in order to get the updated data
+//            $vendiroOrder = $this->apiStatusManager->getOrders($vendiroId);
+//
+//            $order->setOrderId($newOrderId);
+//            $order->setStatus($vendiroOrder['status']['name']);
+//            $this->orderRepository->save($order);
+//        } else {
+//            $this->apiStatusManager->rejectOrder($vendiroId, 'Order could not be imported');
+//        }
     }
 }

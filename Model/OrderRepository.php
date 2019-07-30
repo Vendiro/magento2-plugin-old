@@ -135,6 +135,14 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getNewOrders()
+    {
+        return $this->getByFieldWithValue('order_id', true, 1, 'null');
+    }
+
+    /**
      * @param OrderInterface $order
      *
      * @return bool

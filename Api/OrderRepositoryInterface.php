@@ -124,4 +124,9 @@ interface OrderRepositoryInterface
      * @return array
      */
     public function getAlreadyInsertedOrders($orderIds, $limit = 999);
+
+    /**
+     * @return array
+     */
+    public function getNewOrders();
 }
