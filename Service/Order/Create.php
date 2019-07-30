@@ -55,6 +55,7 @@ class Create
     /**
      * @param CartManager                $cart
      * @param ProductRepositoryInterface $productRepository
+     * @param DataObjectFactory          $dataObjectFactory
      * @param Log                        $logger
      */
     public function __construct(

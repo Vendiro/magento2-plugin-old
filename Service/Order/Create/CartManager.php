@@ -37,6 +37,7 @@ use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use TIG\Vendiro\Api\HistoryRepository;
 use TIG\Vendiro\Logging\Log;
 
 class CartManager
@@ -56,22 +57,28 @@ class CartManager
     /** @var CartInterface|\Magento\Quote\Model\Quote */
     private $cart;
 
+    /** @var HistoryRepository $historyRepository */
+    private $historyRepository;
+
     /**
      * @param StoreManagerInterface   $storeManager
      * @param CartManagementInterface $cartManagement
      * @param CartRepositoryInterface $cartRepository
      * @param Log                     $logger
+     * @param HistoryRepository       $historyRepository
      */
     public function __construct(
         StoreManagerInterface $storeManager,
         CartManagementInterface $cartManagement,
         CartRepositoryInterface $cartRepository,
-        Log $logger
+        Log $logger,
+        HistoryRepository $historyRepository
     ) {
         $this->storeManager = $storeManager;
         $this->cartManagement = $cartManagement;
         $this->cartRepository = $cartRepository;
         $this->logger = $logger;
+        $this->historyRepository = $historyRepository;
     }
 
     /**
@@ -166,6 +173,13 @@ class CartManager
         } catch (LocalizedException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
         }
+
+        $orderHistoryComment = $this->historyRepository->create();
+        $orderHistoryComment->setComment('Imported from Vendiro');
+        $orderHistoryComment->setParentId($orderId);
+        $orderHistoryComment->setStatus('pending');
+        $orderHistoryComment->setEntityName('order');
+        $this->historyRepository->save($orderHistoryComment);
 
         return $orderId;
     }
