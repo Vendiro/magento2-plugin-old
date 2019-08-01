@@ -33,6 +33,7 @@ namespace TIG\Vendiro\Service\Order;
 
 use TIG\Vendiro\Api\Data\OrderInterface;
 use TIG\Vendiro\Api\OrderRepositoryInterface;
+use TIG\Vendiro\Exception as VendiroException;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 
 class Import
@@ -86,38 +87,20 @@ class Import
     private function createOrder($order)
     {
         $vendiroId = $order->getVendiroId();
-
         $vendiroOrder = $this->apiStatusManager->getOrders($vendiroId);
+        $newOrderId = null;
 
         try {
             $newOrderId = $this->createOrder->execute($vendiroOrder);
 
             $this->apiStatusManager->acceptOrder($vendiroId, $newOrderId);
-
-        } catch (\Exception $exception) {
-            $this->apiStatusManager->rejectOrder($vendiroId, 'Order could not be imported');
-        } finally {
-            //re-retrieve the Vendiro Order in order to get the updated data
-            $vendiroOrder = $this->apiStatusManager->getOrders($vendiroId);
-
-            $order->setOrderId($newOrderId);
-            $order->setStatus($vendiroOrder['status']['name']);
-            $this->orderRepository->save($order);
+        } catch (VendiroException $exception) {
+            $this->apiStatusManager->rejectOrder($vendiroId, $exception->getMessage());
         }
 
-//        $newOrderId = $this->createOrder->execute($vendiroOrder);
-//
-//        if ($newOrderId !== false && $newOrderId !== null) {
-//            $this->apiStatusManager->acceptOrder($vendiroId, $newOrderId);
-//
-//            //re-retrieve the Vendiro Order in order to get the updated data
-//            $vendiroOrder = $this->apiStatusManager->getOrders($vendiroId);
-//
-//            $order->setOrderId($newOrderId);
-//            $order->setStatus($vendiroOrder['status']['name']);
-//            $this->orderRepository->save($order);
-//        } else {
-//            $this->apiStatusManager->rejectOrder($vendiroId, 'Order could not be imported');
-//        }
+        if ($newOrderId) {
+            $order->setOrderId($newOrderId);
+            $this->orderRepository->save($order);
+        }
     }
 }

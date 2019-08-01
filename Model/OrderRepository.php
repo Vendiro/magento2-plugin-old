@@ -139,7 +139,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      */
     public function getNewOrders()
     {
-        return $this->getByFieldWithValue('order_id', true, 1, 'null');
+        return $this->getByFieldWithValue('order_id', true, 10, 'null');
     }
 
     /**
