@@ -45,15 +45,9 @@ class Order extends AbstractModel implements OrderInterface
 {
     const FIELD_ORDER_ID = 'order_id';
     const FIELD_VENDIRO_ID = 'vendiro_id';
-    const FIELD_ORDER_REF = 'order_ref';
-    const FIELD_MARKETPLACE_ORDER_ID = 'marketplace_order_id';
-    const FIELD_ORDER_DATE = 'order_date';
-    const FIELD_FULFILMENT_BY_MARKETPLACE = 'fulfilment_by_marketplace';
-    const FIELD_CREATED_AT = 'created_at';
-    const FIELD_MARKETPLACE_NAME = 'marketplace_name';
     const FIELD_MARKETPLACE_REFERENCE = 'marketplace_reference';
     const FIELD_STATUS = 'status';
-    const FIELD_IMPORTED_AT = 'imported_at';
+    const FIELD_CREATED_AT = 'created_at';
 
     protected function _construct()
     {
@@ -99,114 +93,6 @@ class Order extends AbstractModel implements OrderInterface
     /**
      * @return int
      */
-    public function getOrderRef()
-    {
-        return $this->getData(self::FIELD_ORDER_REF);
-    }
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
-     */
-    public function setOrderRef($value)
-    {
-        return $this->setData(self::FIELD_ORDER_REF, $value);
-    }
-
-    /**
-     * @return int
-     */
-    public function getMarketplaceOrderId()
-    {
-        return $this->getData(self::FIELD_MARKETPLACE_ORDER_ID);
-    }
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
-     */
-    public function setMarketplaceOrderId($value)
-    {
-        return $this->setData(self::FIELD_MARKETPLACE_ORDER_ID, $value);
-    }
-
-    /**
-     * @return int
-     */
-    public function getOrderDate()
-    {
-        return $this->getData(self::FIELD_ORDER_DATE);
-    }
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
-     */
-    public function setOrderDate($value)
-    {
-        return $this->setData(self::FIELD_ORDER_DATE, $value);
-    }
-
-    /**
-     * @return int
-     */
-    public function getFulfilmentByMarketplace()
-    {
-        return $this->getData(self::FIELD_FULFILMENT_BY_MARKETPLACE);
-    }
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
-     */
-    public function setFulfilmentByMarketplace($value)
-    {
-        return $this->setData(self::FIELD_FULFILMENT_BY_MARKETPLACE, $value);
-    }
-
-    /**
-     * @return int
-     */
-    public function getCreatedAt()
-    {
-        return $this->getData(self::FIELD_CREATED_AT);
-    }
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
-     */
-    public function setCreatedAt($value)
-    {
-        return $this->setData(self::FIELD_CREATED_AT, $value);
-    }
-
-    /**
-     * @return int
-     */
-    public function getMarketplaceName()
-    {
-        return $this->getData(self::FIELD_MARKETPLACE_NAME);
-    }
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
-     */
-    public function setMarketplaceName($value)
-    {
-        return $this->setData(self::FIELD_MARKETPLACE_NAME, $value);
-    }
-
-    /**
-     * @return int
-     */
     public function getMarketplaceReference()
     {
         return $this->getData(self::FIELD_MARKETPLACE_REFERENCE);
@@ -243,9 +129,9 @@ class Order extends AbstractModel implements OrderInterface
     /**
      * @return string
      */
-    public function getImportedAt()
+    public function getCreatedAt()
     {
-        return $this->getData(self::FIELD_STATUS);
+        return $this->getData(self::FIELD_CREATED_AT);
     }
 
     /**
@@ -253,8 +139,8 @@ class Order extends AbstractModel implements OrderInterface
      *
      * @return \TIG\Vendiro\Api\Data\OrderInterface
      */
-    public function setImportedAt($value)
+    public function setCreatedAt($value)
     {
-        return $this->setData(self::FIELD_IMPORTED_AT, $value);
+        return $this->setData(self::FIELD_CREATED_AT, $value);
     }
 }

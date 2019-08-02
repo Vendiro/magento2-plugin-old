@@ -33,7 +33,7 @@
 
 namespace TIG\Vendiro\Service\Order;
 
-use Magento\Framework\Stdlib\DateTime\DateTime;
+use TIG\Vendiro\Api\Data\OrderInterface;
 use TIG\Vendiro\Api\OrderRepositoryInterface;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 use TIG\Vendiro\Webservices\Endpoints\GetOrders;
@@ -50,9 +50,6 @@ class Data
     /** @var OrderRepositoryInterface $orderRepository */
     private $orderRepository;
 
-    /** @var DateTime $date */
-    private $date;
-
     /** @var Log $logger */
     private $logger;
 
@@ -62,36 +59,31 @@ class Data
      * @param ApiConfiguration         $apiConfiguration
      * @param GetOrders                $getOrders
      * @param OrderRepositoryInterface $orderRepository
-     * @param DateTime                 $date
      * @param Log                      $logger
      */
     public function __construct(
         ApiConfiguration $apiConfiguration,
         GetOrders $getOrders,
         OrderRepositoryInterface $orderRepository,
-        DateTime $date,
         Log $logger
     ) {
         $this->apiConfiguration = $apiConfiguration;
         $this->getOrders = $getOrders;
         $this->orderRepository = $orderRepository;
-        $this->date = $date;
         $this->logger = $logger;
     }
 
+    /**
+     * @param $order
+     *
+     * @return OrderInterface
+     */
     private function createVendiroOrder($order)
     {
         $vendiroOrder = $this->orderRepository->create();
         $vendiroOrder->setVendiroId($order['id']);
-        $vendiroOrder->setOrderRef($order['order_ref']);
-        $vendiroOrder->setMarketplaceOrderId($order['marketplace_order_id']);
-        $vendiroOrder->setOrderDate($order['date_order']);
-        $vendiroOrder->setFulfilmentByMarketplace($order['fulfilment_by_marketplace']);
-        $vendiroOrder->setCreatedAt($order['created']);
-        $vendiroOrder->setMarketplaceName($order['marketplace']['name']);
         $vendiroOrder->setMarketplaceReference($order['marketplace']['reference']);
         $vendiroOrder->setStatus($order['status']['name']);
-        $vendiroOrder->setImportedAt($this->date->gmtDate());
 
         return $vendiroOrder;
     }
@@ -118,7 +110,7 @@ class Data
      */
     private function saveVendiroOrder($order, $valuesToSkip)
     {
-        if (!in_array($order['id'], $valuesToSkip)) {
+        if (in_array($order['id'], $valuesToSkip)) {
             return;
         }
 
@@ -127,7 +119,8 @@ class Data
         try {
             $this->orderRepository->save($vendiroOrder);
         } catch (\Exception $exception) {
-            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
+            $errorMessage = 'Import on Vendiro order #' . $order['id'] . ' went wrong: ' . $exception->getMessage();
+            $this->logger->critical($errorMessage);
         }
     }
 }

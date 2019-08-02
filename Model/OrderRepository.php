@@ -127,9 +127,16 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      */
     public function getAlreadyInsertedOrders($orderIds, $limit = 999)
     {
+        $insertedOrders = [];
         $list = $this->getByFieldInArray('vendiro_id', $orderIds, $limit);
 
-        $insertedOrders = array_diff($orderIds, array_keys($list));
+        if (!is_array($list)) {
+            return $insertedOrders;
+        }
+
+        foreach ($list as $dbOrder) {
+            $insertedOrders[] = $dbOrder->getVendiroId();
+        }
 
         return $insertedOrders;
     }
