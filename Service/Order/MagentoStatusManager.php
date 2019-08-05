@@ -83,4 +83,22 @@ class MagentoStatusManager
             $this->logger->critical('Vendiro add history comment went wrong: ' . $exception->getMessage());
         }
     }
+
+    /**
+     * @param int    $orderId
+     * @param string $state
+     */
+    public function setNewState($orderId, $state)
+    {
+        /** @var \Magento\Sales\Model\Order $order */
+        $order = $this->orderRepository->get($orderId);
+        $orderConfig = $order->getConfig();
+        $defaultStatus = $orderConfig->getStateDefaultStatus($state);
+
+        $order->setState($state);
+        $order->setStatus($defaultStatus);
+        $order->addStatusToHistory($order->getStatus());
+
+        $this->orderRepository->save($order);
+    }
 }

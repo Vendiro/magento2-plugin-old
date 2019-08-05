@@ -32,6 +32,7 @@
 namespace TIG\Vendiro\Service\Order;
 
 use Magento\Framework\DataObject\Factory as DataObjectFactory;
+use Magento\Sales\Model\Order;
 use TIG\Vendiro\Exception as VendiroException;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Payment\Vendiro;
@@ -170,5 +171,9 @@ class Create
             $vendiroOrder['marketplace']['name'] . " ID: " . $vendiroOrder['marketplace_order_id'];
 
         $this->magentoStatusManager->addHistoryComment($magentoOrderId, $comment);
+
+        if ($vendiroOrder['fulfilment_by_marketplace'] == 'true') {
+            $this->magentoStatusManager->setNewState($magentoOrderId, Order::STATE_COMPLETE);
+        }
     }
 }
