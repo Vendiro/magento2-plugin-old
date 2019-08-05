@@ -55,6 +55,8 @@
             <stability />
             <supported_magento_version>2.2.0 - 2.2.9, 2.3.0 - 2.3.2</supported_magento_version>
 
+            <new_orders_limit>10</new_orders_limit>
+
             <endpoints>
                 <api_base_url>https://api.vendiro.nl/client/</api_base_url>
                 <test_api_base_url>https://pre-prod-api.vendiro.nl/client/</test_api_base_url>

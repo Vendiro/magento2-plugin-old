@@ -54,15 +54,6 @@ interface OrderRepositoryInterface
     public function getById($entityId);
 
     /**
-     * Retrieve a list of Vendiro orders.
-     *
-     * @api
-     * @param \Magento\Framework\Api\SearchCriteriaInterface $criteria
-     * @return \Magento\Framework\Api\SearchResultsInterface
-     */
-    public function getList(\Magento\Framework\Api\SearchCriteriaInterface $criteria);
-
-    /**
      * Delete a specific Venduro order.
      *
      * @api
@@ -91,17 +82,6 @@ interface OrderRepositoryInterface
     public function create(array $data = []);
 
     /**
-     * Get by field with value
-     *
-     * @api
-     * @param string $field
-     * @param string $value
-     *
-     * @return OrderInterface
-     */
-    public function getByFieldWithValue($field, $value);
-
-    /**
      * @param int $orderId
      * @param int $limit
      *
@@ -124,4 +104,9 @@ interface OrderRepositoryInterface
      * @return array
      */
     public function getAlreadyInsertedOrders($orderIds, $limit = 999);
+
+    /**
+     * @return array
+     */
+    public function getNewOrders();
 }
