@@ -35,9 +35,13 @@ use TIG\Vendiro\Api\Data\OrderInterface;
 use TIG\Vendiro\Api\OrderRepositoryInterface;
 use TIG\Vendiro\Exception as VendiroException;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
+use TIG\Vendiro\Model\Config\Provider\QueueStatus;
 
 class Import
 {
+    /** @var QueueStatus */
+    private $queueStatus;
+
     /** @var ApiConfiguration */
     private $apiConfiguration;
 
@@ -51,17 +55,20 @@ class Import
     private $createOrder;
 
     /**
+     * @param QueueStatus              $queueStatus
      * @param ApiConfiguration         $apiConfiguration
      * @param ApiStatusManager         $apiStatusManager
      * @param OrderRepositoryInterface $orderRepository
      * @param Create                   $createOrder
      */
     public function __construct(
+        QueueStatus $queueStatus,
         ApiConfiguration $apiConfiguration,
         ApiStatusManager $apiStatusManager,
         OrderRepositoryInterface $orderRepository,
         Create $createOrder
     ) {
+        $this->queueStatus = $queueStatus;
         $this->apiConfiguration = $apiConfiguration;
         $this->apiStatusManager = $apiStatusManager;
         $this->orderRepository = $orderRepository;
@@ -100,6 +107,7 @@ class Import
 
         if ($newOrderId) {
             $order->setOrderId($newOrderId);
+            $order->setStatus($this->queueStatus->getImportedStatus());
             $this->orderRepository->save($order);
         }
     }
