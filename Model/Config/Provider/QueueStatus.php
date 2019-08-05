@@ -1,0 +1,81 @@
+<?php
+/**
+ *
+ *          ..::..
+ *     ..::::::::::::..
+ *   ::'''''':''::'''''::
+ *   ::..  ..:  :  ....::
+ *   ::::  :::  :  :   ::
+ *   ::::  :::  :  ''' ::
+ *   ::::..:::..::.....::
+ *     ''::::::::::::''
+ *          ''::''
+ *
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Creative Commons License.
+ * It is available through the world-wide-web at this URL:
+ * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ * If you are unable to obtain it through the world-wide-web, please send an email
+ * to support@tig.nl so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please contact support@tig.nl for more information.
+ *
+ * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
+ * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
+ */
+namespace TIG\Vendiro\Model\Config\Provider;
+
+class QueueStatus
+{
+    const QUEUE_STATUS_NEW              = 'new';
+    const QUEUE_STATUS_IMPORTED         = 'imported';
+    const QUEUE_STATUS_SHIPMENT_CREATED = 'shipment_created';
+    const QUEUE_STATUS_COMPLETE         = 'complete';
+    const QUEUE_STATUS_FAILED           = 'failed';
+
+    /**
+     * @return string
+     */
+    public function getNewStatus()
+    {
+        return static::QUEUE_STATUS_NEW;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImportedStatus()
+    {
+        return static::QUEUE_STATUS_IMPORTED;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShipmentCreatedStatus()
+    {
+        return static::QUEUE_STATUS_SHIPMENT_CREATED;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompleteStatus()
+    {
+        return static::QUEUE_STATUS_COMPLETE;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFailedStatus()
+    {
+        return static::QUEUE_STATUS_FAILED;
+    }
+}
