@@ -34,26 +34,35 @@ namespace TIG\Vendiro\Model;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Model\ScopeInterface;
 use TIG\Vendiro\Api\Data\OrderInterface;
 use TIG\Vendiro\Api\OrderRepositoryInterface;
 use TIG\Vendiro\Model\ResourceModel\Order\CollectionFactory;
 
 class OrderRepository extends AbstractRepository implements OrderRepositoryInterface
 {
+    const VENDIRO_NEW_ORDERS_LIMIT = 'tig_vendiro/new_orders_limit';
+
+    /** @var ScopeConfigInterface */
+    private $scopeConfig;
+
     /**
      * @var OrderFactory $orderFactory
      */
     private $orderFactory;
 
     public function __construct(
+        ScopeConfigInterface $scopeConfig,
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         CollectionFactory $orderCollectionFactory,
         OrderFactory $orderFactory
     ) {
+        $this->scopeConfig = $scopeConfig;
         $this->orderFactory = $orderFactory;
 
         parent::__construct($searchResultsFactory, $searchCriteriaBuilder, $orderCollectionFactory);
@@ -135,6 +144,16 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         $insertedOrders = array_diff($orderIds, array_keys($list));
 
         return $insertedOrders;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getNewOrders()
+    {
+        $newOrdersLimit = $this->scopeConfig->getValue(self::VENDIRO_NEW_ORDERS_LIMIT, ScopeInterface::SCOPE_STORE);
+
+        return $this->getByFieldWithValue('order_id', true, $newOrdersLimit, 'null');
     }
 
     /**

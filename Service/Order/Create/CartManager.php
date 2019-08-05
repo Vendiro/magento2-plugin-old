@@ -33,6 +33,7 @@ namespace TIG\Vendiro\Service\Order\Create;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
@@ -83,6 +84,8 @@ class CartManager
 
     /**
      * @param string $storeCode
+     *
+     * @throws \TIG\Vendiro\Exception
      */
     public function createCart($storeCode = 'default')
     {
@@ -91,6 +94,11 @@ class CartManager
 
             $cartId = $this->cartManagement->createEmptyCart();
             $this->cart = $this->cartRepository->get($cartId);
+        } catch (NoSuchEntityException $exception) {
+            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
+
+            $errorMessage = __("The order could not be exported. The store that was requested wasn't found.");
+            throw new \TIG\Vendiro\Exception($errorMessage);
         } catch (LocalizedException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
             return;
@@ -152,7 +160,7 @@ class CartManager
         $payment = $this->cart->getPayment();
 
         try {
-            $payment->importData(['method' => $method]); //Use Vendiro payment method?
+            $payment->importData(['method' => $method]);
         } catch (LocalizedException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
         }
