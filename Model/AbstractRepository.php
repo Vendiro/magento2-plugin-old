@@ -63,15 +63,16 @@ abstract class AbstractRepository
     }
 
     /**
-     * @param $field
-     * @param $value
-     * @param int $limit
+     * @param        $field
+     * @param        $value
+     * @param int    $limit
+     * @param string $conditionType
      *
      * @return AbstractModel|array|null
      */
-    public function getByFieldWithValue($field, $value, $limit = 1)
+    public function getByFieldWithValue($field, $value, $limit = 1, $conditionType = 'eq')
     {
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter($field, $value);
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter($field, $value, $conditionType);
         $searchCriteria->setPageSize($limit);
 
         /** @var \Magento\Framework\Api\SearchResults $list */

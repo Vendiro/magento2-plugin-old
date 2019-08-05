@@ -31,9 +31,8 @@
  */
 namespace TIG\Vendiro\Service\Order;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\DataObject\Factory as DataObjectFactory;
-use Magento\Framework\Exception\NoSuchEntityException;
+use TIG\Vendiro\Exception as VendiroException;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Payment\Vendiro;
 use TIG\Vendiro\Service\Order\Create\CartManager;
@@ -43,8 +42,8 @@ class Create
     /** @var CartManager */
     private $cart;
 
-    /** @var ProductRepositoryInterface */
-    private $productRepository;
+    /** @var Product */
+    private $product;
 
     /** @var DataObjectFactory */
     private $dataObjectFactory;
@@ -53,18 +52,19 @@ class Create
     private $logger;
 
     /**
-     * @param CartManager                $cart
-     * @param ProductRepositoryInterface $productRepository
-     * @param Log                        $logger
+     * @param CartManager       $cart
+     * @param Product           $product
+     * @param DataObjectFactory $dataObjectFactory
+     * @param Log               $logger
      */
     public function __construct(
         CartManager $cart,
-        ProductRepositoryInterface $productRepository,
+        Product $product,
         DataObjectFactory $dataObjectFactory,
         Log $logger
     ) {
         $this->cart = $cart;
-        $this->productRepository = $productRepository;
+        $this->product = $product;
         $this->dataObjectFactory = $dataObjectFactory;
         $this->logger = $logger;
     }
@@ -73,6 +73,7 @@ class Create
      * @param $vendiroOrder
      *
      * @return int
+     * @throws VendiroException
      */
     public function execute($vendiroOrder)
     {
@@ -80,7 +81,7 @@ class Create
         $this->cart->createCart($storeCode);
 
         foreach ($vendiroOrder['orderlines'] as $apiProduct) {
-            $this->addProducts($apiProduct);
+            $this->addProducts($apiProduct, $storeCode);
         }
 
         $this->cart->addAddress($vendiroOrder['invoice_address'], 'Billing');
@@ -95,22 +96,22 @@ class Create
 
     /**
      * @param $apiProduct
+     * @param $storeId
+     *
+     * @throws VendiroException
      */
-    private function addProducts($apiProduct)
+    private function addProducts($apiProduct, $storeCode = null)
     {
         $data = [
             'qty' => (int)$apiProduct['amount'],
             'custom_price' => $apiProduct['value'],
         ];
 
-        try {
-            $product = $this->productRepository->get($apiProduct['sku']);
-            $quoteProductData = $this->dataObjectFactory->create($data);
+        $quoteProductData = $this->dataObjectFactory->create($data);
 
-            $this->cart->addProduct($product, $quoteProductData);
-        } catch (NoSuchEntityException $exception) {
-            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
-        }
+        $product = $this->product->getBySku($apiProduct['sku'], $storeCode);
+
+        $this->cart->addProduct($product, $quoteProductData);
     }
 
     /**
