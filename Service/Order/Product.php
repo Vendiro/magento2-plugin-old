@@ -71,14 +71,18 @@ class Product
         $product = $this->loadProduct($sku);
 
         if (!$product->getId()) {
-            $errorMessage = __("The order could not be exported. The product that was requested wasn't found.");
+            $errorMessage = __(
+                "The order could not be exported from Vendiro. The product that was requested wasn't found."
+            );
             throw new VendiroException($errorMessage);
         }
 
         $qty = $this->stockState->getStockQty($product->getId(), $store);
 
         if ($qty <= 0) {
-            $errorMessage = __("The order could not be exported. The product that was requested is not in stock.");
+            $errorMessage = __(
+                "The order could not be exported from Vendiro. The product that was requested is not in stock."
+            );
             throw new VendiroException($errorMessage);
         }
 
@@ -98,7 +102,9 @@ class Product
         } catch (NoSuchEntityException $exception) {
             $this->logger->critical('Vendiro load product went wrong: ' . $exception->getMessage());
 
-            $errorMessage = __("The order could not be exported. The product that was requested wasn't found.");
+            $errorMessage = __(
+                "The order could not be exported from Vendiro. The product that was requested wasn't found."
+            );
             throw new VendiroException($errorMessage);
         }
 
