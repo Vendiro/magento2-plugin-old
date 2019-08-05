@@ -42,6 +42,9 @@ class Create
     /** @var CartManager */
     private $cart;
 
+    /** @var MagentoStatusManager */
+    private $magentoStatusManager;
+
     /** @var Product */
     private $product;
 
@@ -52,18 +55,21 @@ class Create
     private $logger;
 
     /**
-     * @param CartManager       $cart
-     * @param Product           $product
-     * @param DataObjectFactory $dataObjectFactory
-     * @param Log               $logger
+     * @param CartManager          $cart
+     * @param MagentoStatusManager $magentoStatusManager
+     * @param Product              $product
+     * @param DataObjectFactory    $dataObjectFactory
+     * @param Log                  $logger
      */
     public function __construct(
         CartManager $cart,
+        MagentoStatusManager $magentoStatusManager,
         Product $product,
         DataObjectFactory $dataObjectFactory,
         Log $logger
     ) {
         $this->cart = $cart;
+        $this->magentoStatusManager = $magentoStatusManager;
         $this->product = $product;
         $this->dataObjectFactory = $dataObjectFactory;
         $this->logger = $logger;
@@ -84,14 +90,18 @@ class Create
             $this->addProducts($apiProduct, $storeCode);
         }
 
-        $this->cart->addAddress($vendiroOrder['invoice_address'], 'Billing');
-        $this->cart->addAddress($vendiroOrder['delivery_address'], 'Shipping');
+        $this->addAddresses($vendiroOrder['invoice_address'], $vendiroOrder['delivery_address']);
 
         $shippingCost = $vendiroOrder['shipping_cost'] + $vendiroOrder['administration_cost'];
-        $this->cart->setShippingMethod('tig_vendiro_shipping', $shippingCost);
-        $this->cart->setPaymentMethod(Vendiro::PAYMENT_CODE);
+        $this->setMethods($shippingCost);
 
-        return $this->placeOrder();
+        $newOrderId = $this->placeOrder();
+
+        if ($newOrderId) {
+            $this->updateOrderCommentAndStatus($newOrderId, $vendiroOrder);
+        }
+
+        return $newOrderId;
     }
 
     /**
@@ -115,6 +125,25 @@ class Create
     }
 
     /**
+     * @param array $billingAddress
+     * @param array $shippingAddress
+     */
+    private function addAddresses($billingAddress, $shippingAddress)
+    {
+        $this->cart->addAddress($billingAddress, 'Billing');
+        $this->cart->addAddress($shippingAddress, 'Shipping');
+    }
+
+    /**
+     * @param int|float|string $shippingCost
+     */
+    private function setMethods($shippingCost)
+    {
+        $this->cart->setShippingMethod('tig_vendiro_shipping', $shippingCost);
+        $this->cart->setPaymentMethod(Vendiro::PAYMENT_CODE);
+    }
+
+    /**
      * @return bool|int
      */
     private function placeOrder()
@@ -128,5 +157,18 @@ class Create
         }
 
         return $newOrderId;
+    }
+
+    /**
+     * @param int $magentoOrderId
+     * @param     $vendiroOrder
+     */
+    private function updateOrderCommentAndStatus($magentoOrderId, $vendiroOrder)
+    {
+        $comment = "Order via Vendiro<br>" .
+            "Marketplace: " . $vendiroOrder['marketplace']['name'] . "<br/>" .
+            $vendiroOrder['marketplace']['name'] . " ID: " . $vendiroOrder['marketplace_order_id'];
+
+        $this->magentoStatusManager->addHistoryComment($magentoOrderId, $comment);
     }
 }
