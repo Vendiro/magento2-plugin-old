@@ -35,6 +35,7 @@ use TIG\Vendiro\Api\Data\OrderInterface;
 use TIG\Vendiro\Api\OrderRepositoryInterface;
 use TIG\Vendiro\Exception as VendiroException;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
+use TIG\Vendiro\Model\Config\Provider\QueueStatus;
 
 class Import
 {
@@ -100,6 +101,7 @@ class Import
 
         if ($newOrderId) {
             $order->setOrderId($newOrderId);
+            $order->setStatus(QueueStatus::QUEUE_STATUS_IMPORTED);
             $this->orderRepository->save($order);
         }
     }

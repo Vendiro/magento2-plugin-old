@@ -71,78 +71,6 @@ interface OrderInterface
     public function setVendiroId($value);
 
     /**
-     * @return int
-     */
-    public function getOrderRef();
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
-     */
-    public function setOrderRef($value);
-
-    /**
-     * @return string
-     */
-    public function getMarketplaceOrderId();
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
-     */
-    public function setMarketplaceOrderId($value);
-
-    /**
-     * @return string
-     */
-    public function getOrderDate();
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
-     */
-    public function setOrderDate($value);
-
-    /**
-     * @return string
-     */
-    public function getFulfilmentByMarketplace();
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
-     */
-    public function setFulfilmentByMarketplace($value);
-
-    /**
-     * @return string
-     */
-    public function getCreatedAt();
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
-     */
-    public function setCreatedAt($value);
-
-    /**
-     * @return string
-     */
-    public function getMarketplaceName();
-
-    /**
-     * @param $value
-     *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
-     */
-    public function setMarketplaceName($value);
-
-    /**
      * @return string
      */
     public function getMarketplaceReference();
@@ -169,12 +97,12 @@ interface OrderInterface
     /**
      * @return string
      */
-    public function getImportedAt();
+    public function getCreatedAt();
 
     /**
      * @param $value
      *
      * @return \TIG\Vendiro\Api\Data\OrderInterface
      */
-    public function setImportedAt($value);
+    public function setCreatedAt($value);
 }
