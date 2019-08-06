@@ -110,6 +110,9 @@ class CartManager
     {
         try {
             $this->cart->addProduct($product, $quantity);
+
+            $quoteItem = $this->cart->getItemByProduct($product);
+            $quoteItem->setNoDiscount(1);
         } catch (LocalizedException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
         }
