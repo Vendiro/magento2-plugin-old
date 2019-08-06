@@ -38,44 +38,4 @@ class QueueStatus
     const QUEUE_STATUS_SHIPMENT_CREATED = 'shipment_created';
     const QUEUE_STATUS_COMPLETE         = 'complete';
     const QUEUE_STATUS_FAILED           = 'failed';
-
-    /**
-     * @return string
-     */
-    public function getNewStatus()
-    {
-        return static::QUEUE_STATUS_NEW;
-    }
-
-    /**
-     * @return string
-     */
-    public function getImportedStatus()
-    {
-        return static::QUEUE_STATUS_IMPORTED;
-    }
-
-    /**
-     * @return string
-     */
-    public function getShipmentCreatedStatus()
-    {
-        return static::QUEUE_STATUS_SHIPMENT_CREATED;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCompleteStatus()
-    {
-        return static::QUEUE_STATUS_COMPLETE;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFailedStatus()
-    {
-        return static::QUEUE_STATUS_FAILED;
-    }
 }

@@ -51,9 +51,6 @@ class Data
     /** @var OrderRepositoryInterface $orderRepository */
     private $orderRepository;
 
-    /** @var QueueStatus */
-    private $queueStatus;
-
     /** @var Log $logger */
     private $logger;
 
@@ -63,20 +60,17 @@ class Data
      * @param ApiConfiguration         $apiConfiguration
      * @param GetOrders                $getOrders
      * @param OrderRepositoryInterface $orderRepository
-     * @param QueueStatus              $queueStatus
      * @param Log                      $logger
      */
     public function __construct(
         ApiConfiguration $apiConfiguration,
         GetOrders $getOrders,
         OrderRepositoryInterface $orderRepository,
-        QueueStatus $queueStatus,
         Log $logger
     ) {
         $this->apiConfiguration = $apiConfiguration;
         $this->getOrders = $getOrders;
         $this->orderRepository = $orderRepository;
-        $this->queueStatus = $queueStatus;
         $this->logger = $logger;
     }
 
@@ -90,7 +84,7 @@ class Data
         $vendiroOrder = $this->orderRepository->create();
         $vendiroOrder->setVendiroId($order['id']);
         $vendiroOrder->setMarketplaceReference($order['marketplace']['reference']);
-        $vendiroOrder->setStatus($this->queueStatus->getNewStatus());
+        $vendiroOrder->setStatus(QueueStatus::QUEUE_STATUS_NEW);
 
         return $vendiroOrder;
     }
