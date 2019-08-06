@@ -172,7 +172,7 @@ class Create
 
         $this->magentoStatusManager->addHistoryComment($magentoOrderId, $comment);
 
-        if ($vendiroOrder['fulfilment_by_marketplace'] == 'true') {
+        if (isset($vendiroOrder['fulfilment_by_marketplace']) && $vendiroOrder['fulfilment_by_marketplace'] == 'true') {
             $this->magentoStatusManager->setNewState($magentoOrderId, Order::STATE_COMPLETE);
         }
     }
