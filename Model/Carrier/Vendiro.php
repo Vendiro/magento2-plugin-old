@@ -42,6 +42,8 @@ use Psr\Log\LoggerInterface;
 
 class Vendiro extends AbstractCarrier implements CarrierInterface
 {
+    const SHIPPING_CARRIER_METHOD = 'tig_vendiro_shipping';
+
     // @codingStandardsIgnoreLine
     protected $_code = 'tig_vendiro';
 
