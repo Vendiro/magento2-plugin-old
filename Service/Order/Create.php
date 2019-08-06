@@ -35,7 +35,8 @@ use Magento\Framework\DataObject\Factory as DataObjectFactory;
 use Magento\Sales\Model\Order;
 use TIG\Vendiro\Exception as VendiroException;
 use TIG\Vendiro\Logging\Log;
-use TIG\Vendiro\Model\Payment\Vendiro;
+use TIG\Vendiro\Model\Carrier\Vendiro as VendiroCarrier;
+use TIG\Vendiro\Model\Payment\Vendiro as VendiroPayment;
 use TIG\Vendiro\Service\Order\Create\CartManager;
 
 class Create
@@ -43,8 +44,8 @@ class Create
     /** @var CartManager */
     private $cart;
 
-    /** @var MagentoStatusManager */
-    private $magentoStatusManager;
+    /** @var OrderStatusManager */
+    private $orderStatusManager;
 
     /** @var Product */
     private $product;
@@ -57,20 +58,20 @@ class Create
 
     /**
      * @param CartManager          $cart
-     * @param MagentoStatusManager $magentoStatusManager
+     * @param OrderStatusManager  $orderStatusManager
      * @param Product              $product
      * @param DataObjectFactory    $dataObjectFactory
      * @param Log                  $logger
      */
     public function __construct(
         CartManager $cart,
-        MagentoStatusManager $magentoStatusManager,
+        OrderStatusManager $orderStatusManager,
         Product $product,
         DataObjectFactory $dataObjectFactory,
         Log $logger
     ) {
         $this->cart = $cart;
-        $this->magentoStatusManager = $magentoStatusManager;
+        $this->orderStatusManager = $orderStatusManager;
         $this->product = $product;
         $this->dataObjectFactory = $dataObjectFactory;
         $this->logger = $logger;
@@ -140,8 +141,8 @@ class Create
      */
     private function setMethods($shippingCost)
     {
-        $this->cart->setShippingMethod('tig_vendiro_shipping', $shippingCost);
-        $this->cart->setPaymentMethod(Vendiro::PAYMENT_CODE);
+        $this->cart->setShippingMethod(VendiroCarrier::SHIPPING_CARRIER_METHOD, $shippingCost);
+        $this->cart->setPaymentMethod(VendiroPayment::PAYMENT_CODE);
     }
 
     /**
@@ -170,10 +171,10 @@ class Create
             "Marketplace: " . $vendiroOrder['marketplace']['name'] . "<br/>" .
             $vendiroOrder['marketplace']['name'] . " ID: " . $vendiroOrder['marketplace_order_id'];
 
-        $this->magentoStatusManager->addHistoryComment($magentoOrderId, $comment);
+        $this->orderStatusManager->addHistoryComment($magentoOrderId, $comment);
 
         if (isset($vendiroOrder['fulfilment_by_marketplace']) && $vendiroOrder['fulfilment_by_marketplace'] == 'true') {
-            $this->magentoStatusManager->setNewState($magentoOrderId, Order::STATE_COMPLETE);
+            $this->orderStatusManager->setNewState($magentoOrderId, Order::STATE_COMPLETE);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace TIG\Vendiro\Test\Unit\Service\Order;
 
 use Magento\Sales\Model\Order;
 use TIG\Vendiro\Service\Order\Create;
-use TIG\Vendiro\Service\Order\MagentoStatusManager;
+use TIG\Vendiro\Service\Order\OrderStatusManager;
 use TIG\Vendiro\Test\TestCase;
 
 class CreateTest extends TestCase
@@ -90,7 +90,7 @@ class CreateTest extends TestCase
      */
     public function testUpdateOrderCommentAndStatus($magentoOrderId, $vendiroOrderData, $expectedComment, $expectedFulfillment)
     {
-        $statusManagerMock = $this->getFakeMock(MagentoStatusManager::class)
+        $statusManagerMock = $this->getFakeMock(OrderStatusManager::class)
             ->setMethods(['addHistoryComment', 'setNewState'])
             ->getMock();
         $statusManagerMock->expects($this->once())
@@ -100,7 +100,7 @@ class CreateTest extends TestCase
             ->method('setNewState')
             ->with($magentoOrderId, Order::STATE_COMPLETE);
 
-        $instance = $this->getInstance(['magentoStatusManager' => $statusManagerMock]);
+        $instance = $this->getInstance(['orderStatusManager' => $statusManagerMock]);
         $this->invokeArgs('updateOrderCommentAndStatus', [$magentoOrderId, $vendiroOrderData], $instance);
     }
 }

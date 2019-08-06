@@ -36,7 +36,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Order\Status\HistoryRepository;
 
-class MagentoStatusManager
+class OrderStatusManager
 {
     /** @var OrderRepositoryInterface */
     private $orderRepository;
