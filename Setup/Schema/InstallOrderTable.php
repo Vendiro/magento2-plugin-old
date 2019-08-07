@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  *
  *          ..::..
@@ -30,13 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="TIG_Vendiro" setup_version="1.0.0">
-        <sequence>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Payment"/>
-            <module name="Magento_CatalogInventory"/>
-        </sequence>
-    </module>
-</config>
+namespace TIG\Vendiro\Setup\Schema;
+
+use Magento\Framework\DB\Ddl\Table;
+use TIG\Vendiro\Setup\AbstractTableInstaller;
+
+class InstallOrderTable extends AbstractTableInstaller
+{
+    const TABLE_NAME = 'tig_vendiro_order';
+
+    /**
+     * @return void
+     * @throws \Zend_Db_Exception
+     * @codingStandardsIgnoreLine
+     */
+    // @codingStandardsIgnoreLine
+    protected function defineTable()
+    {
+        $this->addEntityId();
+        $this->addInt('order_id', 'Order ID');
+        $this->addInt('vendiro_id', 'Vendiro ID');
+        $this->addText('marketplace_reference', 'Marketplace reference', 32, false);
+        $this->addText('status', 'Status', 32, false);
+        $this->addTimestamp('created_at', 'Created at', false, Table::TIMESTAMP_INIT);
+        $this->addIndex('vendiro_id');
+    }
+}

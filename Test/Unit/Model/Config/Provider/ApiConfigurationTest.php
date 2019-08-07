@@ -33,6 +33,7 @@ namespace TIG\Vendiro\Test\Unit\Model\Config\Provider;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
+use TIG\Vendiro\Model\Config\Provider\General\Configuration;
 use TIG\Vendiro\Test\TestCase;
 
 class ApiConfigurationTest extends TestCase
@@ -67,5 +68,103 @@ class ApiConfigurationTest extends TestCase
         $instance = $this->getInstance(['scopeConfig' => $scopeConfigMock]);
         $result = $instance->getTestApiBaseUrl();
         $this->assertEquals('some test url', $result);
+    }
+
+    /**
+     * @return array
+     */
+    public function vendiroConfigProvider()
+    {
+        return [
+            'extension enabled and vendiro config enabled' => [
+                true,
+                true,
+                true
+            ],
+            'extension disabled and vendiro config enabled' => [
+                false,
+                true,
+                false
+            ],
+            'extension enabled and vendiro config disabled' => [
+                true,
+                false,
+                false
+            ],
+            'extension disabled and vendiro config disabled' => [
+                false,
+                false,
+                false
+            ],
+        ];
+    }
+
+    /**
+     * @param $extensionEnabled
+     * @param $configEnabled
+     * @param $expect
+     *
+     * @dataProvider vendiroConfigProvider
+     */
+    public function testCanImportOrders($extensionEnabled, $configEnabled, $expect)
+    {
+        $vendiroConfigMock = $this->getFakeMock(Configuration::class)
+            ->setMethods(['isEnabled', 'isOrderImportEnabled'])
+            ->getMock();
+        $vendiroConfigMock->expects($this->once())->method('isEnabled')->willReturn($extensionEnabled);
+        $vendiroConfigMock->expects($this->exactly((int)$extensionEnabled))
+            ->method('isOrderImportEnabled')
+            ->willReturn($configEnabled);
+
+        $instance = $this->getInstance(['configuration' => $vendiroConfigMock]);
+        $result = $instance->canImportOrders();
+
+        $this->assertEquals($expect, $result);
+    }
+
+    /**
+     * @param $extensionEnabled
+     * @param $configEnabled
+     * @param $expect
+     *
+     * @dataProvider vendiroConfigProvider
+     */
+    public function testCanRegisterShipments($extensionEnabled, $configEnabled, $expect)
+    {
+        $vendiroConfigMock = $this->getFakeMock(Configuration::class)
+            ->setMethods(['isEnabled', 'isRegisterShipmentEnabled'])
+            ->getMock();
+        $vendiroConfigMock->expects($this->once())->method('isEnabled')->willReturn($extensionEnabled);
+        $vendiroConfigMock->expects($this->exactly((int)$extensionEnabled))
+            ->method('isRegisterShipmentEnabled')
+            ->willReturn($configEnabled);
+
+        $instance = $this->getInstance(['configuration' => $vendiroConfigMock]);
+        $result = $instance->canRegisterShipments();
+
+        $this->assertEquals($expect, $result);
+    }
+
+    /**
+     * @param $extensionEnabled
+     * @param $configEnabled
+     * @param $expect
+     *
+     * @dataProvider vendiroConfigProvider
+     */
+    public function testCanUpdateInventory($extensionEnabled, $configEnabled, $expect)
+    {
+        $vendiroConfigMock = $this->getFakeMock(Configuration::class)
+            ->setMethods(['isEnabled', 'isUpdateInventoryEnabled'])
+            ->getMock();
+        $vendiroConfigMock->expects($this->once())->method('isEnabled')->willReturn($extensionEnabled);
+        $vendiroConfigMock->expects($this->exactly((int)$extensionEnabled))
+            ->method('isUpdateInventoryEnabled')
+            ->willReturn($configEnabled);
+
+        $instance = $this->getInstance(['configuration' => $vendiroConfigMock]);
+        $result = $instance->canUpdateInventory();
+
+        $this->assertEquals($expect, $result);
     }
 }

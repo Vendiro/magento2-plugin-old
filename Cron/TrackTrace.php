@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  *
  *          ..::..
@@ -19,7 +18,7 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
+ * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
@@ -30,13 +29,38 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="TIG_Vendiro" setup_version="1.0.0">
-        <sequence>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Payment"/>
-            <module name="Magento_CatalogInventory"/>
-        </sequence>
-    </module>
-</config>
+
+namespace TIG\Vendiro\Cron;
+
+use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
+use TIG\Vendiro\Service\TrackTrace\Data;
+
+class TrackTrace
+{
+    /** @var Data $orderService  */
+    private $orderService;
+
+    /** @var ApiConfiguration */
+    private $apiConfiguration;
+
+    /**
+     * @param Data             $orderService
+     * @param ApiConfiguration $apiConfiguration
+     */
+    public function __construct(
+        Data $orderService,
+        ApiConfiguration $apiConfiguration
+    ) {
+        $this->orderService = $orderService;
+        $this->apiConfiguration = $apiConfiguration;
+    }
+
+    public function registerShipments()
+    {
+        if (!$this->apiConfiguration->canRegisterShipments()) {
+            return;
+        }
+
+        $this->orderService->get();
+    }
+}

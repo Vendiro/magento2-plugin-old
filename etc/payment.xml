@@ -1,5 +1,5 @@
-<?php
-/**
+<?xml version="1.0"?>
+<!--
  *
  *          ..::..
  *     ..::::::::::::..
@@ -28,43 +28,12 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- */
-namespace TIG\Vendiro\Webservices\Endpoints;
-
-interface EndpointInterface
-{
-    /**
-     * @return mixed
-     */
-    public function call();
-
-    /**
-     * @return string
-     */
-    public function getEndpointUrl();
-
-    /**
-     * @return string
-     */
-    public function getMethod();
-
-    /**
-     * @param string $urlArguments
-     */
-    public function setUrlArguments($urlArguments);
-
-    /**
-     * @return array
-     */
-    public function getUrlArguments();
-
-    /**
-     * @param array $requestData
-     */
-    public function setRequestData(array $requestData);
-
-    /**
-     * @return array
-     */
-    public function getRequestData();
-}
+ -->
+<payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
+    <methods>
+        <method name="tig_vendiro">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+    </methods>
+</payment>

@@ -77,6 +77,8 @@ class Rest
      */
     public function getRequest(EndpointInterface $endpoint)
     {
+        $this->zendClient->resetParameters(true);
+
         $this->setUri($endpoint->getEndpointUrl());
         $this->setHeaders();
         $this->setParameters($endpoint);

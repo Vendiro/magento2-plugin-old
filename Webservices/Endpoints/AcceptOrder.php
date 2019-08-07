@@ -31,40 +31,8 @@
  */
 namespace TIG\Vendiro\Webservices\Endpoints;
 
-interface EndpointInterface
+class AcceptOrder extends AbstractEndpoint
 {
-    /**
-     * @return mixed
-     */
-    public function call();
-
-    /**
-     * @return string
-     */
-    public function getEndpointUrl();
-
-    /**
-     * @return string
-     */
-    public function getMethod();
-
-    /**
-     * @param string $urlArguments
-     */
-    public function setUrlArguments($urlArguments);
-
-    /**
-     * @return array
-     */
-    public function getUrlArguments();
-
-    /**
-     * @param array $requestData
-     */
-    public function setRequestData(array $requestData);
-
-    /**
-     * @return array
-     */
-    public function getRequestData();
+    const ENDPOINT_URL = 'orders/%s/accept/';
+    const METHOD       = 'PUT';
 }

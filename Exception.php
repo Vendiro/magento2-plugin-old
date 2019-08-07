@@ -29,42 +29,11 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Webservices\Endpoints;
+namespace TIG\Vendiro;
 
-interface EndpointInterface
+use Magento\Framework\Exception\LocalizedException;
+
+// @codingStandardsIgnoreFile
+class Exception extends LocalizedException
 {
-    /**
-     * @return mixed
-     */
-    public function call();
-
-    /**
-     * @return string
-     */
-    public function getEndpointUrl();
-
-    /**
-     * @return string
-     */
-    public function getMethod();
-
-    /**
-     * @param string $urlArguments
-     */
-    public function setUrlArguments($urlArguments);
-
-    /**
-     * @return array
-     */
-    public function getUrlArguments();
-
-    /**
-     * @param array $requestData
-     */
-    public function setRequestData(array $requestData);
-
-    /**
-     * @return array
-     */
-    public function getRequestData();
 }

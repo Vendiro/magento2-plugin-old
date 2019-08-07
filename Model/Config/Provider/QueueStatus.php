@@ -29,42 +29,13 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Webservices\Endpoints;
+namespace TIG\Vendiro\Model\Config\Provider;
 
-interface EndpointInterface
+class QueueStatus
 {
-    /**
-     * @return mixed
-     */
-    public function call();
-
-    /**
-     * @return string
-     */
-    public function getEndpointUrl();
-
-    /**
-     * @return string
-     */
-    public function getMethod();
-
-    /**
-     * @param string $urlArguments
-     */
-    public function setUrlArguments($urlArguments);
-
-    /**
-     * @return array
-     */
-    public function getUrlArguments();
-
-    /**
-     * @param array $requestData
-     */
-    public function setRequestData(array $requestData);
-
-    /**
-     * @return array
-     */
-    public function getRequestData();
+    const QUEUE_STATUS_NEW              = 'new';
+    const QUEUE_STATUS_IMPORTED         = 'imported';
+    const QUEUE_STATUS_SHIPMENT_CREATED = 'shipment_created';
+    const QUEUE_STATUS_COMPLETE         = 'complete';
+    const QUEUE_STATUS_FAILED           = 'failed';
 }
