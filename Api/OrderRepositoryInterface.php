@@ -54,7 +54,7 @@ interface OrderRepositoryInterface
     public function getById($entityId);
 
     /**
-     * Delete a specific Venduro order.
+     * Delete a specific Vendiro order.
      *
      * @api
      * @param OrderInterface $order
