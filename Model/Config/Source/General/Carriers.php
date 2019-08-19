@@ -29,22 +29,44 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Setup\Schema;
 
-use Magento\Framework\DB\Ddl\Table;
-use TIG\Vendiro\Setup\AbstractTableInstaller;
+namespace TIG\Vendiro\Model\Config\Source\General;
 
-class InstallCarriersTable extends AbstractTableInstaller
+use Magento\Framework\Option\ArrayInterface;
+use TIG\Vendiro\Model\CarrierRepository;
+
+class Carriers implements ArrayInterface
 {
-    const TABLE_NAME = 'tig_vendiro_carriers';
+    private $carrierRepository;
 
     /**
-     * @return void
-     * @throws \Zend_Db_Exception
-     * @codingStandardsIgnoreLine
+     * Carrier constructor.
+     *
+     * @param \TIG\Vendiro\Model\CarrierRepository $carrierRepository
      */
-    // @codingStandardsIgnoreLine
-    protected function defineTable()
+    public function __construct(CarrierRepository $carrierRepository)
     {
+        $this->carrierRepository = $carrierRepository;
+    }
+
+    /**
+     * Return option array for the inventory mode.
+     * @return array
+     */
+    public function toOptionArray()
+    {
+        $collection = $this->carrierRepository->getCollection();
+        $collection = $collection->create();
+
+        // @codingStandardsIgnoreStart
+        $options = [];
+
+        foreach($collection->getItems() as $carrier)
+        {
+            array_push($options, ['value'=> $carrier->getEntityId(), 'label' => __($carrier->getCarrier())]);
+        }
+
+        // @codingStandardsIgnoreEnd
+        return $options;
     }
 }

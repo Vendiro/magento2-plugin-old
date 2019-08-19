@@ -18,47 +18,51 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to support@tig.nl so we can send you a copy immediately.
+ * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact support@tig.nl for more information.
+ * needs please contact servicedesk@tig.nl for more information.
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Service\Api;
+
+namespace TIG\Vendiro\Cron;
 
 use TIG\Vendiro\Model\Config\Provider\General\Configuration;
-use Magento\Framework\Encryption\Encryptor;
+use TIG\Vendiro\Service\Carrier\Data as CarrierService;
 
-class AuthCredential
+class Carrier
 {
-    /** @var Configuration */
+    /** @var Configuration $configuration */
     private $configuration;
 
-    /** @var Encryptor */
-    private $encryptor;
-
-    public function __construct(Configuration $configuration, Encryptor $encryptor)
-    {
-        $this->configuration = $configuration;
-        $this->encryptor = $encryptor;
-    }
+    /** @var CarrierService $carrierService */
+    private $carrierService;
 
     /**
-     * @return string
+     * Carrier constructor.
+     *
+     * @param Configuration  $configuration
+     * @param CarrierService $carrierService
      */
-    public function get()
+    public function __construct(
+        Configuration $configuration,
+        CarrierService $carrierService
+    ) {
+        $this->configuration = $configuration;
+        $this->carrierService = $carrierService;
+    }
+
+    public function updateCarriers()
     {
-        $authKey = $this->encryptor->decrypt($this->configuration->getKey());
-        $authToken = $this->encryptor->decrypt($this->configuration->getToken());
+        if (!$this->configuration->isEnabled()) {
+            return;
+        }
 
-        $authString = $authKey . ':' . $authToken;
-        $authCredential = base64_encode($authString);
-
-        return $authCredential;
+        $this->carrierService->updateCarriers();
     }
 }

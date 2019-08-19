@@ -31,7 +31,6 @@
  */
 namespace TIG\Vendiro\Model;
 
-use Magento\Cms\Model\ResourceModel\AbstractCollection;
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\Search\FilterGroup;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -39,11 +38,11 @@ use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Api\SortOrder;
-use TIG\Vendiro\Model\ResourceModel\Order\CollectionFactory;
+use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 abstract class AbstractRepository
 {
-    /** @var CollectionFactory */
+    /** @var AbstractCollection $collectionFactory */
     private $collectionFactory;
 
     /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
@@ -52,14 +51,18 @@ abstract class AbstractRepository
     /** @var SearchResultsInterfaceFactory $searchResultsFactory */
     private $searchResultsFactory;
 
+    /**
+     * AbstractRepository constructor.
+     *
+     * @param SearchResultsInterfaceFactory $searchResultsFactory
+     * @param SearchCriteriaBuilder         $searchCriteriaBuilder
+     */
     public function __construct(
         SearchResultsInterfaceFactory $searchResultsFactory,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        CollectionFactory $orderCollectionFactory
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->searchResultsFactory = $searchResultsFactory;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->collectionFactory = $orderCollectionFactory;
     }
 
     /**
@@ -123,7 +126,7 @@ abstract class AbstractRepository
     {
         $searchResults =  $this->searchResultsFactory->create();
         $searchResults->setSearchCriteria($criteria);
-        $collection = $this->collectionFactory->create();
+        $collection = $this->getCollection()->create();
 
         foreach ($criteria->getFilterGroups() as $filterGroup) {
             $this->handleFilterGroups($filterGroup, $collection);
@@ -137,6 +140,22 @@ abstract class AbstractRepository
         $searchResults->setItems($collection->getItems());
 
         return $searchResults;
+    }
+
+    /**
+     * @return AbstractCollection
+     */
+    public function getCollection()
+    {
+        return $this->collectionFactory;
+    }
+
+    /**
+     * @param $collectionFactory
+     */
+    public function setCollection($collectionFactory)
+    {
+        $this->collectionFactory = $collectionFactory;
     }
 
     /**

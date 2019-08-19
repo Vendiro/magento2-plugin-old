@@ -35,12 +35,15 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="TIG\Vendiro\Api\OrderRepositoryInterface" type="TIG\Vendiro\Model\OrderRepository" />
     <preference for="TIG\Vendiro\Api\Data\OrderInterface" type="TIG\Vendiro\Model\Order" />
+    <preference for="TIG\Vendiro\Api\CarrierRepositoryInterface" type="TIG\Vendiro\Model\CarrierRepository" />
+    <preference for="TIG\Vendiro\Api\Data\CarrierInterface" type="TIG\Vendiro\Model\Carrier" />
 
     <type name="TIG\Vendiro\Setup\InstallSchema">
         <arguments>
             <argument name="installSchemaObjects" xsi:type="array">
                 <item name="v1.0.0" xsi:type="array">
-                    <item name="InstallOrderTable" xsi:type="object">TIG\Vendiro\Setup\Schema\InstallOrderTable</item>
+                    <item name="InstallOrderTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallOrderTable</item>
+                    <item name="InstallCarrierTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallCarrierTable</item>
                 </item>
             </argument>
         </arguments>

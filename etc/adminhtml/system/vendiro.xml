@@ -38,10 +38,12 @@
         <field id="key" translate="label comment" type="obscure" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>API key</label>
             <comment><![CDATA[Fill in your Vendiro API key.]]></comment>
+            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
         </field>
         <field id="token" translate="label comment" type="obscure" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>API token</label>
             <comment><![CDATA[Fill in your Vendiro API token.]]></comment>
+            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
         </field>
         <field id="validate_api_credentials" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <frontend_model>TIG\Vendiro\Block\Adminhtml\Config\Validate\ApiCredentials</frontend_model>
@@ -65,6 +67,11 @@
             <label>Select which quantity you want to be updated</label>
             <comment><![CDATA[Only use this when you are using Magento version 2.3 or higher]]></comment>
             <source_model>TIG\Vendiro\Model\Config\Source\General\Inventory</source_model>
+        </field>
+        <field id="default_shipment_method" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Select your default shipping method</label>
+            <source_model>TIG\Vendiro\Model\Config\Source\General\Carriers</source_model>
+            <comment><![CDATA[]]></comment>
         </field>
 
     </group>

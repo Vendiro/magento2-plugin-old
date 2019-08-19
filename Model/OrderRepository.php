@@ -65,7 +65,9 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         $this->scopeConfig = $scopeConfig;
         $this->orderFactory = $orderFactory;
 
-        parent::__construct($searchResultsFactory, $searchCriteriaBuilder, $orderCollectionFactory);
+        $this->setCollection($orderCollectionFactory);
+
+        parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
     }
 
     /**
