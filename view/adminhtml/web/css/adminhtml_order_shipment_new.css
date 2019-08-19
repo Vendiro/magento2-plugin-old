@@ -1,0 +1,18 @@
+
+/* TIG -  Shipping Carriers */
+
+.tig_vendiro_carrier_options {
+    max-width:300px !important;
+}
+
+.tig_vendiro_shipment_options {
+    display:inline-block;
+    min-width: 170px;
+    margin-right: 25px;
+}
+
+#vendiro_shipping_options {
+    margin-top: 20px;
+    border-top: 1px solid #cecece;
+    padding-top: 10px;
+}
