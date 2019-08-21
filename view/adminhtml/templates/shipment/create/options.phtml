@@ -39,7 +39,7 @@
         <span><?php /* @escapeNotVerified */ echo __('Vendiro Shipping options') ?></span>
     </label>
     <select id="tig_vendiro_carrier"
-            name="shipment"
+            name="shipment[tig_vendiro_carrier]"
             class="admin__control-select tig_vendiro_carrier_options">
         <?php foreach($this->getItems() as $carrier) :?>
             <option value="<?php echo $carrier->getEntityId(); ?>"><?php echo __($carrier->getCarrier()); ?></option>

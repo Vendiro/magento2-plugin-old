@@ -41,6 +41,8 @@ use TIG\Vendiro\Model\ResourceModel\Carrier\CollectionFactory;
 
 class CarrierRepository extends AbstractRepository implements CarrierRepositoryInterface
 {
+    /** @var CollectionFactory $collectionFactory */
+    private $collectionFactory;
 
     /** @var CarrierFactory $carrierFactory */
     private $carrierFactory;
@@ -57,8 +59,8 @@ class CarrierRepository extends AbstractRepository implements CarrierRepositoryI
     ) {
         $this->carrierFactory = $carrierFactory;
         $this->carrierResourceModel = $carrierResourceModel;
+        $this->collectionFactory = $carrierCollectionFactory;
 
-        $this->setCollection($carrierCollectionFactory);
         parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
     }
 

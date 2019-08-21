@@ -61,6 +61,9 @@
                 <api_base_url>https://api.vendiro.nl/client/</api_base_url>
                 <test_api_base_url>https://pre-prod-api.vendiro.nl/client/</test_api_base_url>
             </endpoints>
+            <vendiro>
+                <default_shipment_method>1</default_shipment_method>
+            </vendiro>
         </tig_vendiro>
     </default>
 </config>

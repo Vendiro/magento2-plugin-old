@@ -126,7 +126,7 @@ abstract class AbstractRepository
     {
         $searchResults =  $this->searchResultsFactory->create();
         $searchResults->setSearchCriteria($criteria);
-        $collection = $this->getCollection()->create();
+        $collection = $this->collectionFactory->create();
 
         foreach ($criteria->getFilterGroups() as $filterGroup) {
             $this->handleFilterGroups($filterGroup, $collection);
@@ -148,14 +148,6 @@ abstract class AbstractRepository
     public function getCollection()
     {
         return $this->collectionFactory;
-    }
-
-    /**
-     * @param $collectionFactory
-     */
-    public function setCollection($collectionFactory)
-    {
-        $this->collectionFactory = $collectionFactory;
     }
 
     /**

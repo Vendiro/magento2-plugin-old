@@ -61,9 +61,9 @@ class Create extends Template implements BlockInterface
      */
     public function getItems()
     {
-       $collection = $this->carrierRepository->getCollection();
-       $collection = $collection->create();
+        $collection = $this->carrierRepository->getCollection();
+        $collection = $collection->create();
 
-       return $collection->getItems();
+        return $collection->getItems();
     }
 }

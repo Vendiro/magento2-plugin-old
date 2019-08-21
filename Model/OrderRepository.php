@@ -47,6 +47,9 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
 {
     const VENDIRO_NEW_ORDERS_LIMIT = 'tig_vendiro/new_orders_limit';
 
+    /** @var CollectionFactory $collectionFactory */
+    private $collectionFactory;
+
     /** @var ScopeConfigInterface */
     private $scopeConfig;
 
@@ -64,8 +67,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->orderFactory = $orderFactory;
-
-        $this->setCollection($orderCollectionFactory);
+        $this->collectionFactory = $orderCollectionFactory;
 
         parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
     }
