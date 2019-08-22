@@ -42,9 +42,6 @@ use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 abstract class AbstractRepository
 {
-    /** @var AbstractCollection $collectionFactory */
-    private $collectionFactory;
-
     /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
     private $searchCriteriaBuilder;
 
@@ -54,8 +51,8 @@ abstract class AbstractRepository
     /**
      * AbstractRepository constructor.
      *
-     * @param SearchResultsInterfaceFactory $searchResultsFactory
-     * @param SearchCriteriaBuilder         $searchCriteriaBuilder
+     * @param SearchResultsInterfaceFactory       $searchResultsFactory
+     * @param SearchCriteriaBuilder               $searchCriteriaBuilder
      */
     public function __construct(
         SearchResultsInterfaceFactory $searchResultsFactory,
@@ -140,14 +137,6 @@ abstract class AbstractRepository
         $searchResults->setItems($collection->getItems());
 
         return $searchResults;
-    }
-
-    /**
-     * @return AbstractCollection
-     */
-    public function getCollection()
-    {
-        return $this->collectionFactory;
     }
 
     /**

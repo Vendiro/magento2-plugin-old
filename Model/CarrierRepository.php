@@ -91,4 +91,12 @@ class CarrierRepository extends AbstractRepository implements CarrierRepositoryI
     {
         return $this->carrierFactory->create($data);
     }
+
+    /**
+     * @return CollectionFactory
+     */
+    public function getCollection()
+    {
+        return $this->collectionFactory;
+    }
 }

@@ -31,6 +31,7 @@
  */
 namespace TIG\Vendiro\Test\Unit\Service\Api;
 
+use Magento\Framework\Encryption\Encryptor;
 use TIG\Vendiro\Model\Config\Provider\General\Configuration;
 use TIG\Vendiro\Service\Api\AuthCredential;
 use TIG\Vendiro\Test\TestCase;
@@ -41,11 +42,21 @@ class DataTest extends TestCase
 
     public function testGet()
     {
+
+
+
         $configurationMock = $this->getFakeMock(Configuration::class)->setMethods(['getKey', 'getToken'])->getMock();
         $configurationMock->expects($this->once())->method('getKey')->willReturn('a');
         $configurationMock->expects($this->once())->method('getToken')->willReturn('b');
 
-        $instance = $this->getInstance(['configuration' => $configurationMock]);
+        $encryptorMock = $this->getFakeMock(Encryptor::class)->setMethods(['decrypt'])->getMock();
+
+        $encryptorMock
+            ->expects($this->atLeastOnce())
+            ->method('decrypt')
+            ->willReturn('a', 'b');
+
+        $instance = $this->getInstance(['configuration' => $configurationMock, 'encryptor' => $encryptorMock]);
         $result = $instance->get();
 
         $this->assertEquals('YTpi', $result);

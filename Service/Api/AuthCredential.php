@@ -53,8 +53,11 @@ class AuthCredential
      */
     public function get()
     {
-        $authKey = $this->encryptor->decrypt($this->configuration->getKey());
-        $authToken = $this->encryptor->decrypt($this->configuration->getToken());
+        $authKey = $this->configuration->getKey();
+        $authKey = $this->encryptor->decrypt($authKey);
+
+        $authToken = $this->configuration->getToken();
+        $authToken = $this->encryptor->decrypt($authToken);
 
         $authString = $authKey . ':' . $authToken;
         $authCredential = base64_encode($authString);

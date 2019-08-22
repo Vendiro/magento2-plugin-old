@@ -197,4 +197,12 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
 
         return $this->delete($order);
     }
+
+    /**
+     * @return CollectionFactory
+     */
+    public function getCollection()
+    {
+        return $this->collectionFactory;
+    }
 }
