@@ -90,14 +90,6 @@ interface OrderRepositoryInterface
     public function getByOrderId($orderId, $limit = 1);
 
     /**
-     * @param     $status
-     * @param int $limit
-     *
-     * @return array|OrderInterface|null
-     */
-    public function getByStatus($status, $limit = 10);
-
-    /**
      * @param array $orderIds
      * @param int   $limit
      *

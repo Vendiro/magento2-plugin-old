@@ -130,14 +130,6 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     /**
      * {@inheritDoc}
      */
-    public function getByStatus($status, $limit = 10)
-    {
-        return $this->getByFieldWithValue('status', $status, $limit);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getAlreadyInsertedOrders($orderIds, $limit = 999)
     {
         $insertedOrders = [];
