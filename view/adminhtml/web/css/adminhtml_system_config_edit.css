@@ -24,13 +24,39 @@
     height: 40px;
     margin-right: 10px;
     content: ' ';
-    background-image: url(../images/george-menu-icon@2x.png) !important;
-    background-position: 0;
+    background-image: url(../images/vendiro-logo.png) !important;
     background-repeat: no-repeat;
     background-size: auto 35px;
     margin-top: -12px;
 }
 
+/* Identity - Toolbar =============================================================================================== */
+
+.vendiro-config-page .page-main-actions .page-actions .page-actions-inner:before {
+    background-image: url(../images/vendiro-logo.png) !important;
+    background-repeat: no-repeat;
+    content: ' ';
+    width: 50px;
+    float: left;
+    height: 30px;
+    margin-top: 8px;
+    background-size: auto 29px;
+}
+
+.vendiro-config-page .page-main-actions .page-actions:not(._fixed) .page-actions-inner:before {
+    margin-left: 752px;
+}
+
+.vendiro-config-page .page-main-actions .page-actions .page-actions-inner:after {
+    background-image: url(../images/logo_tig.png) !important;
+    background-repeat: no-repeat;
+    content: ' ';
+    width: 50px;
+    float: left;
+    height: 30px;
+    margin-top: 8px;
+    background-size: auto 29px;
+}
 
 /* SupportTab - Default styling ===================================================================================== */
 

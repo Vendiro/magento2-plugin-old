@@ -40,13 +40,11 @@
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <tab id="tig_vendiro" translate="label" sortOrder="9999">
+        <section id="tig_vendiro" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Vendiro</label>
-        </tab>
-        <section id="tig_vendiro" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Configuration</label>
-            <tab>tig_vendiro</tab>
+            <tab>sales</tab>
             <resource>TIG_Vendiro::configuration</resource>
+            <class>vendiro-section</class>
             <include path="TIG_Vendiro::system/support.xml" />
             <include path="TIG_Vendiro::system/general.xml" />
             <include path="TIG_Vendiro::system/vendiro.xml" />
