@@ -32,6 +32,10 @@
 
 /* Identity - Toolbar =============================================================================================== */
 
+.vendiro-config-page .page-main-actions .page-actions .page-actions-inner {
+    float: right;
+}
+
 .vendiro-config-page .page-main-actions .page-actions .page-actions-inner:before {
     background-image: url(../images/vendiro-logo.png) !important;
     background-repeat: no-repeat;
@@ -41,10 +45,6 @@
     height: 30px;
     margin-top: 8px;
     background-size: auto 29px;
-}
-
-.vendiro-config-page .page-main-actions .page-actions:not(._fixed) .page-actions-inner:before {
-    margin-left: 752px;
 }
 
 .vendiro-config-page .page-main-actions .page-actions .page-actions-inner:after {
