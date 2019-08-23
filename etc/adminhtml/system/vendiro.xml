@@ -50,17 +50,14 @@
         </field>
         <field id="orders" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Import orders</label>
-            <comment><![CDATA[]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
         <field id="shipment" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Register shipment</label>
-            <comment><![CDATA[]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
         <field id="inventory" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Update inventory</label>
-            <comment><![CDATA[]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
         <field id="inventory_quantity" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -71,8 +68,6 @@
         <field id="default_shipment_method" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Select your default shipping method</label>
             <source_model>TIG\Vendiro\Model\Config\Source\General\Carriers</source_model>
-            <comment><![CDATA[]]></comment>
         </field>
-
     </group>
 </include>
