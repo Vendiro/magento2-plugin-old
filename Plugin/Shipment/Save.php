@@ -34,9 +34,14 @@ namespace TIG\Vendiro\Plugin\Shipment;
 use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use TIG\Vendiro\Model\Config\Provider\General\CarrierConfiguration;
+use Magento\Framework\Message\ManagerInterface;
+use TIG\Vendiro\Exception;
 
 class Save
 {
+    /** @var ManagerInterface */
+    private $managerInterface;
+
     /**
      * @var RequestInterface $request
      */
@@ -49,10 +54,12 @@ class Save
 
     public function __construct(
         RequestInterface $request,
-        CarrierConfiguration $configuration
+        CarrierConfiguration $configuration,
+        ManagerInterface $managerInterface
     ) {
         $this->request = $request;
         $this->configuration = $configuration;
+        $this->managerInterface = $managerInterface;
     }
 
     /**
@@ -74,6 +81,7 @@ class Save
      * @param ShipmentInterface $shipment
      *
      * @return ShipmentInterface
+     * @throws \TIG\Vendiro\Exception
      */
     private function saveVendiroCarrier(ShipmentInterface $shipment)
     {
@@ -89,7 +97,10 @@ class Save
         }
 
         if ($shipment->getVendiroCarrier() === '0') {
-            //display error message
+            $errorMessage = __(
+                "Please select a default shipping method or select one below."
+            );
+            throw new Exception($errorMessage);
         }
 
         return $shipment;

@@ -33,7 +33,7 @@ namespace TIG\Vendiro\Block\Adminhtml\Shipment\Options;
 
 use Magento\Backend\Block\Template;
 use Magento\Framework\View\Element\BlockInterface;
-use TIG\Vendiro\Model\ResourceModel\Carrier\CollectionFactory;;
+use TIG\Vendiro\Model\ResourceModel\Carrier\CollectionFactory;
 
 class Create extends Template implements BlockInterface
 {
