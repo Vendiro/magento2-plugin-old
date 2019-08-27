@@ -41,14 +41,10 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\ScopeInterface;
 use TIG\Vendiro\Api\Data\OrderInterface;
 use TIG\Vendiro\Api\OrderRepositoryInterface;
-use TIG\Vendiro\Model\ResourceModel\Order\CollectionFactory;
 
 class OrderRepository extends AbstractRepository implements OrderRepositoryInterface
 {
     const VENDIRO_NEW_ORDERS_LIMIT = 'tig_vendiro/new_orders_limit';
-
-    /** @var CollectionFactory $collectionFactory */
-    private $collectionFactory;
 
     /** @var ScopeConfigInterface */
     private $scopeConfig;
@@ -62,12 +58,10 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         ScopeConfigInterface $scopeConfig,
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        CollectionFactory $orderCollectionFactory,
         OrderFactory $orderFactory
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->orderFactory = $orderFactory;
-        $this->collectionFactory = $orderCollectionFactory;
 
         parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
     }
@@ -188,13 +182,5 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         $order = $this->getById($entityId);
 
         return $this->delete($order);
-    }
-
-    /**
-     * @return CollectionFactory
-     */
-    public function getCollection()
-    {
-        return $this->collectionFactory;
     }
 }

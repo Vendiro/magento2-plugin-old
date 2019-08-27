@@ -33,9 +33,10 @@
 
 namespace TIG\Vendiro\Service\Carrier;
 
+use TIG\Vendiro\Api\CarrierRepositoryInterface;
+use TIG\Vendiro\Exception;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Webservices\Endpoints\GetCarriers;
-use TIG\Vendiro\Api\CarrierRepositoryInterface;
 
 class Data
 {
@@ -65,20 +66,37 @@ class Data
         $this->carrierRepository = $carrierRepository;
     }
 
+    /**
+     * @throws \TIG\Vendiro\Exception
+     */
     public function updateCarriers()
     {
         $carriers = $this->getCarriers->call();
+
+        if (array_key_exists('message', $carriers)) {
+            return false;
+        }
 
         foreach ($carriers as $carrierId => $carrier) {
             $this->saveCarrier($carrierId, $carrier);
         }
     }
 
+    /**
+     * @param $carrierId
+     * @param $carrier
+     *
+     * @throws \TIG\Vendiro\Exception
+     */
     private function saveCarrier($carrierId, $carrier)
     {
-        $carrierModel = $this->carrierRepository->create();
-        $carrierModel->setCarrierId($carrierId);
-        $carrierModel->setCarrier($carrier);
-        $this->carrierRepository->save($carrierModel);
+        try {
+            $carrierModel = $this->carrierRepository->create();
+            $carrierModel->setCarrierId($carrierId);
+            $carrierModel->setCarrier($carrier);
+            $this->carrierRepository->save($carrierModel);
+        } catch (\Exception $exception) {
+            throw new Exception(__($exception->getMessage()));
+        }
     }
 }

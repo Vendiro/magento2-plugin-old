@@ -33,20 +33,20 @@
 namespace TIG\Vendiro\Model\Config\Source\General;
 
 use Magento\Framework\Option\ArrayInterface;
-use TIG\Vendiro\Model\CarrierRepository;
+use TIG\Vendiro\Model\ResourceModel\Carrier\CollectionFactory;
 
 class Carriers implements ArrayInterface
 {
-    private $carrierRepository;
+    private $collectionFactory;
 
     /**
      * Carrier constructor.
      *
-     * @param \TIG\Vendiro\Model\CarrierRepository $carrierRepository
+     * @param CollectionFactory $collectionFactory
      */
-    public function __construct(CarrierRepository $carrierRepository)
+    public function __construct(CollectionFactory $collectionFactory)
     {
-        $this->carrierRepository = $carrierRepository;
+        $this->collectionFactory = $collectionFactory;
     }
 
     /**
@@ -55,15 +55,14 @@ class Carriers implements ArrayInterface
      */
     public function toOptionArray()
     {
-        $collection = $this->carrierRepository->getCollection();
+        $collection = $this->collectionFactory;
         $collection = $collection->create();
 
         // @codingStandardsIgnoreStart
-        $options = [];
+        $options[] = ['value' => '0', 'label' => __('--none--')];
 
-        foreach($collection->getItems() as $carrier)
-        {
-            array_push($options, ['value'=> $carrier->getEntityId(), 'label' => __($carrier->getCarrier())]);
+        foreach ($collection->getItems() as $carrier) {
+            array_push($options, ['value'=> $carrier->getCarrierId(), 'label' => __($carrier->getCarrier())]);
         }
 
         // @codingStandardsIgnoreEnd

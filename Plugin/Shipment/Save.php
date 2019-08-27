@@ -56,7 +56,7 @@ class Save
     }
 
     /**
-     * @param                   $subject
+     * @param $subject
      *
      * @return ShipmentInterface
      */
@@ -81,13 +81,15 @@ class Save
 
         if ($vendiroCarrier) {
             $shipment->setVendiroCarrier($vendiroCarrier);
-
-            return $shipment;
         }
 
         if (!$shipment->getVendiroCarrier()) {
             $defaultCarrier = $this->configuration->getDefaultCarrier($shipment->getStoreId());
             $shipment->setVendiroCarrier($defaultCarrier);
+        }
+
+        if ($shipment->getVendiroCarrier() === '0') {
+            //display error message
         }
 
         return $shipment;

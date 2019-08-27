@@ -42,9 +42,6 @@ class DataTest extends TestCase
 
     public function testGet()
     {
-
-
-
         $configurationMock = $this->getFakeMock(Configuration::class)->setMethods(['getKey', 'getToken'])->getMock();
         $configurationMock->expects($this->once())->method('getKey')->willReturn('a');
         $configurationMock->expects($this->once())->method('getToken')->willReturn('b');

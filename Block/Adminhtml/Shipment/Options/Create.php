@@ -33,27 +33,27 @@ namespace TIG\Vendiro\Block\Adminhtml\Shipment\Options;
 
 use Magento\Backend\Block\Template;
 use Magento\Framework\View\Element\BlockInterface;
-use TIG\Vendiro\Model\CarrierRepository;
+use TIG\Vendiro\Model\ResourceModel\Carrier\CollectionFactory;;
 
 class Create extends Template implements BlockInterface
 {
     /**
-     * @var CarrierRepository
+     * @var CollectionFactory\
      */
-    private $carrierRepository;
+    private $collectionFactory;
 
     /**
      * @param \Magento\Backend\Block\Template\Context $context
-     * @param CarrierRepository                       $carrierRepository
+     * @param CollectionFactory                       $collectionFactory
      * @param array                                   $data
      */
     public function __construct(
         Template\Context $context,
-        CarrierRepository $carrierRepository,
+        CollectionFactory $collectionFactory,
         array $data = []
     ) {
         parent::__construct($context, $data);
-        $this->carrierRepository = $carrierRepository;
+        $this->collectionFactory = $collectionFactory;
     }
 
     /**
@@ -61,7 +61,7 @@ class Create extends Template implements BlockInterface
      */
     public function getItems()
     {
-        $collection = $this->carrierRepository->getCollection();
+        $collection = $this->collectionFactory;
         $collection = $collection->create();
 
         return $collection->getItems();

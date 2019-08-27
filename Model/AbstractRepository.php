@@ -39,9 +39,13 @@ use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use TIG\Vendiro\Model\ResourceModel\Carrier\CollectionFactory;
 
 abstract class AbstractRepository
 {
+    /** @var CollectionFactory $collectionFactory */
+    private $collectionFactory;
+
     /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
     private $searchCriteriaBuilder;
 
@@ -51,15 +55,18 @@ abstract class AbstractRepository
     /**
      * AbstractRepository constructor.
      *
-     * @param SearchResultsInterfaceFactory       $searchResultsFactory
-     * @param SearchCriteriaBuilder               $searchCriteriaBuilder
+     * @param SearchResultsInterfaceFactory                              $searchResultsFactory
+     * @param SearchCriteriaBuilder                                      $searchCriteriaBuilder
+     * @param CollectionFactory                                          $collectionFactory
      */
     public function __construct(
         SearchResultsInterfaceFactory $searchResultsFactory,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        CollectionFactory $collectionFactory
     ) {
         $this->searchResultsFactory = $searchResultsFactory;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->collectionFactory = $collectionFactory;
     }
 
     /**

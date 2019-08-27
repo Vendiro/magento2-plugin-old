@@ -31,17 +31,17 @@
  */
 ?>
 
-<?php /** @var $block \TIG\Vendiro\Block\Adminhtml\Config\Validate\ApiCredentials */ ?>
+<?php /** @var $block \TIG\Vendiro\Block\Adminhtml\Config\Carrier\Carriers */ ?>
 
 <?php echo $block->getButtonHtml() ?>
-<div id="credentials_message_span"></div>
+<div id="carrier_message_span"></div>
 
 <script>
     require([
         'jquery',
         'prototype'
     ], function(jQuery){
-        jQuery('#validate_api_credentials').click(function () {
+        jQuery('#get_carriers').click(function () {
             var params = {
                 form_key: "<?php echo $block->getFormKey() ?>",
                 isAjax: true
@@ -53,7 +53,7 @@
                 data: params,
                 dataType: 'json'
             }).done(function (response) {
-                jQuery('#credentials_message_span').text(response.message);
+                jQuery('#carrier_message_span').text(response.message);
             });
         });
 

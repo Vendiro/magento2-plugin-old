@@ -31,8 +31,8 @@
  */
 namespace TIG\Vendiro\Model;
 
-use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Exception\CouldNotSaveException;
 use TIG\Vendiro\Api\CarrierRepositoryInterface;
 use TIG\Vendiro\Api\Data\CarrierInterface;
@@ -41,9 +41,6 @@ use TIG\Vendiro\Model\ResourceModel\Carrier\CollectionFactory;
 
 class CarrierRepository extends AbstractRepository implements CarrierRepositoryInterface
 {
-    /** @var CollectionFactory $collectionFactory */
-    private $collectionFactory;
-
     /** @var CarrierFactory $carrierFactory */
     private $carrierFactory;
 
@@ -55,13 +52,12 @@ class CarrierRepository extends AbstractRepository implements CarrierRepositoryI
         SearchCriteriaBuilder $searchCriteriaBuilder,
         CarrierFactory $carrierFactory,
         CarrierResourceModel $carrierResourceModel,
-        CollectionFactory $carrierCollectionFactory
+        CollectionFactory $collectionFactory
     ) {
         $this->carrierFactory = $carrierFactory;
         $this->carrierResourceModel = $carrierResourceModel;
-        $this->collectionFactory = $carrierCollectionFactory;
 
-        parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
+        parent::__construct($searchResultsFactory, $searchCriteriaBuilder, $collectionFactory);
     }
 
     /**
@@ -90,13 +86,5 @@ class CarrierRepository extends AbstractRepository implements CarrierRepositoryI
     public function create(array $data = [])
     {
         return $this->carrierFactory->create($data);
-    }
-
-    /**
-     * @return CollectionFactory
-     */
-    public function getCollection()
-    {
-        return $this->collectionFactory;
     }
 }
