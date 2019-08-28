@@ -100,7 +100,7 @@ class Save
             $errorMessage = __(
                 "Please select a default shipping method or select one below."
             );
-            throw new Exception($errorMessage);
+            throw new \TIG\Vendiro\Exception($errorMessage);
         }
 
         return $shipment;

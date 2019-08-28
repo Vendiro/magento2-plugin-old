@@ -56,8 +56,9 @@ class CarrierRepository extends AbstractRepository implements CarrierRepositoryI
     ) {
         $this->carrierFactory = $carrierFactory;
         $this->carrierResourceModel = $carrierResourceModel;
+        $this->collectionFactory = $collectionFactory;
 
-        parent::__construct($searchResultsFactory, $searchCriteriaBuilder, $collectionFactory);
+        parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
     }
 
     /**

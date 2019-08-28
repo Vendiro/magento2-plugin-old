@@ -39,12 +39,12 @@ use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
-use TIG\Vendiro\Model\ResourceModel\Carrier\CollectionFactory;
 
 abstract class AbstractRepository
 {
-    /** @var CollectionFactory $collectionFactory */
-    private $collectionFactory;
+    /** @var $collectionFactory */
+    // @codingStandardsIgnoreLine
+    protected $collectionFactory;
 
     /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
     private $searchCriteriaBuilder;
@@ -55,18 +55,15 @@ abstract class AbstractRepository
     /**
      * AbstractRepository constructor.
      *
-     * @param SearchResultsInterfaceFactory                              $searchResultsFactory
-     * @param SearchCriteriaBuilder                                      $searchCriteriaBuilder
-     * @param CollectionFactory                                          $collectionFactory
+     * @param SearchResultsInterfaceFactory $searchResultsFactory
+     * @param SearchCriteriaBuilder         $searchCriteriaBuilder
      */
     public function __construct(
         SearchResultsInterfaceFactory $searchResultsFactory,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        CollectionFactory $collectionFactory
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->searchResultsFactory = $searchResultsFactory;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->collectionFactory = $collectionFactory;
     }
 
     /**
@@ -75,7 +72,7 @@ abstract class AbstractRepository
      * @param int    $limit
      * @param string $conditionType
      *
-     * @return AbstractModel|array|null
+     * @return array|null
      */
     public function getByFieldWithValue($field, $value, $limit = 1, $conditionType = 'eq')
     {

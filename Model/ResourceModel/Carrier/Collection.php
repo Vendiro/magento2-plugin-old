@@ -32,11 +32,14 @@
 
 namespace TIG\Vendiro\Model\ResourceModel\Carrier;
 
-// @codingStandardsIgnoreFile
-class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+
+class Collection extends AbstractCollection
 {
+    // @codingStandardsIgnoreLine
     protected function _construct()
     {
+        // @codingStandardsIgnoreLine
         $this->_init('TIG\Vendiro\Model\Carrier', 'TIG\Vendiro\Model\ResourceModel\Carrier');
     }
 }

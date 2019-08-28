@@ -96,6 +96,7 @@ class Data
             $carrierModel->setCarrier($carrier);
             $this->carrierRepository->save($carrierModel);
         } catch (\Exception $exception) {
+            // @codingStandardsIgnoreLine
             throw new Exception(__($exception->getMessage()));
         }
     }
