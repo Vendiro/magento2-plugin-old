@@ -33,27 +33,41 @@ namespace TIG\Vendiro\Block\Adminhtml\Shipment\Options;
 
 use Magento\Backend\Block\Template;
 use Magento\Framework\View\Element\BlockInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use TIG\Vendiro\Model\Config\Provider\General\CarrierConfiguration;
 use TIG\Vendiro\Model\ResourceModel\Carrier\CollectionFactory;
 
 class Create extends Template implements BlockInterface
 {
+    /** @var StoreManagerInterface */
+    private $storeManager;
+
+    /** @var CarrierConfiguration */
+    private $configuration;
+
     /**
      * @var CollectionFactory\
      */
     private $collectionFactory;
 
     /**
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param CollectionFactory                       $collectionFactory
-     * @param array                                   $data
+     * @param Template\Context          $context
+     * @param CollectionFactory         $collectionFactory
+     * @param CarrierConfiguration      $configuration
+     * @param StoreManagerInterface     $storeManager
+     * @param array                     $data
      */
     public function __construct(
         Template\Context $context,
         CollectionFactory $collectionFactory,
+        CarrierConfiguration $configuration,
+        StoreManagerInterface $storeManager,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->collectionFactory = $collectionFactory;
+        $this->configuration = $configuration;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -65,5 +79,12 @@ class Create extends Template implements BlockInterface
         $collection = $collection->create();
 
         return $collection->getItems();
+    }
+
+    public function getDefaultCarrier()
+    {
+        $storeId = $this->storeManager->getStore()->getId();
+
+        return $this->configuration->getDefaultCarrier($storeId);
     }
 }

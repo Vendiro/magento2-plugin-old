@@ -47,8 +47,12 @@
             array_push($options, ['value'=> $carrier->getCarrierId(), 'label' => __($carrier->getCarrier())]);
         } ?>
 
+        <?php
+        $defaultCarrier = $this->getDefaultCarrier();
+        ?>
+
         <?php foreach ($options as $carrier) :?>
-            <option value="<?php echo $carrier['value']; ?>"><?php echo __($carrier['label']->getText()); ?></option>
+            <option value="<?php echo $carrier['value']; ?>" <?php echo $defaultCarrier == $carrier['value'] ? 'selected="selected"' : ''; ?>><?php echo __($carrier['label']->getText()); ?></option>
         <?php endforeach; ?>
     </select>
 </div>
