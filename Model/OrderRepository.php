@@ -41,6 +41,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\ScopeInterface;
 use TIG\Vendiro\Api\Data\OrderInterface;
 use TIG\Vendiro\Api\OrderRepositoryInterface;
+use TIG\Vendiro\Model\ResourceModel\Order\CollectionFactory;
 
 class OrderRepository extends AbstractRepository implements OrderRepositoryInterface
 {
@@ -58,10 +59,12 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         ScopeConfigInterface $scopeConfig,
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        OrderFactory $orderFactory
+        OrderFactory $orderFactory,
+        CollectionFactory $collectionFactory
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->orderFactory = $orderFactory;
+        $this->collectionFactory = $collectionFactory;
 
         parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
     }
