@@ -45,8 +45,11 @@ class InstallCarrierTable extends AbstractTableInstaller
     // @codingStandardsIgnoreLine
     protected function defineTable()
     {
+        $columns = ['carrier_id'];
+
         $this->addEntityId();
         $this->addInt('carrier_id', 'carrier id');
+        $this->addIndex($columns);
         $this->addText('carrier', 'carrier', 64, false);
     }
 }
