@@ -14,7 +14,7 @@
             <schedule>*/5 * * * *</schedule>
         </job>
         <job name="vendiro_update_carriers" instance="TIG\Vendiro\Cron\Carrier" method="updateCarriers">
-            <schedule>*/5 * * * *</schedule>
+            <schedule>0 0 * * *</schedule>
         </job>
     </group>
 </config>
