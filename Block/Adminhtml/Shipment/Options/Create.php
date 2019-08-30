@@ -83,7 +83,8 @@ class Create extends Template implements BlockInterface
 
     public function getDefaultCarrier()
     {
-        $storeId = $this->storeManager->getStore()->getId();
+        $store = $this->storeManager->getStore();
+        $storeId = $store->getId();
 
         return $this->configuration->getDefaultCarrier($storeId);
     }
