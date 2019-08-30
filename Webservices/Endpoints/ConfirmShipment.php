@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-**
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -19,22 +18,21 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to support@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future. If you wish to customize this module for your
- * needs please contact servicedesk@tig.nl for more information.
+ * needs please contact support@tig.nl for more information.
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <body>
-        <referenceBlock name="order_tab_info">
-            <block class="TIG\Vendiro\Block\Adminhtml\Shipment\Carriers\View" name="vendiro.sales.order.shippingMethod" template="TIG_Vendiro::sales/order/shippingMethod.phtml" />
-        </referenceBlock>
-    </body>
-</page>
+ */
+namespace TIG\Vendiro\Webservices\Endpoints;
+
+class ConfirmShipment extends AbstractEndpoint
+{
+    const ENDPOINT_URL = 'orders/%s/shipment/';
+    const METHOD       = 'PUT';
+}

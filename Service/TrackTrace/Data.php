@@ -33,27 +33,85 @@
 
 namespace TIG\Vendiro\Service\TrackTrace;
 
+use Magento\Sales\Api\Data\ShipmentInterface;
+use TIG\Vendiro\Api\Data\CarrierInterface;
+use TIG\Vendiro\Api\Data\OrderInterface;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
+use TIG\Vendiro\Service\Order\ApiStatusManager;
+use TIG\Vendiro\Webservices\Endpoints\ConfirmShipment;
 
 class Data
 {
+    /** @var ConfirmShipment */
+    private $confirmShipment;
+
+    /** @var CarrierInterface */
+    private $carrierInterface;
+
     /** @var ApiConfiguration */
     private $apiConfiguration;
 
+    /** @var ApiStatusManager */
+    private $apiStatusManager;
+
     /**
-     * @param ApiConfiguration $apiConfiguration
+     * @param ApiConfiguration        $apiConfiguration
+     * @param ApiStatusManager        $apiStatusManager
+     * @param CarrierInterface        $carrierInterface
+     * @param ConfirmShipment         $confirmShipment
      */
-    public function __construct(ApiConfiguration $apiConfiguration)
-    {
+    public function __construct(
+        ApiConfiguration $apiConfiguration,
+        ApiStatusManager $apiStatusManager,
+        CarrierInterface $carrierInterface,
+        ConfirmShipment $confirmShipment
+    ) {
         $this->apiConfiguration = $apiConfiguration;
+        $this->apiStatusManager = $apiStatusManager;
+        $this->carrierInterface = $carrierInterface;
+        $this->confirmShipment = $confirmShipment;
     }
 
-    public function get()
+    /**
+     * @param OrderInterface $order
+     * @param ShipmentInterface $shipment
+     *
+     * @return array|void
+     */
+    public function setShipment($order, $shipment)
     {
         if (!$this->apiConfiguration->canRegisterShipments()) {
             return;
         }
 
-        return '';
+        $vendiroId = $order->getVendiroId();
+        $carrierId = $this->carrierInterface->getCarrierId();
+        $vendiroOrder = $this->apiStatusManager->getOrders($vendiroId);
+        $shipmentCode = $vendiroOrder->getShipmentCode();
+        $tracks = $shipment->getTracks();
+
+        foreach ($tracks as $track) {
+            $titles = $track->getTitle();
+            $numbers = $track->getNumber();
+
+            $result = array_merge($titles, $numbers);
+        }
+
+        $this->shipmentCall($vendiroOrder, $carrierId, $shipmentCode);
+    }
+
+    /**
+     * @param $vendiroOrderId
+     * @param $carrierId
+     * @param $shipmentCode
+     *
+     * @return mixed
+     */
+    public function shipmentCall($vendiroOrderId, $carrierId, $shipmentCode)
+    {
+        $requestData = ['carrier_id' => $carrierId, 'shipment_code' => $shipmentCode];
+        $this->confirmShipment->setRequestData($requestData);
+
+        return $this->confirmShipment->call($vendiroOrderId);
     }
 }

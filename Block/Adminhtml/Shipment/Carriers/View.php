@@ -73,35 +73,4 @@ class View extends Template implements BlockInterface
     {
         return $this->getRequest()->getParams()['order_id'];
     }
-
-    /**
-     * @return \Magento\Sales\Api\Data\ShipmentInterface[]
-     */
-    public function getCarrierId()
-    {
-        $orderId = $this->getOrderId();
-        $searchCriteria = $this->searchCriteriaBuilder->addFilter('order_id', $orderId);
-        $searchCriteria->create();
-
-        $shipments = $this->shipmentRepository->getList($searchCriteria);
-        $shipmentRecords = $shipments->getData();
-        $carrierId = $shipmentRecords['0']['vendiro_carrier'];
-
-        return $carrierId;
-    }
-
-    public function getCarrierName()
-    {
-        $carrierId = $this->getCarrierId();
-        $options = [];
-
-        foreach ($this->create->getItems() as $carrier) {
-            array_push($options, ['value'=> $carrier->getCarrierId(), 'label' => __($carrier->getCarrier())]);
-        }
-
-        $carrierKey = array_search($carrierId, array_column($options, 'value'));
-        $carrierName = $options[$carrierKey]['label']->getText();
-
-        return $carrierName;
-    }
 }

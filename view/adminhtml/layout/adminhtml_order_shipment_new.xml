@@ -37,7 +37,7 @@
     </head>
     <body>
         <referenceContainer name="before.body.end">
-            <block class="TIG\Vendiro\Block\Adminhtml\Shipment\Options\Create" name="vendiro.shipment.create.options" template="TIG_Vendiro::shipment/create/options.phtml" />
+            <block class="TIG\Vendiro\Block\Adminhtml\Shipment\Options\Create" name="vendiro.shipment.create.options" />
         </referenceContainer>
     </body>
 </page>

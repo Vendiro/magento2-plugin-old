@@ -37,6 +37,8 @@ use TIG\Vendiro\Webservices\Endpoints\RejectOrder;
 
 class ApiStatusManager
 {
+
+
     /** @var GetOrders */
     private $getOrders;
 

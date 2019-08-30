@@ -38,29 +38,29 @@ use TIG\Vendiro\Service\TrackTrace\Data;
 class TrackTrace
 {
     /** @var Data $orderService  */
-    private $orderService;
+    private $shipmentService;
 
     /** @var ApiConfiguration */
     private $apiConfiguration;
 
     /**
-     * @param Data             $orderService
+     * @param Data             $shipmentService
      * @param ApiConfiguration $apiConfiguration
      */
     public function __construct(
-        Data $orderService,
+        Data $shipmentService,
         ApiConfiguration $apiConfiguration
     ) {
-        $this->orderService = $orderService;
+        $this->shipmentService = $shipmentService;
         $this->apiConfiguration = $apiConfiguration;
     }
 
-    public function registerShipments()
+    public function confirmShipment()
     {
         if (!$this->apiConfiguration->canRegisterShipments()) {
             return;
         }
 
-        $this->orderService->get();
+        $this->shipmentService->setShipment($order, $shipment);
     }
 }

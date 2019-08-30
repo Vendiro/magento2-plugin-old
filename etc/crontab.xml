@@ -10,7 +10,7 @@
         <job name="vendiro_import_to_magento" instance="TIG\Vendiro\Cron\Order" method="importToMagento">
             <schedule>*/5 * * * *</schedule>
         </job>
-        <job name="vendiro_tracktrace" instance="TIG\Vendiro\Cron\TrackTrace" method="registerShipments">
+        <job name="vendiro_tracktrace" instance="TIG\Vendiro\Cron\TrackTrace" method="confirmShipment">
             <schedule>*/5 * * * *</schedule>
         </job>
         <job name="vendiro_update_carriers" instance="TIG\Vendiro\Cron\Carrier" method="updateCarriers">
