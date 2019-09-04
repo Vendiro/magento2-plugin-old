@@ -32,27 +32,73 @@
 
 namespace TIG\Vendiro\Service\Inventory;
 
+use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
+use TIG\Vendiro\Webservices\Endpoints\UpdateProductsStock;
 
 class Data
 {
     /** @var ApiConfiguration */
     private $apiConfiguration;
 
+    /** @var ProductStock */
+    private $productStock;
+
+    /** @var UpdateProductsStock */
+    private $updateProductsStock;
+
+    /** @var Log */
+    private $logger;
+
     /**
-     * @param ApiConfiguration $apiConfiguration
+     * @param ApiConfiguration    $apiConfiguration
+     * @param ProductStock        $productStock
+     * @param UpdateProductsStock $updateProductsStock
+     * @param Log                 $logger
      */
-    public function __construct(ApiConfiguration $apiConfiguration)
-    {
+    public function __construct(
+        ApiConfiguration $apiConfiguration,
+        ProductStock $productStock,
+        UpdateProductsStock $updateProductsStock,
+        Log $logger
+    ) {
         $this->apiConfiguration = $apiConfiguration;
+        $this->productStock = $productStock;
+        $this->updateProductsStock = $updateProductsStock;
+        $this->logger = $logger;
     }
 
-    public function get()
+    public function updateProductInventory()
     {
         if (!$this->apiConfiguration->canUpdateInventory()) {
             return;
         }
 
-        return '';
+        //TODO: get item list by rule; either "cron last run" date or by queue
+
+
+        $sku = '';
+        $qty = $this->productStock->getStockBySku($sku);
+        $requestData = [['sku' => $sku, 'stock' => $qty]];
+
+        $this->updateProductsStock->setRequestData($requestData);
+
+        $response = $this->updateProductsStock->call();
+
+        if ((int)$response['count_invalid_skus'] > 0 && isset($response['invalid_skus'])) {
+            $this->logInvalidSkus($response['invalid_skus']);
+        }
+    }
+
+    private function logInvalidSkus($invalidSkus)
+    {
+        if (!is_array($invalidSkus)) {
+            $invalidSkus = [$invalidSkus];
+        }
+
+        $invalidSkusString = implode(', ', $invalidSkus);
+        $noticeString = sprintf(__("The inventory of some SKU's could not be updated: %s"), $invalidSkusString);
+
+        $this->logger->notice($noticeString);
     }
 }
