@@ -235,3 +235,21 @@
     width:0;
     height:0;
 }
+
+/* Vendiro Configuration - API validator messages =================================================================== */
+
+.vendiro-config-page #message_span .validation-message {
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.vendiro-config-page #message_span .validation-message.error {
+    background: #ffd0d0;
+    border-left: 3px solid red;
+}
+
+.vendiro-config-page #message_span .validation-message.success {
+    background: #c6ffc8;
+    border-left: 3px solid #4CAF50;
+}
