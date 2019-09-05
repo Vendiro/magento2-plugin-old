@@ -34,70 +34,49 @@
 namespace TIG\Vendiro\Service\TrackTrace;
 
 use Magento\Sales\Api\Data\ShipmentInterface;
-use TIG\Vendiro\Api\Data\CarrierInterface;
-use TIG\Vendiro\Api\Data\OrderInterface;
-use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
-use TIG\Vendiro\Service\Order\ApiStatusManager;
+use Magento\Sales\Model\ResourceModel\Order\Shipment\Track\CollectionFactory;
+use TIG\Vendiro\Exception;
+use TIG\Vendiro\Model\Config\Provider\General\CarrierConfiguration;
+use TIG\Vendiro\Model\Config\Provider\QueueStatus;
+use TIG\Vendiro\Model\TrackQueueRepository;
 use TIG\Vendiro\Webservices\Endpoints\ConfirmShipment;
 
 class Data
 {
-    /** @var ConfirmShipment */
+    /** @var ConfirmShipment $confirmShipment */
     private $confirmShipment;
 
-    /** @var CarrierInterface */
-    private $carrierInterface;
+    /** @var TrackQueueRepository $trackQueueItemRepository */
+    private $trackQueueItemRepository;
 
-    /** @var ApiConfiguration */
-    private $apiConfiguration;
+    /** @var CollectionFactory $collectionFactory */
+    private $collectionFactory;
 
-    /** @var ApiStatusManager */
-    private $apiStatusManager;
+    /** @var CarrierConfiguration $carrierConfiguration */
+    private $carrierConfiguration;
+
+    /** @var ShipmentInterface $shipmentInterface */
+    private $shipmentInterface;
 
     /**
-     * @param ApiConfiguration        $apiConfiguration
-     * @param ApiStatusManager        $apiStatusManager
-     * @param CarrierInterface        $carrierInterface
-     * @param ConfirmShipment         $confirmShipment
+     * @param ConfirmShipment                           $confirmShipment
+     * @param TrackQueueRepository                      $trackQueueItemRepository
+     * @param CollectionFactory                         $collectionFactory
+     * @param CarrierConfiguration                      $carrierConfiguration
+     * @param ShipmentInterface                         $shipmentInterface
      */
     public function __construct(
-        ApiConfiguration $apiConfiguration,
-        ApiStatusManager $apiStatusManager,
-        CarrierInterface $carrierInterface,
-        ConfirmShipment $confirmShipment
+        ConfirmShipment $confirmShipment,
+        TrackQueueRepository $trackQueueItemRepository,
+        CollectionFactory $collectionFactory,
+        CarrierConfiguration $carrierConfiguration,
+        ShipmentInterface $shipmentInterface
     ) {
-        $this->apiConfiguration = $apiConfiguration;
-        $this->apiStatusManager = $apiStatusManager;
-        $this->carrierInterface = $carrierInterface;
         $this->confirmShipment = $confirmShipment;
-    }
-
-    /**
-     * @param OrderInterface $order
-     * @param ShipmentInterface $shipment
-     *
-     * @return array|void
-     */
-    public function setShipment($order, $shipment)
-    {
-        if (!$this->apiConfiguration->canRegisterShipments()) {
-            return;
-        }
-
-        $vendiroId = $order->getVendiroId();
-        $carrierId = $this->carrierInterface->getCarrierId();
-        $vendiroOrder = $this->apiStatusManager->getOrders($vendiroId);
-        $shipmentCode = $vendiroOrder->getShipmentCode();
-        $tracks = $shipment->getTracks();
-
-        foreach ($tracks as $track) {
-            $titles = $track->getTitle();
-            $numbers = $track->getNumber();
-
-            $result = array_merge($titles, $numbers);
-        }
-
-        $this->shipmentCall($vendiroOrder, $carrierId, $shipmentCode);
+        $this->trackQueueItemRepository = $trackQueueItemRepository;
+        $this->collectionFactory = $collectionFactory;
+        $this->carrierConfiguration = $carrierConfiguration;
+        $this->shipmentInterface = $shipmentInterface;
     }
 
     /**
@@ -107,11 +86,67 @@ class Data
      *
      * @return mixed
      */
-    public function shipmentCall($vendiroOrderId, $carrierId, $shipmentCode)
+    public function confirmShipmentCall($vendiroOrderId, $carrierId, $shipmentCode)
     {
         $requestData = ['carrier_id' => $carrierId, 'shipment_code' => $shipmentCode];
         $this->confirmShipment->setRequestData($requestData);
 
         return $this->confirmShipment->call($vendiroOrderId);
+    }
+
+    /**
+     * @param \TIG\Vendiro\Api\Data\TrackQueueInterface $trackQueueItem
+     *
+     * @return array
+     */
+    public function getTracks($trackQueueItem)
+    {
+        $data = [];
+
+        $trackCollection = $this->collectionFactory->create();
+        $trackId = $trackQueueItem->getTrackId();
+        $track = $trackCollection->getItemById($trackId);
+
+        $shipmentCode = $track->getTrackNumber();
+        $shipment = $track->getShipment();
+
+        $vendiroOrderId = $shipment->getOrderId();
+        $carrierId = $this->carrierConfiguration->getDefaultCarrier($this->shipmentInterface->getStoreId());
+
+        $data['shipment_code'] = $shipmentCode;
+        $data['vendiro_order_id'] = $vendiroOrderId;
+        $data['carrier_id'] = $carrierId;
+
+        return $data;
+    }
+
+    /**
+     * @param $trackQueueItem
+     *
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \TIG\Vendiro\Exception
+     */
+    public function shipmentCall($trackQueueItem)
+    {
+        $data = $this->getTracks($trackQueueItem);
+
+        try {
+            $this->confirmShipmentCall($data['vendiro_order_id'], $data['carrier_id'], $data['shipment_code']);
+        } catch (Exception $exception) {
+            throw $exception;
+        }
+
+        $this->saveTrackItem($trackQueueItem);
+    }
+
+    /**
+     * @param \TIG\Vendiro\Api\Data\TrackQueueInterface $trackQueueItem
+     *
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     */
+    public function saveTrackItem($trackQueueItem)
+    {
+        $trackQueueItem->setStatus(QueueStatus::QUEUE_STATUS_SHIPMENT_CREATED);
+        $this->trackQueueItemRepository->save($trackQueueItem);
     }
 }

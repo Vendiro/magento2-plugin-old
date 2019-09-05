@@ -82,13 +82,8 @@ abstract class AbstractRepository
         /** @var \Magento\Framework\Api\SearchResults $list */
         $list = $this->getList($searchCriteria->create());
 
-        if ($list->getTotalCount() > 1) {
+        if ($list->getTotalCount() > 0) {
             return $list->getItems();
-        }
-
-        if ($list->getTotalCount()) {
-            $items = $list->getItems();
-            return array_shift($items);
         }
 
         return null;

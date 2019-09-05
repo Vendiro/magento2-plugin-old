@@ -31,70 +31,156 @@
  */
 namespace TIG\Vendiro\Plugin\Shipment;
 
-use Magento\Framework\App\RequestInterface;
-use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\ShipmentInterface;
+use TIG\Vendiro\Api\TrackQueueRepositoryInterface;
 use TIG\Vendiro\Model\Config\Provider\General\CarrierConfiguration;
+use TIG\Vendiro\Model\Config\Provider\QueueStatus;
+use TIG\Vendiro\Model\TrackQueueRepository;
 
 class Save
 {
-    /** @var ManagerInterface */
-    private $managerInterface;
+    /** @var TrackQueueRepository $trackQueueRepository */
+    private $trackQueueRepository;
 
-    /**
-     * @var RequestInterface $request
-     */
-    private $request;
-
-    /**
-     * @var CarrierConfiguration $configuration
-     */
+    /** @var CarrierConfiguration $configuration */
     private $configuration;
 
+    /**
+     * @param CarrierConfiguration                   $configuration
+     * @param TrackQueueRepositoryInterface          $trackQueueRepository
+     */
     public function __construct(
-        RequestInterface $request,
         CarrierConfiguration $configuration,
-        ManagerInterface $managerInterface
+        TrackQueueRepositoryInterface $trackQueueRepository
     ) {
-        $this->request = $request;
-        $this->configuration = $configuration;
-        $this->managerInterface = $managerInterface;
+        $this->configuration          = $configuration;
+        $this->trackQueueRepository   = $trackQueueRepository;
     }
 
     /**
-     * @param $subject
+     * @param      $subject
+     *
+     * @param null $shipment
      *
      * @return ShipmentInterface
-     * @throws \TIG\Vendiro\Exception
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function beforeSave($subject)
+    public function beforeSave($subject, $shipment = null)
     {
-        $order = $subject->getOrder();
+        $order = null;
+        if ($shipment) {
+            $order = $shipment->getOrder();
+        }
+
+        if (!$order) {
+            $order = $subject->getOrder();
+        }
+
         if ($order->getShippingMethod() != 'tig_vendiro_shipping') {
             return $subject;
         }
 
-        return $this->saveVendiroCarrier($subject);
+        if (!$shipment) {
+            $shipment = $subject;
+        }
+
+        $this->saveVendiroCarrier($shipment);
     }
 
     /**
      * @param ShipmentInterface $shipment
      *
-     * @return ShipmentInterface
-     * @throws \TIG\Vendiro\Exception
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     private function saveVendiroCarrier(ShipmentInterface $shipment)
     {
         $defaultCarrier = $this->configuration->getDefaultCarrier($shipment->getStoreId());
         $shipment->setVendiroCarrier($defaultCarrier);
 
-        if ($shipment->getVendiroCarrier() === '0') {
+        if ($shipment->getVendiroCarrier() == '0') {
             $errorMessage = __(
                 "Please select a default shipping method."
             );
-            throw new \TIG\Vendiro\Exception($errorMessage);
+            throw new LocalizedException($errorMessage);
+        }
+    }
+
+    /**
+     * @param $subject
+     *
+     * @throws \Exception
+     */
+    public function afterSave($subject, $shipment = null)
+    {
+        $tracks = $this->getTracks($subject, $shipment);
+        $this->saveTracks($tracks);
+    }
+
+    /**
+     * @param      $subject
+     * @param null $shipment
+     *
+     * @return null
+     * @throws \Exception
+     */
+    public function getTracks($subject, $shipment = null)
+    {
+        $tracks = null;
+        if ($shipment) {
+            $tracks = $shipment->getTracks();
         }
 
-        return $shipment;
+        if (!$tracks) {
+            $tracks = $subject->getTracks();
+        }
+
+        $tracks = $this->filterTracks($tracks);
+        $tracks = array_unique($tracks, SORT_REGULAR);
+
+        return $tracks;
+    }
+
+    /**
+     * @param $tracks
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function filterTracks($tracks)
+    {
+        $entityIds = [];
+
+        foreach ($tracks as $track) {
+            array_push($entityIds, $track->getId());
+        }
+
+        $duplicateTracks = $this->trackQueueRepository->getByFieldWithValue('track_id', $entityIds, 0, 'in');
+
+        if (!isset($duplicateTracks)) {
+            return $tracks;
+        }
+
+        foreach ($duplicateTracks as $duplicateTrack) {
+            unset($tracks[$duplicateTrack->getTrackId()]);
+        }
+
+        return $tracks;
+    }
+
+    /**
+     * @param $tracks
+     *
+     * @throws \Exception
+     */
+    public function saveTracks($tracks)
+    {
+        foreach ($tracks as $track) {
+            $vendiroTrackQueueItem = $this->trackQueueRepository->create();
+            $vendiroTrackQueueItem->setTrackId($track->getId());
+            $vendiroTrackQueueItem->setStatus(QueueStatus::QUEUE_STATUS_NEW);
+            // @codingStandardsIgnoreLine
+            $vendiroTrackQueueItem->save();
+        }
     }
 }

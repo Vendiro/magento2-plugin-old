@@ -29,16 +29,26 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Model\ResourceModel\Carrier;
+namespace TIG\Vendiro\Api;
 
-use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use TIG\Vendiro\Api\Data\TrackQueueInterface;
 
-class Collection extends AbstractCollection
+interface TrackQueueRepositoryInterface
 {
-    // @codingStandardsIgnoreLine
-    protected function _construct()
-    {
-        // @codingStandardsIgnoreLine
-        $this->_init('TIG\Vendiro\Model\Carrier', 'TIG\Vendiro\Model\ResourceModel\Carrier');
-    }
+    /**
+     * Save the Track to the queue
+     *
+     * @param TrackQueueInterface $trackQueueItem
+     *
+     * @return TrackQueueInterface
+     * @api
+     */
+    public function save(TrackQueueInterface $trackQueueItem);
+
+    /**
+     * @param array $data
+     *
+     * @return mixed
+     */
+    public function create(array $data = []);
 }

@@ -46,7 +46,7 @@ class Create extends Template implements BlockInterface
     private $configuration;
 
     /**
-     * @var CollectionFactory\
+     * @var CollectionFactory
      */
     private $collectionFactory;
 

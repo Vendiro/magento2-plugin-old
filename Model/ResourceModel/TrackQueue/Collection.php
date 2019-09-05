@@ -29,7 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Model\ResourceModel\Carrier;
+namespace TIG\Vendiro\Model\ResourceModel\TrackQueue;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
@@ -39,6 +39,6 @@ class Collection extends AbstractCollection
     protected function _construct()
     {
         // @codingStandardsIgnoreLine
-        $this->_init('TIG\Vendiro\Model\Carrier', 'TIG\Vendiro\Model\ResourceModel\Carrier');
+        $this->_init('TIG\Vendiro\Model\TrackQueue', 'TIG\Vendiro\Model\ResourceModel\TrackQueue');
     }
 }

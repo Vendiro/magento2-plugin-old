@@ -32,35 +32,68 @@
 
 namespace TIG\Vendiro\Cron;
 
-use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
+use Magento\Sales\Model\ResourceModel\Order\Shipment\Track\CollectionFactory;
+use TIG\Vendiro\Api\TrackQueueRepositoryInterface;
+use TIG\Vendiro\Model\Config\Provider\General\Configuration;
+use TIG\Vendiro\Model\TrackQueueRepository;
 use TIG\Vendiro\Service\TrackTrace\Data;
 
 class TrackTrace
 {
-    /** @var Data $orderService  */
+    /** @var TrackQueueRepository $trackQueueItemRepository */
+    private $trackQueueItemRepository;
+
+    /** @var Configuration $configuration */
+    private $configuration;
+
+    /** @var Data $shipmentService */
     private $shipmentService;
 
-    /** @var ApiConfiguration */
-    private $apiConfiguration;
+    /** @var CollectionFactory $collectionFactory */
+    private $collectionFactory;
 
     /**
-     * @param Data             $shipmentService
-     * @param ApiConfiguration $apiConfiguration
+     * @param Data                                                            $shipmentService
+     * @param Configuration                                                   $configuration
+     * @param TrackQueueRepositoryInterface                                   $trackQueueItemRepository
+     * @param CollectionFactory                                               $collectionFactory
      */
     public function __construct(
         Data $shipmentService,
-        ApiConfiguration $apiConfiguration
+        Configuration $configuration,
+        TrackQueueRepositoryInterface $trackQueueItemRepository,
+        CollectionFactory $collectionFactory
     ) {
         $this->shipmentService = $shipmentService;
-        $this->apiConfiguration = $apiConfiguration;
+        $this->configuration = $configuration;
+        $this->trackQueueItemRepository = $trackQueueItemRepository;
+        $this->collectionFactory = $collectionFactory;
     }
 
-    public function confirmShipment()
+    /**
+     * @param \TIG\Vendiro\Api\Data\TrackQueueInterface $trackQueueItem
+     *
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \TIG\Vendiro\Exception
+     */
+    public function confirmShipment($trackQueueItem)
     {
-        if (!$this->apiConfiguration->canRegisterShipments()) {
+        if (!$this->configuration->isEnabled()) {
             return;
         }
 
-        $this->shipmentService->setShipment($order, $shipment);
+        $queueItems = $this->trackQueueItemRepository->getQueueItems();
+
+        if (!is_array($queueItems)) {
+            $this->shipmentService->shipmentCall($queueItems);
+
+            return;
+        }
+
+        foreach ($queueItems as $queueItem) {
+            $this->shipmentService->getTracks($queueItem);
+        }
+
+        $this->shipmentService->shipmentCall($trackQueueItem);
     }
 }

@@ -56,6 +56,7 @@
             <supported_magento_version>2.2.0 - 2.2.9, 2.3.0 - 2.3.2</supported_magento_version>
 
             <new_orders_limit>10</new_orders_limit>
+            <shipments_limit>1</shipments_limit>
 
             <endpoints>
                 <api_base_url>https://api.vendiro.nl/client/</api_base_url>

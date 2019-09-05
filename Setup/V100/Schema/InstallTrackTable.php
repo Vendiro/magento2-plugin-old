@@ -18,7 +18,7 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
@@ -29,16 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Model\ResourceModel\Carrier;
+namespace TIG\Vendiro\Setup\V100\Schema;
 
-use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use Magento\Framework\DB\Ddl\Table;
+use TIG\Vendiro\Setup\AbstractTableInstaller;
 
-class Collection extends AbstractCollection
+class InstallTrackTable extends AbstractTableInstaller
 {
+    const TABLE_NAME = 'tig_vendiro_track';
+
+    /**
+     * @return void
+     * @throws \Zend_Db_Exception
+     * @codingStandardsIgnoreLine§
+     */
     // @codingStandardsIgnoreLine
-    protected function _construct()
+    protected function defineTable()
     {
-        // @codingStandardsIgnoreLine
-        $this->_init('TIG\Vendiro\Model\Carrier', 'TIG\Vendiro\Model\ResourceModel\Carrier');
+        $columns = ['track_id'];
+
+        $this->addEntityId();
+        $this->addInt('track_id', 'Sales Shipment Track id');
+        $this->addText('status', 'Status', 32, false);
+        $this->addTimestamp('created_at', 'Created at', false, Table::TIMESTAMP_INIT);
+        $this->addIndex($columns);
     }
 }

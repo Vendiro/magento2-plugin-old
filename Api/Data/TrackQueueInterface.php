@@ -29,16 +29,43 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Model\ResourceModel\Carrier;
+namespace TIG\Vendiro\Api\Data;
 
-use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
-
-class Collection extends AbstractCollection
+interface TrackQueueInterface
 {
-    // @codingStandardsIgnoreLine
-    protected function _construct()
-    {
-        // @codingStandardsIgnoreLine
-        $this->_init('TIG\Vendiro\Model\Carrier', 'TIG\Vendiro\Model\ResourceModel\Carrier');
-    }
+    /**
+     * @return int
+     */
+    public function getTrackId();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\Vendiro\Api\Data\TrackQueueInterface
+     */
+    public function setTrackId($value);
+
+    /**
+     * @return string
+     */
+    public function getStatus();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\Vendiro\Api\Data\TrackQueueInterface
+     */
+    public function setStatus($value);
+
+    /**
+     * @return string
+     */
+    public function getCreatedAt();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\Vendiro\Api\Data\TrackQueueInterface
+     */
+    public function setCreatedAt($value);
 }
