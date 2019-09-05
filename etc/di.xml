@@ -55,4 +55,8 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="tig_vendiro_plugin_fbmordercomplete" type="TIG\Vendiro\Plugin\Order\FBMOrderComplete" sortOrder="1"/>
+    </type>
 </config>
