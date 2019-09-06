@@ -32,25 +32,56 @@
 namespace TIG\Vendiro\Service\Api;
 
 use TIG\Vendiro\Model\Config\Provider\General\Configuration;
+use Magento\Framework\Encryption\Encryptor;
 
 class AuthCredential
 {
     /** @var Configuration */
     private $configuration;
 
-    public function __construct(Configuration $configuration)
+    /** @var Encryptor $encryptor */
+    private $encryptor;
+
+    /**
+     * AuthCredential constructor.
+     * @param Configuration $configuration
+     * @param Encryptor $encryptor
+     */
+    public function __construct(Configuration $configuration,
+                                Encryptor $encryptor)
     {
         $this->configuration = $configuration;
+        $this->encryptor     = $encryptor;
+    }
+
+
+    /**
+     * @param null $authKey
+     * @param null $authToken
+     * @return string
+     */
+    public function get($authKey = null, $authToken = null)
+    {
+        if (!$authKey) {
+            $authKey = $this->encryptor->decrypt($this->configuration->getKey());
+        }
+
+        if (!$authToken) {
+            $authToken = $this->encryptor->decrypt($this->configuration->getToken());
+        }
+
+        $authCredential = $this->authEncode($authKey, $authToken);
+
+        return $authCredential;
     }
 
     /**
+     * @param $authKey
+     * @param $authToken
      * @return string
      */
-    public function get()
+    public function authEncode($authKey, $authToken)
     {
-        $authKey = $this->configuration->getKey();
-        $authToken = $this->configuration->getToken();
-
         $authString = $authKey . ':' . $authToken;
         $authCredential = base64_encode($authString);
 
