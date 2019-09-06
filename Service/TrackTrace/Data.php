@@ -38,9 +38,10 @@ use Magento\Sales\Model\ResourceModel\Order\Shipment\Track\CollectionFactory;
 use TIG\Vendiro\Exception;
 use TIG\Vendiro\Model\Config\Provider\General\CarrierConfiguration;
 use TIG\Vendiro\Model\Config\Provider\QueueStatus;
+use TIG\Vendiro\Model\OrderRepository;
 use TIG\Vendiro\Model\TrackQueueRepository;
 use TIG\Vendiro\Webservices\Endpoints\ConfirmShipment;
-use TIG\Vendiro\Model\OrderRepository;
+use TIG\Vendiro\Logging\Log;
 
 class Data
 {
@@ -62,7 +63,8 @@ class Data
     /** @var OrderRepository $orderRepository */
     private $orderRepository;
 
-
+    /** @var Log $logger */
+    private $logger;
 
     /**
      * @param ConfirmShipment          $confirmShipment
@@ -78,7 +80,8 @@ class Data
         CollectionFactory $collectionFactory,
         CarrierConfiguration $carrierConfiguration,
         ShipmentInterface $shipmentInterface,
-        OrderRepository $orderRepository
+        OrderRepository $orderRepository,
+        Log $logger
     ) {
         $this->confirmShipment = $confirmShipment;
         $this->trackQueueItemRepository = $trackQueueItemRepository;
@@ -86,6 +89,7 @@ class Data
         $this->carrierConfiguration = $carrierConfiguration;
         $this->shipmentInterface = $shipmentInterface;
         $this->orderRepository = $orderRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -94,13 +98,18 @@ class Data
      * @param $shipmentCode
      *
      * @return mixed
+     * @throws \TIG\Vendiro\Exception
      */
     public function confirmShipmentCall($vendiroOrderId, $carrierId, $shipmentCode)
     {
-        $requestData = ['carrier_id' => $carrierId, 'shipment_code' => $shipmentCode];
+        $requestData = ['carrier_id' => '99999', 'shipment_code' => $shipmentCode];
         $this->confirmShipment->setRequestData($requestData);
 
         $result = $this->confirmShipment->call($vendiroOrderId);
+
+        if ($result) {
+            throw new \TIG\Vendiro\Exception(__($result['message']));
+        }
 
         return $result;
     }
@@ -109,6 +118,7 @@ class Data
      * @param \TIG\Vendiro\Api\Data\TrackQueueInterface $trackQueueItem
      *
      * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getTracks($trackQueueItem)
     {
@@ -119,12 +129,11 @@ class Data
         $track = $trackCollection->getItemById($trackId);
 
         $shipmentCode = $track->getTrackNumber();
-        $shipment = $track->getShipment();
 
         $orderId = $track->getShipment()->getOrderId();
-
         $vendiroOrder = $this->orderRepository->getByOrderId($orderId);
-        $vendiroOrderId = array_keys($vendiroOrder)['0'];
+        $entityId = array_keys($vendiroOrder)['0'];
+        $vendiroOrderId = $this->orderRepository->getById($entityId)->getVendiroId();
         $carrierId = $this->carrierConfiguration->getDefaultCarrier($this->shipmentInterface->getStoreId());
 
         $data['shipment_code'] = $shipmentCode;
@@ -137,8 +146,7 @@ class Data
     /**
      * @param $trackQueueItem
      *
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \TIG\Vendiro\Exception
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function shipmentCall($trackQueueItem)
     {
@@ -146,11 +154,12 @@ class Data
 
         try {
             $this->confirmShipmentCall($data['vendiro_order_id'], $data['carrier_id'], $data['shipment_code']);
-        } catch (Exception $exception) {
-            throw $exception;
+            $this->saveTrackItem($trackQueueItem);
+        } catch (\Magento\Framework\Exception\CouldNotSaveException $exception) {
+            $this->logger->addNotice('Could not confirm Vendiro shipment');
+        } catch (\TIG\Vendiro\Exception $exception) {
+            $this->logger->notice($exception->getMessage());
         }
-
-        $this->saveTrackItem($trackQueueItem);
     }
 
     /**

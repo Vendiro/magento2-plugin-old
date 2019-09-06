@@ -85,9 +85,7 @@ class TrackTrace
         $queueItems = $this->trackQueueItemRepository->getQueueItems();
 
         if (!is_array($queueItems)) {
-            $this->shipmentService->shipmentCall($queueItems);
-
-            return;
+            $queueItems = [$queueItems];
         }
 
         foreach ($queueItems as $trackQueueItem) {
