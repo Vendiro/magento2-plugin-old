@@ -55,4 +55,57 @@
             </argument>
         </arguments>
     </type>
+
+    <!-- Plugins to observe product quantity changes -->
+    <!-- Catalog Quantity -->
+    <type name="Magento\Catalog\Api\Data\ProductInterface">
+        <plugin name="TIG_Vendiro_StockQueue_Product" type="TIG\Vendiro\Plugin\StockQueue\Catalog\Product" />
+    </type>
+    <type name="Magento\Catalog\Api\ProductRepositoryInterface">
+        <plugin name="TIG_Vendiro_StockQueue_ProductRepository" type="TIG\Vendiro\Plugin\StockQueue\Catalog\ProductRepository" />
+    </type>
+    <type name="Magento\CatalogInventory\Api\RegisterProductSaleInterface">
+        <plugin name="TIG_Vendiro_StockQueueRegisterProductSale" type="TIG\Vendiro\Plugin\StockQueue\Catalog\RegisterProductSale" />
+    </type>
+    <type name="Magento\CatalogInventory\Api\RevertProductSaleInterface">
+        <plugin name="TIG_Vendiro_StockQueue_RevertProductSale" type="TIG\Vendiro\Plugin\StockQueue\Catalog\RevertProductSale" />
+    </type>
+    <type name="Magento\CatalogInventory\Api\StockItemRepositoryInterface">
+        <plugin name="TIG_Vendiro_StockQueue_StockItemRepository" type="TIG\Vendiro\Plugin\StockQueue\Catalog\StockItemRepository" />
+    </type>
+    <type name="Magento\CatalogInventory\Api\StockManagementInterface">
+        <plugin name="TIG_Vendiro_StockQueue_StockManagement" type="TIG\Vendiro\Plugin\StockQueue\Catalog\StockManagement" />
+    </type>
+    <!-- Inventory Quantity -->
+    <type name="Magento\InventoryReservationsApi\Model\AppendReservationsInterface">
+        <plugin name="TIG_Vendiro_StockQueue_AppendReservations" type="TIG\Vendiro\Plugin\StockQueue\Inventory\AppendReservations" />
+    </type>
+    <type name="Magento\InventoryConfigurationApi\Api\SaveStockItemConfigurationInterface">
+        <plugin name="TIG_Vendiro_StockQueue_SaveStockItemConfiguration" type="TIG\Vendiro\Plugin\StockQueue\Inventory\SaveStockItemConfiguration" />
+    </type>
+    <!-- Sales Quantity -->
+    <type name="Magento\Sales\Api\Data\CreditmemoInterface">
+        <plugin name="TIG_Vendiro_StockQueue_Creditmemo" type="TIG\Vendiro\Plugin\StockQueue\Sales\Creditmemo" />
+    </type>
+    <type name="Magento\Sales\Api\CreditmemoRepositoryInterface">
+        <plugin name="TIG_Vendiro_StockQueue_CreditmemoRepository" type="TIG\Vendiro\Plugin\StockQueue\Sales\CreditmemoRepository" />
+    </type>
+    <type name="Magento\Sales\Api\Data\OrderInterface">
+        <plugin name="TIG_Vendiro_StockQueue_Order" type="TIG\Vendiro\Plugin\StockQueue\Sales\Order" />
+    </type>
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="TIG_Vendiro_StockQueue_OrderRepository" type="TIG\Vendiro\Plugin\StockQueue\Sales\OrderRepository" />
+    </type>
+    <type name="Magento\Sales\Api\RefundInvoiceInterface">
+        <plugin name="TIG_Vendiro_StockQueue_RefundInvoice" type="TIG\Vendiro\Plugin\StockQueue\Sales\RefundInvoice" />
+    </type>
+    <type name="Magento\Sales\Api\RefundOrderInterface">
+        <plugin name="TIG_Vendiro_StockQueue_RefundOrder" type="TIG\Vendiro\Plugin\StockQueue\Sales\RefundOrder" />
+    </type>
+    <type name="Magento\Sales\Api\Data\ShipmentInterface">
+        <plugin name="TIG_Vendiro_StockQueue_Shipment" type="TIG\Vendiro\Plugin\StockQueue\Sales\Shipment" />
+    </type>
+    <type name="Magento\Sales\Api\ShipmentRepositoryInterface">
+        <plugin name="TIG_Vendiro_StockQueue_ShipmentRepository" type="TIG\Vendiro\Plugin\StockQueue\Sales\ShipmentRepository" />
+    </type>
 </config>
