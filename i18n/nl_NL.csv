@@ -18,3 +18,8 @@
 "Regular quantity","Normale voorraad"
 "Fill in your Vendiro API key.","Vul uw Vendiro API key in"
 "Fill in your Vendiro API token.","Vul uw Vendiro API token in"
+"Validate API Credentials","Valideer API Gegevens"
+"The order could not be exported. The store that was requested wasn't found.","De bestelling kan niet worden geëxporteerd. De gevraagde winkel is niet gevonden."
+"The order could not be exported from Vendiro. The product that was requested wasn't found.","De bestelling kan niet worden geëxporteerd vanuit Vendiro. Het gevraagde product is niet gevonden."
+"The order could not be exported from Vendiro. The product that was requested is not in stock.","De bestelling kan niet worden geëxporteerd vanuit Vendiro. Het gevraagde product is niet op voorraad."
+
