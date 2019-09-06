@@ -40,6 +40,7 @@ use TIG\Vendiro\Model\Config\Provider\General\CarrierConfiguration;
 use TIG\Vendiro\Model\Config\Provider\QueueStatus;
 use TIG\Vendiro\Model\TrackQueueRepository;
 use TIG\Vendiro\Webservices\Endpoints\ConfirmShipment;
+use TIG\Vendiro\Model\OrderRepository;
 
 class Data
 {
@@ -58,25 +59,33 @@ class Data
     /** @var ShipmentInterface $shipmentInterface */
     private $shipmentInterface;
 
+    /** @var OrderRepository $orderRepository */
+    private $orderRepository;
+
+
+
     /**
-     * @param ConfirmShipment                           $confirmShipment
-     * @param TrackQueueRepository                      $trackQueueItemRepository
-     * @param CollectionFactory                         $collectionFactory
-     * @param CarrierConfiguration                      $carrierConfiguration
-     * @param ShipmentInterface                         $shipmentInterface
+     * @param ConfirmShipment          $confirmShipment
+     * @param TrackQueueRepository     $trackQueueItemRepository
+     * @param CollectionFactory        $collectionFactory
+     * @param CarrierConfiguration     $carrierConfiguration
+     * @param ShipmentInterface        $shipmentInterface
+     * @param OrderRepository          $orderRepository
      */
     public function __construct(
         ConfirmShipment $confirmShipment,
         TrackQueueRepository $trackQueueItemRepository,
         CollectionFactory $collectionFactory,
         CarrierConfiguration $carrierConfiguration,
-        ShipmentInterface $shipmentInterface
+        ShipmentInterface $shipmentInterface,
+        OrderRepository $orderRepository
     ) {
         $this->confirmShipment = $confirmShipment;
         $this->trackQueueItemRepository = $trackQueueItemRepository;
         $this->collectionFactory = $collectionFactory;
         $this->carrierConfiguration = $carrierConfiguration;
         $this->shipmentInterface = $shipmentInterface;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -91,7 +100,9 @@ class Data
         $requestData = ['carrier_id' => $carrierId, 'shipment_code' => $shipmentCode];
         $this->confirmShipment->setRequestData($requestData);
 
-        return $this->confirmShipment->call($vendiroOrderId);
+        $result = $this->confirmShipment->call($vendiroOrderId);
+
+        return $result;
     }
 
     /**
@@ -110,7 +121,10 @@ class Data
         $shipmentCode = $track->getTrackNumber();
         $shipment = $track->getShipment();
 
-        $vendiroOrderId = $shipment->getOrderId();
+        $orderId = $track->getShipment()->getOrderId();
+
+        $vendiroOrder = $this->orderRepository->getByOrderId($orderId);
+        $vendiroOrderId = array_keys($vendiroOrder)['0'];
         $carrierId = $this->carrierConfiguration->getDefaultCarrier($this->shipmentInterface->getStoreId());
 
         $data['shipment_code'] = $shipmentCode;

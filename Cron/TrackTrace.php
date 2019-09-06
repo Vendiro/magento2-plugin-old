@@ -90,10 +90,9 @@ class TrackTrace
             return;
         }
 
-        foreach ($queueItems as $queueItem) {
-            $this->shipmentService->getTracks($queueItem);
+        foreach ($queueItems as $trackQueueItem) {
+            $this->shipmentService->shipmentCall($trackQueueItem);
         }
 
-        $this->shipmentService->shipmentCall($trackQueueItem);
     }
 }
