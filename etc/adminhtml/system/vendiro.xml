@@ -39,11 +39,13 @@
             <label>API key</label>
             <comment><![CDATA[Fill in your Vendiro API key.]]></comment>
             <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+            <config_path>tig_vendiro/vendiro/key</config_path>
         </field>
         <field id="token" translate="label comment" type="obscure" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>API token</label>
             <comment><![CDATA[Fill in your Vendiro API token.]]></comment>
             <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+            <config_path>tig_vendiro/vendiro/token</config_path>
         </field>
         <field id="validate_api_credentials" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <frontend_model>TIG\Vendiro\Block\Adminhtml\Config\Validate\ApiCredentials</frontend_model>

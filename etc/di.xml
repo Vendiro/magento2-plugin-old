@@ -68,4 +68,15 @@
     <type name="Magento\Sales\Api\ShipmentRepositoryInterface">
         <plugin name="ShipmentCreate" type="TIG\Vendiro\Plugin\Shipment\Save" />
     </type>
+
+    <type name="TIG\Vendiro\Webservices\Endpoints\AbstractEndpoint">
+        <arguments>
+            <argument name="restApi" xsi:type="object">TIG\Vendiro\Webservices\Rest</argument>
+        </arguments>
+    </type>
+    <type name="TIG\Vendiro\Webservices\Endpoints\GetAccount">
+        <arguments>
+            <argument name="restApi" xsi:type="object">TIG\Vendiro\Webservices\ValidationRest</argument>
+        </arguments>
+    </type>
 </config>
