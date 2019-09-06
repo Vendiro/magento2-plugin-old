@@ -35,9 +35,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use \Magento\Framework\Session\SessionManagerInterface as CoreSession;
-
 use TIG\Vendiro\Model\Payment\Vendiro as VendiroPayment;
-
 
 /**
  * Class FBMOrderComplete
@@ -47,10 +45,8 @@ use TIG\Vendiro\Model\Payment\Vendiro as VendiroPayment;
 class FBMOrderComplete
 {
 
-    /**
-     * @var CoreSession
-     */
-    protected $_coreSession;
+    /* @var CoreSession */
+    private $coreSession;
 
     /**
      * FBMOrderComplete constructor.
@@ -58,8 +54,8 @@ class FBMOrderComplete
      */
     public function __construct(
         CoreSession $coreSession
-    ){
-        $this->_coreSession = $coreSession;
+    ) {
+        $this->coreSession = $coreSession;
     }
 
     /**
@@ -67,7 +63,7 @@ class FBMOrderComplete
      */
     public function getCoreSession()
     {
-        return $this->_coreSession;
+        return $this->coreSession;
     }
 
     /**
@@ -82,10 +78,11 @@ class FBMOrderComplete
      */
     public function beforeSave($subject, $order)
     {
-        if ($order->getPayment()->getMethod() == VendiroPayment::PAYMENT_CODE &&
-            $this->getCoreSession()->getFulfilmentByMarketplace() == true)
-        {
+        $payment = $order->getPayment();
+        $currentPaymentMethod = $payment->getMethod();
+        $fulfilmentSession = $this->getCoreSession()->getFulfilmentByMarketplace();
 
+        if ($currentPaymentMethod == VendiroPayment::PAYMENT_CODE && $fulfilmentSession == true) {
             $state = Order::STATE_COMPLETE;
             $orderConfig = $order->getConfig();
             $defaultStatus = $orderConfig->getStateDefaultStatus($state);

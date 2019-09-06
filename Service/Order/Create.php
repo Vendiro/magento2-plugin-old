@@ -32,13 +32,12 @@
 namespace TIG\Vendiro\Service\Order;
 
 use Magento\Framework\DataObject\Factory as DataObjectFactory;
+use \Magento\Framework\Session\SessionManagerInterface as CoreSession;
 use TIG\Vendiro\Exception as VendiroException;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Carrier\Vendiro as VendiroCarrier;
 use TIG\Vendiro\Model\Payment\Vendiro as VendiroPayment;
 use TIG\Vendiro\Service\Order\Create\CartManager;
-
-use \Magento\Framework\Session\SessionManagerInterface as CoreSession;
 
 class Create
 {
@@ -57,10 +56,8 @@ class Create
     /** @var Log */
     private $logger;
 
-    /**
-     * @var CoreSession
-     */
-    protected $_coreSession;
+    /** @var CoreSession */
+    protected $coreSession;
 
     /**
      * @param CartManager          $cart
@@ -83,7 +80,7 @@ class Create
         $this->product = $product;
         $this->dataObjectFactory = $dataObjectFactory;
         $this->logger = $logger;
-        $this->_coreSession = $coreSession;
+        $this->coreSession = $coreSession;
     }
 
     /**
@@ -91,7 +88,7 @@ class Create
      */
     public function getCoreSession()
     {
-        return $this->_coreSession;
+        return $this->coreSession;
     }
 
     /**
@@ -114,6 +111,21 @@ class Create
         $shippingCost = $vendiroOrder['shipping_cost'] + $vendiroOrder['administration_cost'];
         $this->setMethods($shippingCost);
 
+        $newOrderId = $this->prepareAndPlaceOrder($vendiroOrder);
+
+        if ($newOrderId) {
+            $this->updateOrderCommentAndStatus($newOrderId, $vendiroOrder);
+        }
+
+        return $newOrderId;
+    }
+
+    /**
+     * @param $vendiroOrder
+     * @return bool|int
+     */
+    private function prepareAndPlaceOrder($vendiroOrder)
+    {
         if ($this->getCoreSession()->getFulfilmentByMarketplace() == true) {
             throw new VendiroException(
                 __('Fulfilment by marketplace flag already set, this means another order is busy.')
@@ -128,12 +140,9 @@ class Create
 
         $this->getCoreSession()->unsFulfilmentByMarketplace();
 
-        if ($newOrderId) {
-            $this->updateOrderCommentAndStatus($newOrderId, $vendiroOrder);
-        }
-
         return $newOrderId;
     }
+
 
     /**
      * @param $apiProduct
