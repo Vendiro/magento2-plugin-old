@@ -33,20 +33,20 @@ namespace TIG\Vendiro\Service\Inventory\ProductStock;
 
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\InventorySalesAdminUi\Model\ResourceModel\GetAssignedStockIdsBySku;
-use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
+use TIG\Vendiro\Service\Inventory\ProductStock\SalableQty\GetAssignedStockIdsBySkuProxy;
+use TIG\Vendiro\Service\Inventory\ProductStock\SalableQty\GetProductSalableQtyInterfaceProxy;
 
 class SalableQty
 {
-    /** @var GetAssignedStockIdsBySku */
+    /** @var GetAssignedStockIdsBySkuProxy */
     private $getAssignedStockIdsBySku;
 
-    /** @var GetProductSalableQtyInterface */
+    /** @var GetProductSalableQtyInterfaceProxy */
     private $getProductSalableQty;
 
     public function __construct(
-        GetAssignedStockIdsBySku $getAssignedStockIdsBySku,
-        GetProductSalableQtyInterface $getProductSalableQty
+        GetAssignedStockIdsBySkuProxy $getAssignedStockIdsBySku,
+        GetProductSalableQtyInterfaceProxy $getProductSalableQty
     ) {
         $this->getAssignedStockIdsBySku = $getAssignedStockIdsBySku;
         $this->getProductSalableQty = $getProductSalableQty;
@@ -62,14 +62,21 @@ class SalableQty
     public function getQtyBySku($sku)
     {
         $qty = 0;
-        $stockIds = $this->getAssignedStockIdsBySku->execute($sku);
+        $assignedStockIdsBySku = $this->getAssignedStockIdsBySku->create();
+        $productSalableQty = $this->getProductSalableQty->create();
+
+        if ($assignedStockIdsBySku === null || $productSalableQty === null) {
+            return $qty;
+        }
+
+        $stockIds = $assignedStockIdsBySku->execute($sku);
 
         if (count($stockIds) <= 0) {
             return $qty;
         }
 
         foreach ($stockIds as $stockId) {
-            $qty += $this->getProductSalableQty->execute($sku, $stockId);
+            $qty += $productSalableQty->execute($sku, $stockId);
         }
 
         return $qty;
