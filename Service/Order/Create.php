@@ -39,6 +39,7 @@ use TIG\Vendiro\Model\Carrier\Vendiro as VendiroCarrier;
 use TIG\Vendiro\Model\Payment\Vendiro as VendiroPayment;
 use TIG\Vendiro\Service\Order\Create\CartManager;
 
+//@codingStandardsIgnoreFile
 class Create
 {
     /** @var CartManager */
@@ -127,9 +128,7 @@ class Create
     private function prepareAndPlaceOrder($vendiroOrder)
     {
         if ($this->getCoreSession()->getFulfilmentByMarketplace() == true) {
-            throw new VendiroException(
-                __('Fulfilment by marketplace flag already set, this means another order is busy.')
-            );
+            throw new VendiroException(__('Fulfilment by marketplace flag already set, this means another order is busy.'));
         }
 
         if (isset($vendiroOrder['fulfilment_by_marketplace']) && $vendiroOrder['fulfilment_by_marketplace'] == 'true') {

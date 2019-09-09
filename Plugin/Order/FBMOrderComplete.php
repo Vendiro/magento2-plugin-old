@@ -58,13 +58,6 @@ class FBMOrderComplete
         $this->coreSession = $coreSession;
     }
 
-    /**
-     * @return CoreSession
-     */
-    public function getCoreSession()
-    {
-        return $this->coreSession;
-    }
 
     /**
      * Vendiro imported orders with Fulfilment_by_marketplace = true are
@@ -80,7 +73,7 @@ class FBMOrderComplete
     {
         $payment = $order->getPayment();
         $currentPaymentMethod = $payment->getMethod();
-        $fulfilmentSession = $this->getCoreSession()->getFulfilmentByMarketplace();
+        $fulfilmentSession = $this->coreSession->getFulfilmentByMarketplace();
 
         if ($currentPaymentMethod == VendiroPayment::PAYMENT_CODE && $fulfilmentSession == true) {
             $state = Order::STATE_COMPLETE;
@@ -90,7 +83,7 @@ class FBMOrderComplete
             $order->setState($state);
             $order->setStatus($defaultStatus);
 
-            $this->getCoreSession()->unsFulfilmentByMarketplace();
+            $this->coreSession->unsFulfilmentByMarketplace();
         }
     }
 }
