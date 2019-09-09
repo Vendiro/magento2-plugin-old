@@ -33,6 +33,7 @@ namespace TIG\Vendiro\Service\Order;
 
 use TIG\Vendiro\Api\Data\OrderInterface;
 use TIG\Vendiro\Api\OrderRepositoryInterface;
+use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Exception as VendiroException;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 use TIG\Vendiro\Model\Config\Provider\QueueStatus;
@@ -51,22 +52,28 @@ class Import
     /** @var Create */
     private $createOrder;
 
+    /** @var Log */
+    private $logger;
+
     /**
      * @param ApiConfiguration         $apiConfiguration
      * @param ApiStatusManager         $apiStatusManager
      * @param OrderRepositoryInterface $orderRepository
      * @param Create                   $createOrder
+     * @param Log                  $logger
      */
     public function __construct(
         ApiConfiguration $apiConfiguration,
         ApiStatusManager $apiStatusManager,
         OrderRepositoryInterface $orderRepository,
-        Create $createOrder
+        Create $createOrder,
+        Log $logger
     ) {
         $this->apiConfiguration = $apiConfiguration;
         $this->apiStatusManager = $apiStatusManager;
         $this->orderRepository = $orderRepository;
         $this->createOrder = $createOrder;
+        $this->logger = $logger;
     }
 
     public function importToMagento()
@@ -76,6 +83,11 @@ class Import
         }
 
         $orders = $this->orderRepository->getNewOrders();
+
+        if (isset($orders) && !is_array($orders)) {
+            $this->createOrder($orders);
+            return;
+        }
 
         foreach ($orders as $order) {
             $this->createOrder($order);
@@ -96,6 +108,7 @@ class Import
 
             $this->apiStatusManager->acceptOrder($vendiroId, $newOrderId);
         } catch (VendiroException $exception) {
+            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
             $this->apiStatusManager->rejectOrder($vendiroId, $exception->getMessage());
         }
 

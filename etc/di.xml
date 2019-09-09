@@ -62,13 +62,15 @@
         </arguments>
     </type>
 
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="tig_vendiro_plugin_fbmordercomplete" type="TIG\Vendiro\Plugin\Order\FBMOrderComplete" sortOrder="1"/>
+    </type>
     <type name="Magento\Sales\Api\Data\ShipmentInterface">
         <plugin name="ShipmentCreate" type="TIG\Vendiro\Plugin\Shipment\Save" />
     </type>
     <type name="Magento\Sales\Api\ShipmentRepositoryInterface">
         <plugin name="ShipmentCreate" type="TIG\Vendiro\Plugin\Shipment\Save" />
     </type>
-
     <type name="TIG\Vendiro\Webservices\Endpoints\AbstractEndpoint">
         <arguments>
             <argument name="restApi" xsi:type="object">TIG\Vendiro\Webservices\Rest</argument>

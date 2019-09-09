@@ -32,13 +32,14 @@
 namespace TIG\Vendiro\Service\Order;
 
 use Magento\Framework\DataObject\Factory as DataObjectFactory;
-use Magento\Sales\Model\Order;
+use \Magento\Framework\Session\SessionManagerInterface as CoreSession;
 use TIG\Vendiro\Exception as VendiroException;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Carrier\Vendiro as VendiroCarrier;
 use TIG\Vendiro\Model\Payment\Vendiro as VendiroPayment;
 use TIG\Vendiro\Service\Order\Create\CartManager;
 
+//@codingStandardsIgnoreFile
 class Create
 {
     /** @var CartManager */
@@ -56,25 +57,39 @@ class Create
     /** @var Log */
     private $logger;
 
+    /** @var CoreSession */
+    protected $coreSession;
+
     /**
      * @param CartManager          $cart
      * @param OrderStatusManager  $orderStatusManager
      * @param Product              $product
      * @param DataObjectFactory    $dataObjectFactory
      * @param Log                  $logger
+     * @param CoreSession          $coreSession
      */
     public function __construct(
         CartManager $cart,
         OrderStatusManager $orderStatusManager,
         Product $product,
         DataObjectFactory $dataObjectFactory,
-        Log $logger
+        Log $logger,
+        CoreSession $coreSession
     ) {
         $this->cart = $cart;
         $this->orderStatusManager = $orderStatusManager;
         $this->product = $product;
         $this->dataObjectFactory = $dataObjectFactory;
         $this->logger = $logger;
+        $this->coreSession = $coreSession;
+    }
+
+    /**
+     * @return CoreSession
+     */
+    public function getCoreSession()
+    {
+        return $this->coreSession;
     }
 
     /**
@@ -97,7 +112,7 @@ class Create
         $shippingCost = $vendiroOrder['shipping_cost'] + $vendiroOrder['administration_cost'];
         $this->setMethods($shippingCost);
 
-        $newOrderId = $this->placeOrder();
+        $newOrderId = $this->prepareAndPlaceOrder($vendiroOrder);
 
         if ($newOrderId) {
             $this->updateOrderCommentAndStatus($newOrderId, $vendiroOrder);
@@ -105,6 +120,28 @@ class Create
 
         return $newOrderId;
     }
+
+    /**
+     * @param $vendiroOrder
+     * @return bool|int
+     */
+    private function prepareAndPlaceOrder($vendiroOrder)
+    {
+        if ($this->getCoreSession()->getFulfilmentByMarketplace() == true) {
+            throw new VendiroException(__('Fulfilment by marketplace flag already set, this means another order is busy.'));
+        }
+
+        if (isset($vendiroOrder['fulfilment_by_marketplace']) && $vendiroOrder['fulfilment_by_marketplace'] == 'true') {
+            $this->getCoreSession()->setFulfilmentByMarketplace(true);
+        }
+
+        $newOrderId = $this->placeOrder();
+
+        $this->getCoreSession()->unsFulfilmentByMarketplace();
+
+        return $newOrderId;
+    }
+
 
     /**
      * @param $apiProduct
@@ -171,10 +208,10 @@ class Create
             "Marketplace: " . $vendiroOrder['marketplace']['name'] . "<br/>" .
             $vendiroOrder['marketplace']['name'] . " ID: " . $vendiroOrder['marketplace_order_id'];
 
-        $this->orderStatusManager->addHistoryComment($magentoOrderId, $comment);
-
         if (isset($vendiroOrder['fulfilment_by_marketplace']) && $vendiroOrder['fulfilment_by_marketplace'] == 'true') {
-            $this->orderStatusManager->setNewState($magentoOrderId, Order::STATE_COMPLETE);
+            $comment .= "<br/>Fulfilment by marketplace: true";
         }
+
+        $this->orderStatusManager->addHistoryComment($magentoOrderId, $comment);
     }
 }
