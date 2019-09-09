@@ -33,6 +33,7 @@ namespace TIG\Vendiro\Service\Inventory\ProductStock\SalableQty;
 
 use Magento\Framework\ObjectManagerInterface;
 use Magento\InventorySalesAdminUi\Model\ResourceModel\GetAssignedStockIdsBySku;
+use Magento\InventorySalesAdminUi\Model\ResourceModel\GetAssignedStockIdsBySkuFactory;
 
 class GetAssignedStockIdsBySkuProxy
 {
@@ -61,7 +62,7 @@ class GetAssignedStockIdsBySkuProxy
     private function getSubject()
     {
         if (!$this->subject && class_exists(GetAssignedStockIdsBySku::class)) {
-            $this->subject = $this->objectManager->get(GetAssignedStockIdsBySku::class);
+            $this->subject = $this->objectManager->get(GetAssignedStockIdsBySkuFactory::class);
         }
 
         return $this->subject;

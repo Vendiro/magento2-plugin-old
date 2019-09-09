@@ -33,6 +33,7 @@ namespace TIG\Vendiro\Service\Inventory\ProductStock\SalableQty;
 
 use Magento\Framework\ObjectManagerInterface;
 use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
+use Magento\InventorySalesApi\Api\GetProductSalableQtyInterfaceFactory;
 
 class GetProductSalableQtyInterfaceProxy
 {
@@ -61,7 +62,7 @@ class GetProductSalableQtyInterfaceProxy
     private function getSubject()
     {
         if (!$this->subject && interface_exists(GetProductSalableQtyInterface::class)) {
-            $this->subject = $this->objectManager->get(GetProductSalableQtyInterface::class);
+            $this->subject = $this->objectManager->get(GetProductSalableQtyInterfaceFactory::class);
         }
 
         return $this->subject;
