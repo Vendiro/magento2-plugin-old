@@ -67,7 +67,6 @@ class ApiCredentials extends Action
         return $response->representJson(\Zend_Json::encode($result));
     }
 
-
     /**
      * @return bool|string
      */

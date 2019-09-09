@@ -63,6 +63,7 @@ class ValidationRest extends AbstractRest
     /**
      * @throws \Zend_Http_Client_Exception
      */
+    //@codingStandardsIgnoreLine
     protected function setHeaders()
     {
         $authKey = $this->getAuthParam('api_key');

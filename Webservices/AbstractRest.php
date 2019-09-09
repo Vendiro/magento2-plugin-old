@@ -36,7 +36,7 @@ use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 use TIG\Vendiro\Service\Api\AuthCredential;
 use TIG\Vendiro\Service\Software\Data as SoftwareData;
 use TIG\Vendiro\Webservices\Endpoints\EndpointInterface;
-
+//@codingStandardsIgnoreFile
 abstract class AbstractRest
 {
     /** @var ZendClient */

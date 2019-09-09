@@ -31,10 +31,10 @@
  */
 namespace TIG\Vendiro\Plugin\Order;
 
-use Magento\Sales\Model\Order;
+use Magento\Framework\Session\SessionManagerInterface as CoreSession;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use \Magento\Framework\Session\SessionManagerInterface as CoreSession;
+use Magento\Sales\Model\Order;
 use TIG\Vendiro\Model\Payment\Vendiro as VendiroPayment;
 
 /**
@@ -44,8 +44,7 @@ use TIG\Vendiro\Model\Payment\Vendiro as VendiroPayment;
  */
 class FBMOrderComplete
 {
-
-    /* @var CoreSession */
+    /** @var CoreSession */
     private $coreSession;
 
     /**
@@ -58,7 +57,6 @@ class FBMOrderComplete
         $this->coreSession = $coreSession;
     }
 
-
     /**
      * Vendiro imported orders with Fulfilment_by_marketplace = true are
      * directly set to the complete state & status to prevent
@@ -69,6 +67,7 @@ class FBMOrderComplete
      *
      * @return Order
      */
+    //@codingStandardsIgnoreLine
     public function beforeSave($subject, $order)
     {
         $payment = $order->getPayment();
