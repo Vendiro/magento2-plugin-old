@@ -43,6 +43,7 @@ class Stock extends AbstractModel implements StockInterface
     const FIELD_STATUS = 'status';
     const FIELD_CREATED_AT = 'created_at';
 
+    // @codingStandardsIgnoreLine
     protected function _construct()
     {
         $this->_init('TIG\Vendiro\Model\ResourceModel\Stock');

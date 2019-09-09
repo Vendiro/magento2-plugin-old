@@ -62,6 +62,7 @@ class GetProductSalableQtyInterfaceProxy
     private function getSubject()
     {
         if (!$this->subject && interface_exists(GetProductSalableQtyInterface::class)) {
+            // @codingStandardsIgnoreLine
             $this->subject = $this->objectManager->get(GetProductSalableQtyInterfaceFactory::class);
         }
 

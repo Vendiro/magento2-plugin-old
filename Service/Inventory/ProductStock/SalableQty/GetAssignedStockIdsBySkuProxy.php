@@ -62,6 +62,7 @@ class GetAssignedStockIdsBySkuProxy
     private function getSubject()
     {
         if (!$this->subject && class_exists(GetAssignedStockIdsBySku::class)) {
+            // @codingStandardsIgnoreLine
             $this->subject = $this->objectManager->get(GetAssignedStockIdsBySkuFactory::class);
         }
 

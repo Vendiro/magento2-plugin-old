@@ -47,7 +47,7 @@
                     <item name="InstallOrderTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallOrderTable</item>
                     <item name="InstallCarrierTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallCarrierTable</item>
                     <item name="InstallTrackTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallTrackTable</item>
-                    <item name="InstallStockTable" xsi:type="object">TIG\Vendiro\Setup\Schema\InstallStockTable</item>
+                    <item name="InstallStockTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallStockTable</item>
                 </item>
             </argument>
         </arguments>

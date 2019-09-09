@@ -31,6 +31,9 @@
  */
 namespace TIG\Vendiro\Api;
 
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use TIG\Vendiro\Api\Data\StockInterface;
 
 interface StockRepositoryInterface
@@ -41,6 +44,8 @@ interface StockRepositoryInterface
      * @api
      * @param StockInterface $stock
      * @return StockInterface
+     *
+     * @throws CouldNotSaveException
      */
     public function save(StockInterface $stock);
 
@@ -50,6 +55,8 @@ interface StockRepositoryInterface
      * @api
      * @param int $entityId
      * @return StockInterface
+     *
+     * @throws NoSuchEntityException
      */
     public function getById($entityId);
 
@@ -59,6 +66,8 @@ interface StockRepositoryInterface
      * @api
      * @param StockInterface $stock
      * @return bool
+     *
+     * @throws CouldNotDeleteException
      */
     public function delete(StockInterface $stock);
 
@@ -68,6 +77,9 @@ interface StockRepositoryInterface
      * @api
      * @param int $entityId
      * @return bool
+     *
+     * @throws NoSuchEntityException
+     * @throws CouldNotDeleteException
      */
     public function deleteById($entityId);
 
@@ -75,7 +87,6 @@ interface StockRepositoryInterface
      * Create a Vendiro stock.
      *
      * @api
-     *
      * @param array $data
      * @return StockInterface
      */

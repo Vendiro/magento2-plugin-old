@@ -29,7 +29,7 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Setup\Schema;
+namespace TIG\Vendiro\Setup\V100\Schema;
 
 use Magento\Framework\DB\Ddl\Table;
 use TIG\Vendiro\Setup\AbstractTableInstaller;
