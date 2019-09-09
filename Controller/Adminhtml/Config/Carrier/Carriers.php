@@ -29,38 +29,39 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Controller\Adminhtml\Config\Validate;
+namespace TIG\Vendiro\Controller\Adminhtml\Config\Carrier;
 
 use Magento\Backend\App\Action;
-use TIG\Vendiro\Webservices\Endpoints\GetAccount;
+use TIG\Vendiro\Service\Carrier\Data;
 
-class ApiCredentials extends Action
+class Carriers extends Action
 {
-    /** @var GetAccount */
-    private $getAccount;
+    /** @var Data */
+    private $data;
 
     public function __construct(
         Action\Context $context,
-        GetAccount $getAccount
+        Data $data
     ) {
         parent::__construct($context);
 
-        $this->getAccount = $getAccount;
+        $this->data = $data;
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @throws \TIG\Vendiro\Exception
+     */
     public function execute()
     {
         $result = [
             'error' => true,
-            'message' => 'Your API Credentials could not be validated'
+            'message' => 'Your Vendiro Carriers could not be retreived'
         ];
 
-        $validatedAccountName = $this->validateAccount();
-
-        if ($validatedAccountName) {
+        if ($this->updateCarriers()) {
             $result['error'] = false;
-            $result['message'] = 'Successfully connected to account ' . $validatedAccountName . '. '
-                               . "Don't forget to save changes.";
+            $result['message'] = 'Your Vendiro Carriers are successfully updated';
         }
 
         $response = $this->getResponse();
@@ -68,27 +69,19 @@ class ApiCredentials extends Action
     }
 
     /**
-     * @return bool|string
+     * @return bool
+     * @throws \TIG\Vendiro\Exception
      */
-    private function validateAccount()
+    private function updateCarriers()
     {
-        $hasAccount = false;
-        $hasUser = false;
+        $hasCarriers = false;
 
-        $accountResult = $this->getAccount->call();
+        $carriers = $this->data->updateCarriers();
 
-        if (isset($accountResult['account']) && !empty($accountResult['account'])) {
-            $hasAccount = true;
+        if ($carriers === null) {
+            $hasCarriers = true;
         }
 
-        if (isset($accountResult['user']) && !empty($accountResult['user'])) {
-            $hasUser = true;
-        }
-
-        if ($hasAccount && $hasUser) {
-            return $accountResult['account'];
-        }
-
-        return false;
+        return $hasCarriers;
     }
 }

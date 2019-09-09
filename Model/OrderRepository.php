@@ -59,13 +59,14 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         ScopeConfigInterface $scopeConfig,
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        CollectionFactory $orderCollectionFactory,
-        OrderFactory $orderFactory
+        OrderFactory $orderFactory,
+        CollectionFactory $collectionFactory
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->orderFactory = $orderFactory;
+        $this->collectionFactory = $collectionFactory;
 
-        parent::__construct($searchResultsFactory, $searchCriteriaBuilder, $orderCollectionFactory);
+        parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
     }
 
     /**
@@ -121,14 +122,6 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     public function getByOrderId($orderId, $limit = 1)
     {
         return $this->getByFieldWithValue('order_id', $orderId, $limit);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getByStatus($status, $limit = 10)
-    {
-        return $this->getByFieldWithValue('status', $status, $limit);
     }
 
     /**

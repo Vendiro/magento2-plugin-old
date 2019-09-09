@@ -35,12 +35,18 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="TIG\Vendiro\Api\OrderRepositoryInterface" type="TIG\Vendiro\Model\OrderRepository" />
     <preference for="TIG\Vendiro\Api\Data\OrderInterface" type="TIG\Vendiro\Model\Order" />
+    <preference for="TIG\Vendiro\Api\CarrierRepositoryInterface" type="TIG\Vendiro\Model\CarrierRepository" />
+    <preference for="TIG\Vendiro\Api\Data\CarrierInterface" type="TIG\Vendiro\Model\Carrier" />
+    <preference for="TIG\Vendiro\Api\TrackQueueRepositoryInterface" type="TIG\Vendiro\Model\TrackQueueRepository" />
+    <preference for="TIG\Vendiro\Api\Data\TrackQueueInterface" type="TIG\Vendiro\Model\TrackQueue" />
 
     <type name="TIG\Vendiro\Setup\InstallSchema">
         <arguments>
             <argument name="installSchemaObjects" xsi:type="array">
                 <item name="v1.0.0" xsi:type="array">
-                    <item name="InstallOrderTable" xsi:type="object">TIG\Vendiro\Setup\Schema\InstallOrderTable</item>
+                    <item name="InstallOrderTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallOrderTable</item>
+                    <item name="InstallCarrierTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallCarrierTable</item>
+                    <item name="InstallTrackTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallTrackTable</item>
                     <item name="InstallStockTable" xsi:type="object">TIG\Vendiro\Setup\Schema\InstallStockTable</item>
                 </item>
             </argument>
@@ -96,6 +102,7 @@
     </type>
     <type name="Magento\Sales\Api\OrderRepositoryInterface">
         <plugin name="TIG_Vendiro_StockQueue_OrderRepository" type="TIG\Vendiro\Plugin\StockQueue\Sales\OrderRepository" />
+        <plugin name="tig_vendiro_plugin_fbmordercomplete" type="TIG\Vendiro\Plugin\Order\FBMOrderComplete" sortOrder="1"/>
     </type>
     <type name="Magento\Sales\Api\RefundInvoiceInterface">
         <plugin name="TIG_Vendiro_StockQueue_RefundInvoice" type="TIG\Vendiro\Plugin\StockQueue\Sales\RefundInvoice" />
@@ -105,8 +112,21 @@
     </type>
     <type name="Magento\Sales\Api\Data\ShipmentInterface">
         <plugin name="TIG_Vendiro_StockQueue_Shipment" type="TIG\Vendiro\Plugin\StockQueue\Sales\Shipment" />
+        <plugin name="ShipmentCreate" type="TIG\Vendiro\Plugin\Shipment\Save" />
     </type>
     <type name="Magento\Sales\Api\ShipmentRepositoryInterface">
         <plugin name="TIG_Vendiro_StockQueue_ShipmentRepository" type="TIG\Vendiro\Plugin\StockQueue\Sales\ShipmentRepository" />
+        <plugin name="ShipmentCreate" type="TIG\Vendiro\Plugin\Shipment\Save" />
+    </type>
+
+    <type name="TIG\Vendiro\Webservices\Endpoints\AbstractEndpoint">
+        <arguments>
+            <argument name="restApi" xsi:type="object">TIG\Vendiro\Webservices\Rest</argument>
+        </arguments>
+    </type>
+    <type name="TIG\Vendiro\Webservices\Endpoints\GetAccount">
+        <arguments>
+            <argument name="restApi" xsi:type="object">TIG\Vendiro\Webservices\ValidationRest</argument>
+        </arguments>
     </type>
 </config>

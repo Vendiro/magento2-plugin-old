@@ -29,9 +29,10 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Webservices;
+namespace TIG\Vendiro\Webservices\Endpoints;
 
-//@codingStandardsIgnoreFile
-class Rest extends AbstractRest
+class ConfirmShipment extends AbstractEndpoint
 {
+    const ENDPOINT_URL = 'orders/%s/shipment/';
+    const METHOD       = 'PUT';
 }

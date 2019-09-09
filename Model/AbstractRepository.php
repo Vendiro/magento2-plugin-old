@@ -31,7 +31,6 @@
  */
 namespace TIG\Vendiro\Model;
 
-use Magento\Cms\Model\ResourceModel\AbstractCollection;
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\Search\FilterGroup;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -39,12 +38,13 @@ use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchResultsInterface;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Api\SortOrder;
-use TIG\Vendiro\Model\ResourceModel\Order\CollectionFactory;
+use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 abstract class AbstractRepository
 {
-    /** @var CollectionFactory */
-    private $collectionFactory;
+    /** @var $collectionFactory */
+    // @codingStandardsIgnoreLine
+    protected $collectionFactory;
 
     /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
     private $searchCriteriaBuilder;
@@ -52,14 +52,18 @@ abstract class AbstractRepository
     /** @var SearchResultsInterfaceFactory $searchResultsFactory */
     private $searchResultsFactory;
 
+    /**
+     * AbstractRepository constructor.
+     *
+     * @param SearchResultsInterfaceFactory $searchResultsFactory
+     * @param SearchCriteriaBuilder         $searchCriteriaBuilder
+     */
     public function __construct(
         SearchResultsInterfaceFactory $searchResultsFactory,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        CollectionFactory $orderCollectionFactory
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->searchResultsFactory = $searchResultsFactory;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->collectionFactory = $orderCollectionFactory;
     }
 
     /**
@@ -68,7 +72,7 @@ abstract class AbstractRepository
      * @param int    $limit
      * @param string $conditionType
      *
-     * @return AbstractModel|array|null
+     * @return array|null
      */
     public function getByFieldWithValue($field, $value, $limit = 1, $conditionType = 'eq')
     {
@@ -78,13 +82,8 @@ abstract class AbstractRepository
         /** @var \Magento\Framework\Api\SearchResults $list */
         $list = $this->getList($searchCriteria->create());
 
-        if ($list->getTotalCount() > 1) {
+        if ($list->getTotalCount() > 0) {
             return $list->getItems();
-        }
-
-        if ($list->getTotalCount()) {
-            $items = $list->getItems();
-            return array_shift($items);
         }
 
         return null;

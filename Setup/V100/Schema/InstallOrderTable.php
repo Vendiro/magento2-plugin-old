@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
+<?php
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -29,16 +28,30 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <!-- Support section -->
-    <group id="tig_vendiro_support_section" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label><![CDATA[Version & Support]]></label>
-        <fieldset_css>tig_vendiro-section</fieldset_css>
-        <attribute type="expanded">1</attribute>
-        <group id="tig_vendiro" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
-            <frontend_model>TIG\Vendiro\Block\Adminhtml\Config\Support\Tab</frontend_model>
-        </group>
-    </group>
-</include>
+ */
+namespace TIG\Vendiro\Setup\V100\Schema;
+
+use Magento\Framework\DB\Ddl\Table;
+use TIG\Vendiro\Setup\AbstractTableInstaller;
+
+class InstallOrderTable extends AbstractTableInstaller
+{
+    const TABLE_NAME = 'tig_vendiro_order';
+
+    /**
+     * @return void
+     * @throws \Zend_Db_Exception
+     * @codingStandardsIgnoreLine
+     */
+    // @codingStandardsIgnoreLine
+    protected function defineTable()
+    {
+        $this->addEntityId();
+        $this->addInt('order_id', 'Order ID');
+        $this->addInt('vendiro_id', 'Vendiro ID');
+        $this->addText('marketplace_reference', 'Marketplace reference', 32, false);
+        $this->addText('status', 'Status', 32, false);
+        $this->addTimestamp('created_at', 'Created at', false, Table::TIMESTAMP_INIT);
+        $this->addIndex('vendiro_id');
+    }
+}

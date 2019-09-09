@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- *
+<?php
+
+/**
  *
  *          ..::..
  *     ..::::::::::::..
@@ -19,7 +19,7 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
+ * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
@@ -29,16 +29,17 @@
  *
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
- *
--->
-<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <!-- Support section -->
-    <group id="tig_vendiro_support_section" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label><![CDATA[Version & Support]]></label>
-        <fieldset_css>tig_vendiro-section</fieldset_css>
-        <attribute type="expanded">1</attribute>
-        <group id="tig_vendiro" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
-            <frontend_model>TIG\Vendiro\Block\Adminhtml\Config\Support\Tab</frontend_model>
-        </group>
-    </group>
-</include>
+ */
+namespace TIG\Vendiro\Model\ResourceModel;
+
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+
+class TrackQueue extends AbstractDb
+{
+    // @codingStandardsIgnoreLine
+    protected function _construct()
+    {
+        // @codingStandardsIgnoreLine
+        $this->_init('tig_vendiro_track', 'entity_id');
+    }
+}

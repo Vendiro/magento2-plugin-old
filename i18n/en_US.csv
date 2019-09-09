@@ -1,0 +1,34 @@
+"Validate API Credentials","Validate API Credentials"
+Off,Off
+"Regular quantity","Regular quantity"
+"Saleable quantity","Saleable quantity"
+Live,Live
+Test,Test
+"Order with id ""%1"" does not exist.","Order with id ""%1"" does not exist."
+"The order could not be exported. The store that was requested wasn't found.","The order could not be exported. The store that was requested wasn't found."
+"The order could not be exported from Vendiro. The product that was requested wasn't found.","The order could not be exported from Vendiro. The product that was requested wasn't found."
+"The order could not be exported from Vendiro. The product that was requested is not in stock.","The order could not be exported from Vendiro. The product that was requested is not in stock."
+"Exception message.","Exception message."
+"Magento version compatibility","Magento version compatibility"
+"Supported Magento versions","Supported Magento versions"
+"Vendiro version","Vendiro version"
+"Your PHP version","Your PHP version"
+Support,Support
+"This extension is developed by <a href=""https://tig.nl"" target=""_BLANK"">TIG</a>","This extension is developed by <a href=""https://tig.nl"" target=""_BLANK"">TIG</a>"
+"Extension basic configuration and account information","Extension basic configuration and account information"
+"Please contact:","Please contact:"
+Vendiro,Vendiro
+Configuration,Configuration
+"General Configuration","General Configuration"
+Mode,Mode
+"Version & Support","Version & Support"
+"Vendiro Configuration","Vendiro Configuration"
+"API key","API key"
+"Fill in your Vendiro API key.","Fill in your Vendiro API key."
+"API token","API token"
+"Fill in your Vendiro API token.","Fill in your Vendiro API token."
+"Import orders","Import orders"
+"Register shipment","Register shipment"
+"Update inventory","Update inventory"
+"Select which quantity you want to be updated","Select which quantity you want to be updated"
+"Only use this when you are using Magento version 2.3 or higher","Only use this when you are using Magento version 2.3 or higher"

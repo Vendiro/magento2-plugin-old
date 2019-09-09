@@ -32,35 +32,59 @@
 
 namespace TIG\Vendiro\Cron;
 
-use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
+use Magento\Sales\Model\ResourceModel\Order\Shipment\Track\CollectionFactory;
+use TIG\Vendiro\Api\TrackQueueRepositoryInterface;
+use TIG\Vendiro\Model\Config\Provider\General\Configuration;
+use TIG\Vendiro\Model\TrackQueueRepository;
 use TIG\Vendiro\Service\TrackTrace\Data;
 
 class TrackTrace
 {
-    /** @var Data $orderService  */
-    private $orderService;
+    /** @var TrackQueueRepository $trackQueueItemRepository */
+    private $trackQueueItemRepository;
 
-    /** @var ApiConfiguration */
-    private $apiConfiguration;
+    /** @var Configuration $configuration */
+    private $configuration;
+
+    /** @var Data $shipmentService */
+    private $shipmentService;
+
+    /** @var CollectionFactory $collectionFactory */
+    private $collectionFactory;
 
     /**
-     * @param Data             $orderService
-     * @param ApiConfiguration $apiConfiguration
+     * @param Data                                                            $shipmentService
+     * @param Configuration                                                   $configuration
+     * @param TrackQueueRepositoryInterface                                   $trackQueueItemRepository
+     * @param CollectionFactory                                               $collectionFactory
      */
     public function __construct(
-        Data $orderService,
-        ApiConfiguration $apiConfiguration
+        Data $shipmentService,
+        Configuration $configuration,
+        TrackQueueRepositoryInterface $trackQueueItemRepository,
+        CollectionFactory $collectionFactory
     ) {
-        $this->orderService = $orderService;
-        $this->apiConfiguration = $apiConfiguration;
+        $this->shipmentService = $shipmentService;
+        $this->configuration = $configuration;
+        $this->trackQueueItemRepository = $trackQueueItemRepository;
+        $this->collectionFactory = $collectionFactory;
     }
 
-    public function registerShipments()
+    /**
+     * @param \TIG\Vendiro\Api\Data\TrackQueueInterface $trackQueueItem
+     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function confirmShipment($trackQueueItem)
     {
-        if (!$this->apiConfiguration->canRegisterShipments()) {
+        if (!$this->configuration->isEnabled()) {
             return;
         }
 
-        $this->orderService->get();
+        $queueItems = $this->trackQueueItemRepository->getQueueItems();
+
+        foreach ($queueItems as $trackQueueItem) {
+            $this->shipmentService->shipmentCall($trackQueueItem);
+        }
     }
 }
