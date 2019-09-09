@@ -55,17 +55,21 @@ class ApiCredentials extends Action
             'message' => 'Your API Credentials could not be validated'
         ];
 
-        if ($this->validateAccount()) {
+        $validatedAccountName = $this->validateAccount();
+
+        if ($validatedAccountName) {
             $result['error'] = false;
-            $result['message'] = 'Your API Credentials are successfully validated';
+            $result['message'] = 'Successfully connected to account ' . $validatedAccountName . '. '
+                               . "Don't forget to save changes.";
         }
 
         $response = $this->getResponse();
         return $response->representJson(\Zend_Json::encode($result));
     }
 
+
     /**
-     * @return bool
+     * @return bool|string
      */
     private function validateAccount()
     {
@@ -82,6 +86,10 @@ class ApiCredentials extends Action
             $hasUser = true;
         }
 
-        return $hasAccount && $hasUser;
+        if ($hasAccount && $hasUser) {
+            return $accountResult['account'];
+        }
+
+        return false;
     }
 }
