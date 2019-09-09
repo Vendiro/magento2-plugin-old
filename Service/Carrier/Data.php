@@ -36,6 +36,7 @@ namespace TIG\Vendiro\Service\Carrier;
 use TIG\Vendiro\Api\CarrierRepositoryInterface;
 use TIG\Vendiro\Exception;
 use TIG\Vendiro\Logging\Log;
+use TIG\Vendiro\Model\CarrierRepository;
 use TIG\Vendiro\Webservices\Endpoints\GetCarriers;
 
 class Data
@@ -47,23 +48,29 @@ class Data
     private $getCarriers;
 
     /** @var CarrierRepositoryInterface $carrierRepository */
+    private $carrierRepositoryInterface;
+
+    /** @var CarrierRepository */
     private $carrierRepository;
 
     /**
      * Data constructor.
      *
-     * @param Log                        $logger
-     * @param GetCarriers                $getCarriers
-     * @param CarrierRepositoryInterface $carrierRepository
+     * @param Log                                         $logger
+     * @param GetCarriers                                 $getCarriers
+     * @param CarrierRepositoryInterface                  $carrierRepositoryInterface
+     * @param CarrierRepository                           $carrierRepository
      */
     public function __construct(
         Log $logger,
         GetCarriers $getCarriers,
-        CarrierRepositoryInterface $carrierRepository
+        CarrierRepositoryInterface $carrierRepositoryInterface,
+        CarrierRepository $carrierRepository
     ) {
-        $this->logger            = $logger;
-        $this->getCarriers       = $getCarriers;
-        $this->carrierRepository = $carrierRepository;
+        $this->logger                     = $logger;
+        $this->getCarriers                = $getCarriers;
+        $this->carrierRepositoryInterface = $carrierRepositoryInterface;
+        $this->carrierRepository          = $carrierRepository;
     }
 
     /**
@@ -75,6 +82,17 @@ class Data
 
         if (array_key_exists('message', $carriers)) {
             return false;
+        }
+
+        $carrierIds = [];
+
+        array_push($carrierIds, array_keys($carriers));
+
+        $duplicateCarriers = $this->carrierRepository->getByFieldWithValue('carrier_id', $carrierIds, 0, 'in');
+
+        foreach ($duplicateCarriers as $duplicateCarrier) {
+            $this->updateCarrier($duplicateCarrier, $carriers[$duplicateCarrier->getCarrierId()]);
+            unset($carriers[$duplicateCarrier->getCarrierId()]);
         }
 
         foreach ($carriers as $carrierId => $carrier) {
@@ -91,13 +109,21 @@ class Data
     private function saveCarrier($carrierId, $carrier)
     {
         try {
-            $carrierModel = $this->carrierRepository->create();
+            $carrierModel = $this->carrierRepositoryInterface->create();
             $carrierModel->setCarrierId($carrierId);
             $carrierModel->setCarrier($carrier);
-            $this->carrierRepository->save($carrierModel);
+            $this->carrierRepositoryInterface->save($carrierModel);
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
             throw new Exception(__($exception->getMessage()));
+        }
+    }
+
+    public function updateCarrier($duplicateCarrier, $carrier)
+    {
+        if ($duplicateCarrier->getCarrier() != $carrier) {
+            $duplicateCarrier->setCarrier($carrier);
+            $duplicateCarrier->save();
         }
     }
 }

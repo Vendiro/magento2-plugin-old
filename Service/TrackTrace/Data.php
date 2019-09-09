@@ -110,7 +110,7 @@ class Data
 
         $result = $this->confirmShipment->call($vendiroOrderId);
 
-        if ($result) {
+        if ($result['message']) {
             throw new VendiroException(__($result['message']));
         }
 
