@@ -76,7 +76,6 @@ class Data
 
         //TODO: get item list by rule; either "cron last run" date or by queue
 
-
         $sku = '';
         $qty = $this->productStock->getStockBySku($sku);
         $requestData = [['sku' => $sku, 'stock' => $qty]];

@@ -41,6 +41,7 @@
             <argument name="installSchemaObjects" xsi:type="array">
                 <item name="v1.0.0" xsi:type="array">
                     <item name="InstallOrderTable" xsi:type="object">TIG\Vendiro\Setup\Schema\InstallOrderTable</item>
+                    <item name="InstallStockTable" xsi:type="object">TIG\Vendiro\Setup\Schema\InstallStockTable</item>
                 </item>
             </argument>
         </arguments>
