@@ -33,16 +33,18 @@
 
 namespace TIG\Vendiro\Service\TrackTrace;
 
+use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\Track\CollectionFactory;
-use TIG\Vendiro\Exception;
+use TIG\Vendiro\Exception as VendiroException;
+use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Config\Provider\General\CarrierConfiguration;
 use TIG\Vendiro\Model\Config\Provider\QueueStatus;
 use TIG\Vendiro\Model\OrderRepository;
 use TIG\Vendiro\Model\TrackQueueRepository;
 use TIG\Vendiro\Webservices\Endpoints\ConfirmShipment;
-use TIG\Vendiro\Logging\Log;
 
+//@codingStandardsIgnoreFile
 class Data
 {
     /** @var ConfirmShipment $confirmShipment */
@@ -96,26 +98,27 @@ class Data
      * @param $vendiroOrderId
      * @param $carrierId
      * @param $shipmentCode
+     * @param $carrierName
      *
      * @return mixed
      * @throws \TIG\Vendiro\Exception
      */
-    public function confirmShipmentCall($vendiroOrderId, $carrierId, $shipmentCode)
+    public function confirmShipmentCall($vendiroOrderId, $carrierId, $shipmentCode, $carrierName)
     {
-        $requestData = ['carrier_id' => '99999', 'shipment_code' => $shipmentCode];
+        $requestData = ['carrier_id' => $carrierId, 'shipment_code' => $shipmentCode, 'carrierName' => $carrierName];
         $this->confirmShipment->setRequestData($requestData);
 
         $result = $this->confirmShipment->call($vendiroOrderId);
 
         if ($result) {
-            throw new \TIG\Vendiro\Exception(__($result['message']));
+            throw new VendiroException(__($result['message']));
         }
 
         return $result;
     }
 
     /**
-     * @param \TIG\Vendiro\Api\Data\TrackQueueInterface $trackQueueItem
+     * @param $trackQueueItem
      *
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -124,23 +127,70 @@ class Data
     {
         $data = [];
 
-        $trackCollection = $this->collectionFactory->create();
-        $trackId = $trackQueueItem->getTrackId();
-        $track = $trackCollection->getItemById($trackId);
+        $track = $this->getTrack($trackQueueItem);
 
         $shipmentCode = $track->getTrackNumber();
-
-        $orderId = $track->getShipment()->getOrderId();
-        $vendiroOrder = $this->orderRepository->getByOrderId($orderId);
-        $entityId = array_keys($vendiroOrder)['0'];
-        $vendiroOrderId = $this->orderRepository->getById($entityId)->getVendiroId();
-        $carrierId = $this->carrierConfiguration->getDefaultCarrier($this->shipmentInterface->getStoreId());
+        $vendiroOrderId = $this->getVendiroOrderId($trackQueueItem);
+        $carrierId = $this->getCarrier();
+        $carrierName = $this->getCarrierName($trackQueueItem);
 
         $data['shipment_code'] = $shipmentCode;
         $data['vendiro_order_id'] = $vendiroOrderId;
         $data['carrier_id'] = $carrierId;
+        $data['carrier_name'] = $carrierName;
 
         return $data;
+    }
+
+    /**
+     * @param $trackQueueItem
+     *
+     * @return
+     */
+    public function getCarrierName($trackQueueItem)
+    {
+        $track = $this->getTrack($trackQueueItem);
+
+        return $track->getTitle();
+    }
+
+    /**
+     * @param $trackQueueItem
+     *
+     * @return \Magento\Framework\DataObject
+     */
+    public function getTrack($trackQueueItem)
+    {
+        $trackCollection = $this->collectionFactory->create();
+        $trackId = $trackQueueItem->getTrackId();
+        $track = $trackCollection->getItemById($trackId);
+
+        return $track;
+    }
+
+    /**
+     * @param $trackQueueItem
+     *
+     * @return int
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getVendiroOrderId($trackQueueItem)
+    {
+        $track = $this->getTrack($trackQueueItem);
+        $orderId = $track->getShipment()->getOrderId();
+        $vendiroOrder = $this->orderRepository->getByOrderId($orderId);
+        $entityId = array_keys($vendiroOrder)['0'];
+        $vendiroOrderId = $this->orderRepository->getById($entityId)->getVendiroId();
+
+        return $vendiroOrderId;
+    }
+
+    public function getCarrier()
+    {
+        $storeId = $this->shipmentInterface->getStoreId();
+        $carrierId = $this->carrierConfiguration->getDefaultCarrier($storeId);
+
+        return $carrierId;
     }
 
     /**
@@ -153,11 +203,11 @@ class Data
         $data = $this->getTracks($trackQueueItem);
 
         try {
-            $this->confirmShipmentCall($data['vendiro_order_id'], $data['carrier_id'], $data['shipment_code']);
+            $this->confirmShipmentCall($data['vendiro_order_id'], $data['carrier_id'], $data['shipment_code'], $data['carrier_name']);
             $this->saveTrackItem($trackQueueItem);
-        } catch (\Magento\Framework\Exception\CouldNotSaveException $exception) {
+        } catch (CouldNotSaveException $exception) {
             $this->logger->addNotice('Could not confirm Vendiro shipment');
-        } catch (\TIG\Vendiro\Exception $exception) {
+        } catch (VendiroException $exception) {
             $this->logger->notice($exception->getMessage());
         }
     }

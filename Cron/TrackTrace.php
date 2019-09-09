@@ -73,8 +73,7 @@ class TrackTrace
     /**
      * @param \TIG\Vendiro\Api\Data\TrackQueueInterface $trackQueueItem
      *
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \TIG\Vendiro\Exception
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function confirmShipment($trackQueueItem)
     {
@@ -84,13 +83,8 @@ class TrackTrace
 
         $queueItems = $this->trackQueueItemRepository->getQueueItems();
 
-        if (!is_array($queueItems)) {
-            $queueItems = [$queueItems];
-        }
-
         foreach ($queueItems as $trackQueueItem) {
             $this->shipmentService->shipmentCall($trackQueueItem);
         }
-
     }
 }

@@ -94,9 +94,9 @@ class Import
         try {
             $newOrderId = $this->createOrder->execute($vendiroOrder);
 
-            //$this->apiStatusManager->acceptOrder($vendiroId, $newOrderId);
+            $this->apiStatusManager->acceptOrder($vendiroId, $newOrderId);
         } catch (VendiroException $exception) {
-            //$this->apiStatusManager->rejectOrder($vendiroId, $exception->getMessage());
+            $this->apiStatusManager->rejectOrder($vendiroId, $exception->getMessage());
         }
 
         if ($newOrderId) {

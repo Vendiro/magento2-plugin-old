@@ -31,8 +31,8 @@
  */
 namespace TIG\Vendiro\Service\Api;
 
-use TIG\Vendiro\Model\Config\Provider\General\Configuration;
 use Magento\Framework\Encryption\Encryptor;
+use TIG\Vendiro\Model\Config\Provider\General\Configuration;
 
 class AuthCredential
 {
@@ -47,18 +47,20 @@ class AuthCredential
      * @param Configuration $configuration
      * @param Encryptor $encryptor
      */
-    public function __construct(Configuration $configuration,
-                                Encryptor $encryptor)
-    {
+    public function __construct(
+        Configuration $configuration,
+        Encryptor $encryptor
+    ) {
         $this->configuration = $configuration;
         $this->encryptor     = $encryptor;
     }
 
-
     /**
      * @param null $authKey
      * @param null $authToken
+     *
      * @return string
+     * @throws \Exception
      */
     public function get($authKey = null, $authToken = null)
     {
