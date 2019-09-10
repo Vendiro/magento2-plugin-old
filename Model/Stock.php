@@ -42,6 +42,7 @@ class Stock extends AbstractModel implements StockInterface
     const FIELD_PRODUCT_SKU = 'product_sku';
     const FIELD_STATUS = 'status';
     const FIELD_CREATED_AT = 'created_at';
+    const FIELD_UPDATED_AT = 'updated_at';
 
     // @codingStandardsIgnoreLine
     protected function _construct()
@@ -95,5 +96,21 @@ class Stock extends AbstractModel implements StockInterface
     public function setCreatedAt($createdAt)
     {
         return $this->setData(self::FIELD_CREATED_AT, $createdAt);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUpdatedAt()
+    {
+        return $this->getData(self::FIELD_UPDATED_AT);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        return $this->setData(self::FIELD_UPDATED_AT, $updatedAt);
     }
 }

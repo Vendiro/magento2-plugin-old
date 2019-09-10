@@ -80,4 +80,16 @@ interface StockInterface
      * @return StockInterface
      */
     public function setCreatedAt($createdAt);
+
+    /**
+     * @return string
+     */
+    public function getUpdatedAt();
+
+    /**
+     * @param string $updatedAt
+     *
+     * @return StockInterface
+     */
+    public function setUpdatedAt($updatedAt);
 }

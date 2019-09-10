@@ -77,7 +77,10 @@ abstract class AbstractRepository
     public function getByFieldWithValue($field, $value, $limit = 1, $conditionType = 'eq')
     {
         $searchCriteria = $this->searchCriteriaBuilder->addFilter($field, $value, $conditionType);
-        $searchCriteria->setPageSize($limit);
+
+        if ($limit > 0) {
+            $searchCriteria->setPageSize($limit);
+        }
 
         /** @var \Magento\Framework\Api\SearchResults $list */
         $list = $this->getList($searchCriteria->create());

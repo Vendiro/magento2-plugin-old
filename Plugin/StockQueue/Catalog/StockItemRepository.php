@@ -76,12 +76,15 @@ class StockItemRepository
     // @codingStandardsIgnoreLine
     public function afterSave(StockItemRepositoryInterface $subject, $result)
     {
+        if (!$this->apiConfiguration->canUpdateInventory()) {
+            return $result;
+        }
+
         try {
             $productId = $result->getProductId();
             $magentoProduct = $this->productRepository->getById($productId);
 
             $vendiroStock = $this->createVendiroStock($magentoProduct->getSku());
-
             $this->stockRepository->save($vendiroStock);
         } catch (NoSuchEntityException $exception) {
             $errorMessage = 'Stock queue on Product #' . $productId . ' went wrong: ' . $exception->getMessage();
@@ -102,15 +105,17 @@ class StockItemRepository
      */
     private function createVendiroStock($sku)
     {
+        $existingStock = $this->stockRepository->getBySku($sku);
+
+        if ($existingStock && $existingStock->getEntityId() > 0) {
+            $existingStock->setStatus(QueueStatus::QUEUE_STATUS_NEW);
+
+            return $existingStock;
+        }
+
         $vendiroStock = $this->stockRepository->create();
         $vendiroStock->setProductSku($sku);
         $vendiroStock->setStatus(QueueStatus::QUEUE_STATUS_NEW);
-
-        $existingStock = $this->stockRepository->getBySku($sku);
-
-        if ($existingStock->getEntityId() > 0) {
-            $vendiroStock->setEntityId($existingStock->getEntityId());
-        }
 
         return $vendiroStock;
     }

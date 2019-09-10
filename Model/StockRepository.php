@@ -38,6 +38,7 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use TIG\Vendiro\Api\Data\StockInterface;
 use TIG\Vendiro\Api\StockRepositoryInterface;
+use TIG\Vendiro\Model\Config\Provider\QueueStatus;
 use TIG\Vendiro\Model\ResourceModel\Stock\CollectionFactory;
 
 class StockRepository extends AbstractRepository implements StockRepositoryInterface
@@ -65,6 +66,7 @@ class StockRepository extends AbstractRepository implements StockRepositoryInter
     public function save(StockInterface $stock)
     {
         try {
+            $stock->setUpdatedAt(null); //updated_at should be updated by mysql itself
             $stock->save();
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
@@ -102,6 +104,14 @@ class StockRepository extends AbstractRepository implements StockRepositoryInter
         }
 
         return $foundStock;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getNewStock()
+    {
+        return $this->getByFieldWithValue('status', QueueStatus::QUEUE_STATUS_NEW, null);
     }
 
     /**

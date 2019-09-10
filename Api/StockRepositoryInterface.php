@@ -72,6 +72,13 @@ interface StockRepositoryInterface
     public function getBySku($sku);
 
     /**
+     * Get all Vendiro stock where the status is new
+     *
+     * @return StockInterface[]|array|null
+     */
+    public function getNewStock();
+
+    /**
      * Delete a specific Vendiro stock.
      *
      * @api

@@ -32,14 +32,21 @@
 
 namespace TIG\Vendiro\Service\Inventory;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use TIG\Vendiro\Api\Data\StockInterface;
+use TIG\Vendiro\Api\StockRepositoryInterface;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
+use TIG\Vendiro\Model\Config\Provider\QueueStatus;
 use TIG\Vendiro\Webservices\Endpoints\UpdateProductsStock;
 
 class Data
 {
     /** @var ApiConfiguration */
     private $apiConfiguration;
+
+    /** @var StockRepositoryInterface */
+    private $stockRepository;
 
     /** @var ProductStock */
     private $productStock;
@@ -51,18 +58,21 @@ class Data
     private $logger;
 
     /**
-     * @param ApiConfiguration    $apiConfiguration
-     * @param ProductStock        $productStock
-     * @param UpdateProductsStock $updateProductsStock
-     * @param Log                 $logger
+     * @param ApiConfiguration         $apiConfiguration
+     * @param StockRepositoryInterface $stockRepository
+     * @param ProductStock             $productStock
+     * @param UpdateProductsStock      $updateProductsStock
+     * @param Log                      $logger
      */
     public function __construct(
         ApiConfiguration $apiConfiguration,
+        StockRepositoryInterface $stockRepository,
         ProductStock $productStock,
         UpdateProductsStock $updateProductsStock,
         Log $logger
     ) {
         $this->apiConfiguration = $apiConfiguration;
+        $this->stockRepository = $stockRepository;
         $this->productStock = $productStock;
         $this->updateProductsStock = $updateProductsStock;
         $this->logger = $logger;
@@ -74,33 +84,44 @@ class Data
             return;
         }
 
-        //TODO: get item list by rule; either "cron last run" date or by queue
+        $requestData = [];
+        $newStocks = $this->stockRepository->getNewStock();
 
-        $sku = '';
-        $qty = $this->productStock->getStockBySku($sku);
-        $requestData = [['sku' => $sku, 'stock' => $qty]];
+        foreach ($newStocks as $stock) {
+            $sku = $stock->getProductSku();
+            $qty = $this->productStock->getStockBySku($sku);
+            $requestData[] = ['sku' => $sku, 'stock' => $qty];
+        }
 
         $this->updateProductsStock->setRequestData($requestData);
 
         $response = $this->updateProductsStock->call();
 
-        $this->processResponse($response);
+        $this->processResponse($response, $newStocks);
     }
 
     /**
-     * @param array $response
+     * @param array                  $response
+     * @param StockInterface[]|array $stockQueue
      */
-    private function processResponse($response)
+    private function processResponse($response, $stockQueue)
     {
-        if (isset($response['message'])) {
+        if (!isset($response['count_processed_skus'])) {
             // @codingStandardsIgnoreLine
             $criticalString = sprintf(__("The Vendiro endpoint API reported an error: %s"), $response['message']);
             $this->logger->critical($criticalString);
             return;
         }
 
+        $invalidSkus = [];
+
         if ((int)$response['count_invalid_skus'] > 0 && isset($response['invalid_skus'])) {
-            $this->logInvalidSkus($response['invalid_skus']);
+            $invalidSkus = $response['invalid_skus'];
+            $this->logInvalidSkus($invalidSkus);
+        }
+
+        foreach ($stockQueue as $stock) {
+            $this->updateStockQueue($stock, $invalidSkus);
         }
     }
 
@@ -117,5 +138,25 @@ class Data
         $noticeString = sprintf(__("The inventory of some SKU's could not be updated: %s"), $invalidSkusString);
 
         $this->logger->notice($noticeString);
+    }
+
+    /**
+     * @param StockInterface $stock
+     * @param array          $invalidSkus
+     */
+    private function updateStockQueue($stock, $invalidSkus)
+    {
+        if (in_array($stock->getProductSku(), $invalidSkus)) {
+            return;
+        }
+
+        $stock->setStatus(QueueStatus::QUEUE_STATUS_STOCK_UPDATED);
+
+        try {
+            $this->stockRepository->save($stock);
+        } catch (CouldNotSaveException $exception) {
+            $noticeString = __("Vendiro stock notice: Could not update the stock queue for SKU %s");
+            $this->logger->notice(sprintf($noticeString, $stock->getProductSku()));
+        }
     }
 }
