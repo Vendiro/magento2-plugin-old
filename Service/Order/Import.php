@@ -119,17 +119,16 @@ class Import
      */
     private function createOrder($order, $valuesToSkip)
     {
-        if (in_array($order['id'], array_keys($valuesToSkip))) {
-            $this->apiStatusManager->acceptOrder($valuesToSkip[$order['id']]['order_id']);
-            return;
-        }
-
         $vendiroId = $order['id'];
         $newOrderId = null;
 
+        if (in_array($order['id'], array_keys($valuesToSkip))) {
+            $this->apiStatusManager->acceptOrder($valuesToSkip[$order['id']]['order_id'], $newOrderId);
+            return;
+        }
+
         try {
             $newOrderId = $this->createOrder->execute($order);
-
 //            $this->apiStatusManager->acceptOrder($vendiroId, $newOrderId);
         } catch (VendiroException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
