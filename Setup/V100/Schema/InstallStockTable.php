@@ -50,6 +50,7 @@ class InstallStockTable extends AbstractTableInstaller
         $this->addText('product_sku', 'Product SKU', 64, false);
         $this->addText('status', 'Status', 32, false);
         $this->addTimestamp('created_at', 'Created at', false, Table::TIMESTAMP_INIT);
+        $this->addTimestamp('updated_at', 'Updated at', false, Table::TIMESTAMP_INIT_UPDATE);
         $this->addIndex(['product_sku']);
     }
 }

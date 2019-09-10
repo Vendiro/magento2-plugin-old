@@ -84,11 +84,29 @@ class Data
 
         $response = $this->updateProductsStock->call();
 
+        $this->processResponse($response);
+    }
+
+    /**
+     * @param array $response
+     */
+    private function processResponse($response)
+    {
+        if (isset($response['message'])) {
+            // @codingStandardsIgnoreLine
+            $criticalString = sprintf(__("The Vendiro endpoint API reported an error: %s"), $response['message']);
+            $this->logger->critical($criticalString);
+            return;
+        }
+
         if ((int)$response['count_invalid_skus'] > 0 && isset($response['invalid_skus'])) {
             $this->logInvalidSkus($response['invalid_skus']);
         }
     }
 
+    /**
+     * @param array $invalidSkus
+     */
     private function logInvalidSkus($invalidSkus)
     {
         if (!is_array($invalidSkus)) {

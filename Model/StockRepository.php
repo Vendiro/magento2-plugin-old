@@ -93,6 +93,20 @@ class StockRepository extends AbstractRepository implements StockRepositoryInter
     /**
      * {@inheritDoc}
      */
+    public function getBySku($sku)
+    {
+        $foundStock = $this->getByFieldWithValue('product_sku', $sku);
+
+        if (is_array($foundStock)) {
+            $foundStock = array_shift($foundStock);
+        }
+
+        return $foundStock;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function delete(StockInterface $stock)
     {
         try {

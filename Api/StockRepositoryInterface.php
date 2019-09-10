@@ -61,6 +61,17 @@ interface StockRepositoryInterface
     public function getById($entityId);
 
     /**
+     * Return a specific Vendiro stock.
+     *
+     * @api
+     * @param string $sku
+     * @return StockInterface
+     *
+     * @throws NoSuchEntityException
+     */
+    public function getBySku($sku);
+
+    /**
      * Delete a specific Vendiro stock.
      *
      * @api
