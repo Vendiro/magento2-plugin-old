@@ -33,8 +33,8 @@ namespace TIG\Vendiro\Service\Order;
 
 use TIG\Vendiro\Api\Data\OrderInterface;
 use TIG\Vendiro\Api\OrderRepositoryInterface;
-use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Exception as VendiroException;
+use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 use TIG\Vendiro\Model\Config\Provider\QueueStatus;
 
@@ -82,40 +82,72 @@ class Import
             return;
         }
 
-        $orders = $this->orderRepository->getNewOrders();
+        $orders = $this->apiStatusManager->getOrders();
+
+        $orderIds = array_column($orders, 'id');
+        $valuesToSkip = $this->orderRepository->getAlreadyInsertedOrders($orderIds);
 
         if (isset($orders) && !is_array($orders)) {
-            $this->createOrder($orders);
+            $this->createOrder($orders, $valuesToSkip);
             return;
         }
 
         foreach ($orders as $order) {
-            $this->createOrder($order);
+            $this->createOrder($order, $valuesToSkip);
+        }
+    }
+
+    /**
+     * @param $order
+     */
+    private function saveVendiroOrder($order)
+    {
+        try {
+            $this->orderRepository->save($order);
+        } catch (\Exception $exception) {
+            $errorMessage = 'Import on Vendiro order #' . $order['id'] . ' went wrong: ' . $exception->getMessage();
+            $this->logger->critical($errorMessage);
         }
     }
 
     /**
      * @param OrderInterface $order
+     *
+     * @param                $valuesToSkip
+     *
+     * @return void
      */
-    private function createOrder($order)
+    private function createOrder($order, $valuesToSkip)
     {
-        $vendiroId = $order->getVendiroId();
-        $vendiroOrder = $this->apiStatusManager->getOrders($vendiroId);
+        if (in_array($order['id'], array_keys($valuesToSkip))) {
+            $this->apiStatusManager->acceptOrder($valuesToSkip[$order['id']]['order_id']);
+            return;
+        }
+
+        $vendiroId = $order['id'];
         $newOrderId = null;
 
         try {
-            $newOrderId = $this->createOrder->execute($vendiroOrder);
+            $newOrderId = $this->createOrder->execute($order);
 
-            $this->apiStatusManager->acceptOrder($vendiroId, $newOrderId);
+//            $this->apiStatusManager->acceptOrder($vendiroId, $newOrderId);
         } catch (VendiroException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
-            $this->apiStatusManager->rejectOrder($vendiroId, $exception->getMessage());
+//            $this->apiStatusManager->rejectOrder($vendiroId, $exception->getMessage());
         }
 
         if ($newOrderId) {
-            $order->setOrderId($newOrderId);
-            $order->setStatus(QueueStatus::QUEUE_STATUS_IMPORTED);
-            $this->orderRepository->save($order);
+            $this->saveOrder($newOrderId, $order);
         }
+    }
+
+    public function saveOrder($newOrderId, $order)
+    {
+        $vendiroOrder = $this->orderRepository->create();
+        $vendiroOrder->setOrderId($newOrderId);
+        $vendiroOrder->setVendiroId($order['id']);
+        $vendiroOrder->setMarketplaceReference($order['marketplace']['reference']);
+        $vendiroOrder->setStatus(QueueStatus::QUEUE_STATUS_IMPORTED);
+        $this->saveVendiroOrder($vendiroOrder);
     }
 }

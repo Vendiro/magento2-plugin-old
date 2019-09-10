@@ -137,7 +137,9 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         }
 
         foreach ($list as $dbOrder) {
-            $insertedOrders[] = $dbOrder->getVendiroId();
+            $insertedOrders[$dbOrder->getVendiroId()] = ([
+                'order_id' => $dbOrder->getOrderId()
+            ]);
         }
 
         return $insertedOrders;

@@ -123,7 +123,9 @@ class Create
 
     /**
      * @param $vendiroOrder
+     *
      * @return bool|int
+     * @throws \TIG\Vendiro\Exception
      */
     private function prepareAndPlaceOrder($vendiroOrder)
     {

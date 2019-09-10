@@ -4,9 +4,6 @@
         <job name="vendiro_inventory" instance="TIG\Vendiro\Cron\Inventory" method="updateInventory">
             <schedule>*/5 * * * *</schedule>
         </job>
-        <job name="vendiro_import_to_queue" instance="TIG\Vendiro\Cron\Order" method="retrieveNewOrders">
-            <schedule>*/5 * * * *</schedule>
-        </job>
         <job name="vendiro_import_to_magento" instance="TIG\Vendiro\Cron\Order" method="importToMagento">
             <schedule>*/5 * * * *</schedule>
         </job>
