@@ -33,13 +33,10 @@ namespace TIG\Vendiro\Plugin\StockQueue\Catalog;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
-use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use TIG\Vendiro\Api\Data\StockInterface;
-use TIG\Vendiro\Api\StockRepositoryInterface;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
-use TIG\Vendiro\Model\Config\Provider\QueueStatus;
+use TIG\Vendiro\Service\Inventory\StockQueue;
 
 class StockItemRepository
 {
@@ -49,21 +46,27 @@ class StockItemRepository
     /** @var ProductRepositoryInterface */
     private $productRepository;
 
-    /** @var StockRepositoryInterface */
-    private $stockRepository;
+    /** @var StockQueue */
+    private $stockQueue;
 
     /** @var Log */
     private $logger;
 
+    /**
+     * @param ApiConfiguration           $apiConfiguration
+     * @param ProductRepositoryInterface $productRepository
+     * @param StockQueue                 $stockQueue
+     * @param Log                        $logger
+     */
     public function __construct(
         ApiConfiguration $apiConfiguration,
         ProductRepositoryInterface $productRepository,
-        StockRepositoryInterface $stockRepository,
+        StockQueue $stockQueue,
         Log $logger
     ) {
         $this->apiConfiguration = $apiConfiguration;
         $this->productRepository = $productRepository;
-        $this->stockRepository = $stockRepository;
+        $this->stockQueue = $stockQueue;
         $this->logger = $logger;
     }
 
@@ -83,40 +86,14 @@ class StockItemRepository
         try {
             $productId = $result->getProductId();
             $magentoProduct = $this->productRepository->getById($productId);
-
-            $vendiroStock = $this->createVendiroStock($magentoProduct->getSku());
-            $this->stockRepository->save($vendiroStock);
         } catch (NoSuchEntityException $exception) {
-            $errorMessage = 'Stock queue on Product #' . $productId . ' went wrong: ' . $exception->getMessage();
+            $errorMessage = 'Product could not be found for Product #' . $productId . ': ' . $exception->getMessage();
             $this->logger->critical($errorMessage);
-        } catch (CouldNotSaveException $exception) {
-            $errorMessage = 'Stock queue on Product #' . $productId . ' went wrong: ' . $exception->getMessage();
-            $this->logger->critical($errorMessage);
+
+            return $result;
         }
 
+        $this->stockQueue->saveOrUpdateQueueBySku($magentoProduct->getSku());
         return $result;
-    }
-
-    /**
-     * @param string $sku
-     *
-     * @return StockInterface
-     * @throws NoSuchEntityException
-     */
-    private function createVendiroStock($sku)
-    {
-        $existingStock = $this->stockRepository->getBySku($sku);
-
-        if ($existingStock && $existingStock->getEntityId() > 0) {
-            $existingStock->setStatus(QueueStatus::QUEUE_STATUS_NEW);
-
-            return $existingStock;
-        }
-
-        $vendiroStock = $this->stockRepository->create();
-        $vendiroStock->setProductSku($sku);
-        $vendiroStock->setStatus(QueueStatus::QUEUE_STATUS_NEW);
-
-        return $vendiroStock;
     }
 }
