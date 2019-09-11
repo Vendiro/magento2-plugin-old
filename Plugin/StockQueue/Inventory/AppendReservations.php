@@ -31,6 +31,7 @@
  */
 namespace TIG\Vendiro\Plugin\StockQueue\Inventory;
 
+use Magento\Framework\App\RequestInterface;
 use Magento\InventoryReservations\Model\Reservation;
 use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
@@ -38,6 +39,9 @@ use TIG\Vendiro\Service\Inventory\StockQueue;
 
 class AppendReservations
 {
+    /** @var RequestInterface */
+    private $request;
+
     /** @var ApiConfiguration */
     private $apiConfiguration;
 
@@ -45,13 +49,16 @@ class AppendReservations
     private $stockQueue;
 
     /**
+     * @param RequestInterface $request
      * @param ApiConfiguration $apiConfiguration
      * @param StockQueue       $stockQueue
      */
     public function __construct(
+        RequestInterface $request,
         ApiConfiguration $apiConfiguration,
         StockQueue $stockQueue
     ) {
+        $this->request = $request;
         $this->apiConfiguration = $apiConfiguration;
         $this->stockQueue = $stockQueue;
     }
@@ -66,7 +73,7 @@ class AppendReservations
     // @codingStandardsIgnoreLine
     public function afterExecute(AppendReservationsInterface $subject, $result, array $reservations)
     {
-        if (!$this->apiConfiguration->canUpdateInventory()) {
+        if (!$this->apiConfiguration->canUpdateInventory() || $this->request->getParam('tig_vendiro_products_queued')) {
             return $result;
         }
 
@@ -74,6 +81,15 @@ class AppendReservations
             $this->stockQueue->saveOrUpdateQueueBySku($reservation->getSku());
         }
 
+        $this->setRequestProductsQueued();
+
         return $result;
+    }
+
+    private function setRequestProductsQueued()
+    {
+        $params = $this->request->getParams();
+        $params['tig_vendiro_products_queued'] = true;
+        $this->request->setParams($params);
     }
 }
