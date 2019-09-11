@@ -129,10 +129,10 @@ class Import
 
         try {
             $newOrderId = $this->createOrder->execute($order);
-            $this->apiStatusManager->acceptOrder($vendiroId, $newOrderId);
+//            $this->apiStatusManager->acceptOrder($vendiroId, $newOrderId);
         } catch (VendiroException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
-            $this->apiStatusManager->rejectOrder($vendiroId, $exception->getMessage());
+//            $this->apiStatusManager->rejectOrder($vendiroId, $exception->getMessage());
         }
 
         if ($newOrderId) {
