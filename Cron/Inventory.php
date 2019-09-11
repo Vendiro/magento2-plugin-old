@@ -61,6 +61,6 @@ class Inventory
             return;
         }
 
-        $this->inventoryService->get();
+        $this->inventoryService->updateProductInventory();
     }
 }
