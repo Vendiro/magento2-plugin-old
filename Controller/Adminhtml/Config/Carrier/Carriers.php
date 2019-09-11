@@ -56,12 +56,12 @@ class Carriers extends Action
     {
         $result = [
             'error' => true,
-            'message' => 'Your Vendiro Carriers could not be retreived'
+            'message' => __('Your Vendiro Carriers could not be retreived.')
         ];
 
         if ($this->updateCarriers()) {
             $result['error'] = false;
-            $result['message'] = 'Your Vendiro Carriers are successfully updated';
+            $result['message'] = __('Your Vendiro Carriers are successfully updated, please refresh the page.');
         }
 
         $response = $this->getResponse();

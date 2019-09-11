@@ -75,6 +75,7 @@ class Data
      * @param CarrierConfiguration     $carrierConfiguration
      * @param ShipmentInterface        $shipmentInterface
      * @param OrderRepository          $orderRepository
+     * @param Log                      $logger
      */
     public function __construct(
         ConfirmShipment $confirmShipment,

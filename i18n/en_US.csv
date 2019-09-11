@@ -32,3 +32,6 @@ Mode,Mode
 "Update inventory","Update inventory"
 "Select which quantity you want to be updated","Select which quantity you want to be updated"
 "Only use this when you are using Magento version 2.3 or higher","Only use this when you are using Magento version 2.3 or higher"
+"Please refresh the page after you have updated the carriers.","Please refresh the page after you have updated the carriers."
+"Your Vendiro Carriers could not be retreived.","Your Vendiro Carriers could not be retreived."
+"Your Vendiro Carriers are successfully updated, please refresh the page.","Your Vendiro Carriers are successfully updated, please refresh the page."
