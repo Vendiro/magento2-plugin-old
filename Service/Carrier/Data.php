@@ -86,7 +86,6 @@ class Data
 
         $carrierIds = [];
         array_push($carrierIds, array_keys($carriers));
-
         $duplicateCarriers = $this->carrierRepository->getByFieldWithValue('carrier_id', $carrierIds, 0, 'in');
 
         foreach ($duplicateCarriers as $duplicateCarrier) {

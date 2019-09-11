@@ -39,6 +39,8 @@
     <preference for="TIG\Vendiro\Api\Data\CarrierInterface" type="TIG\Vendiro\Model\Carrier" />
     <preference for="TIG\Vendiro\Api\TrackQueueRepositoryInterface" type="TIG\Vendiro\Model\TrackQueueRepository" />
     <preference for="TIG\Vendiro\Api\Data\TrackQueueInterface" type="TIG\Vendiro\Model\TrackQueue" />
+    <preference for="TIG\Vendiro\Api\StockRepositoryInterface" type="TIG\Vendiro\Model\StockRepository" />
+    <preference for="TIG\Vendiro\Api\Data\StockInterface" type="TIG\Vendiro\Model\Stock" />
 
     <type name="TIG\Vendiro\Setup\InstallSchema">
         <arguments>
@@ -47,6 +49,7 @@
                     <item name="InstallOrderTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallOrderTable</item>
                     <item name="InstallCarrierTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallCarrierTable</item>
                     <item name="InstallTrackTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallTrackTable</item>
+                    <item name="InstallStockTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallStockTable</item>
                 </item>
             </argument>
         </arguments>
@@ -62,15 +65,28 @@
         </arguments>
     </type>
 
+    <!-- Plugins to observe product quantity changes -->
+    <!-- Catalog Quantity -->
+    <type name="Magento\CatalogInventory\Api\StockItemRepositoryInterface">
+        <plugin name="TIG_Vendiro_StockQueue_StockItemRepository" type="TIG\Vendiro\Plugin\StockQueue\Catalog\StockItemRepository" />
+    </type>
+    <!-- Inventory Quantity -->
+    <type name="Magento\InventoryReservationsApi\Model\AppendReservationsInterface">
+        <plugin name="TIG_Vendiro_StockQueue_AppendReservations" type="TIG\Vendiro\Plugin\StockQueue\Inventory\AppendReservations" />
+    </type>
+    <!-- Sales Quantity -->
     <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="TIG_Vendiro_StockQueue_OrderRepository" type="TIG\Vendiro\Plugin\StockQueue\Sales\OrderRepository" />
         <plugin name="tig_vendiro_plugin_fbmordercomplete" type="TIG\Vendiro\Plugin\Order\FBMOrderComplete" sortOrder="1"/>
     </type>
+
     <type name="Magento\Sales\Api\Data\ShipmentInterface">
         <plugin name="ShipmentCreate" type="TIG\Vendiro\Plugin\Shipment\Save" />
     </type>
     <type name="Magento\Sales\Api\ShipmentRepositoryInterface">
         <plugin name="ShipmentCreate" type="TIG\Vendiro\Plugin\Shipment\Save" />
     </type>
+
     <type name="TIG\Vendiro\Webservices\Endpoints\AbstractEndpoint">
         <arguments>
             <argument name="restApi" xsi:type="object">TIG\Vendiro\Webservices\Rest</argument>
