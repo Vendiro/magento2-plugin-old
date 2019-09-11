@@ -106,7 +106,7 @@ class Data
      */
     public function confirmShipmentCall($vendiroOrderId, $carrierId, $shipmentCode, $carrierName)
     {
-        $requestData = ['carrier_id' => $carrierId, 'shipment_code' => $shipmentCode, 'carrierName' => $carrierName];
+        $requestData = ['carrier_id' => $carrierId, 'shipment_code' => $shipmentCode, 'carrier_name' => $carrierName];
         $this->confirmShipment->setRequestData($requestData);
 
         $result = $this->confirmShipment->call($vendiroOrderId);
