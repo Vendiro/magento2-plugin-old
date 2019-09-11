@@ -33,6 +33,7 @@ namespace TIG\Vendiro\Plugin\StockQueue\Catalog;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Api\StockItemRepositoryInterface;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
@@ -40,6 +41,9 @@ use TIG\Vendiro\Service\Inventory\StockQueue;
 
 class StockItemRepository
 {
+    /** @var RequestInterface */
+    private $request;
+
     /** @var ApiConfiguration */
     private $apiConfiguration;
 
@@ -53,17 +57,20 @@ class StockItemRepository
     private $logger;
 
     /**
+     * @param RequestInterface           $request
      * @param ApiConfiguration           $apiConfiguration
      * @param ProductRepositoryInterface $productRepository
      * @param StockQueue                 $stockQueue
      * @param Log                        $logger
      */
     public function __construct(
+        RequestInterface $request,
         ApiConfiguration $apiConfiguration,
         ProductRepositoryInterface $productRepository,
         StockQueue $stockQueue,
         Log $logger
     ) {
+        $this->request = $request;
         $this->apiConfiguration = $apiConfiguration;
         $this->productRepository = $productRepository;
         $this->stockQueue = $stockQueue;
@@ -79,7 +86,7 @@ class StockItemRepository
     // @codingStandardsIgnoreLine
     public function afterSave(StockItemRepositoryInterface $subject, $result)
     {
-        if (!$this->apiConfiguration->canUpdateInventory()) {
+        if (!$this->apiConfiguration->canUpdateInventory() || $this->request->getParam('tig_vendiro_products_queued')) {
             return $result;
         }
 
@@ -94,6 +101,16 @@ class StockItemRepository
         }
 
         $this->stockQueue->saveOrUpdateQueueBySku($magentoProduct->getSku());
+
+        $this->setRequestProductsQueued();
+
         return $result;
+    }
+
+    private function setRequestProductsQueued()
+    {
+        $params = $this->request->getParams();
+        $params['tig_vendiro_products_queued'] = true;
+        $this->request->setParams($params);
     }
 }

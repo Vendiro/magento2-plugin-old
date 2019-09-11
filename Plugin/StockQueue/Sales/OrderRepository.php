@@ -32,6 +32,7 @@
 namespace TIG\Vendiro\Plugin\StockQueue\Sales;
 
 use Magento\Catalog\Model\Product\Type;
+use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
@@ -40,16 +41,28 @@ use TIG\Vendiro\Service\Inventory\StockQueue;
 
 class OrderRepository
 {
+    /** @var RequestInterface */
+    private $request;
+
     /** @var ApiConfiguration */
     private $apiConfiguration;
 
     /** @var StockQueue */
     private $stockQueue;
 
+    /**
+     * OrderRepository constructor.
+     *
+     * @param RequestInterface $request
+     * @param ApiConfiguration $apiConfiguration
+     * @param StockQueue       $stockQueue
+     */
     public function __construct(
+        RequestInterface $request,
         ApiConfiguration $apiConfiguration,
         StockQueue $stockQueue
     ) {
+        $this->request = $request;
         $this->apiConfiguration = $apiConfiguration;
         $this->stockQueue = $stockQueue;
     }
@@ -63,13 +76,15 @@ class OrderRepository
     // @codingStandardsIgnoreLine
     public function afterSave(OrderRepositoryInterface $subject, $result)
     {
-        if (!$this->apiConfiguration->canUpdateInventory()) {
+        if (!$this->apiConfiguration->canUpdateInventory() || $this->request->getParam('tig_vendiro_products_queued')) {
             return $result;
         }
 
         foreach ($result->getAllItems() as $product) {
             $this->queueProductItem($product);
         }
+
+        $this->setRequestProductsQueued();
 
         return $result;
     }
@@ -102,5 +117,12 @@ class OrderRepository
         $isBundle = $product->getProductType() == Type::TYPE_BUNDLE;
 
         return !($hasParentId || $priceIsZero || $isBundle);
+    }
+
+    private function setRequestProductsQueued()
+    {
+        $params = $this->request->getParams();
+        $params['tig_vendiro_products_queued'] = true;
+        $this->request->setParams($params);
     }
 }
