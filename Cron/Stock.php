@@ -35,7 +35,7 @@ namespace TIG\Vendiro\Cron;
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 use TIG\Vendiro\Service\Inventory\Data;
 
-class Inventory
+class Stock
 {
     /** @var Data $orderService */
     private $inventoryService;
@@ -55,7 +55,7 @@ class Inventory
         $this->apiConfiguration = $apiConfiguration;
     }
 
-    public function updateInventory()
+    public function updateStock()
     {
         if (!$this->apiConfiguration->canUpdateInventory()) {
             return;

@@ -87,6 +87,10 @@ class Data
         $requestData = [];
         $newStocks = $this->stockRepository->getNewStock();
 
+        if (empty($newStocks)) {
+            return;
+        }
+
         foreach ($newStocks as $stock) {
             $sku = $stock->getProductSku();
             $qty = $this->productStock->getStockBySku($sku);
