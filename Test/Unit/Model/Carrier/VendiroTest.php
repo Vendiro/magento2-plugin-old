@@ -31,6 +31,7 @@
  */
 namespace TIG\Vendiro\Test\Unit\Model\Carrier;
 
+use Magento\Framework\App\State;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Quote\Model\Quote\Address\RateResult\Method;
 use Magento\Quote\Model\Quote\Address\RateResult\MethodFactory;
@@ -49,6 +50,9 @@ class VendiroTest extends TestCase
         $rateRequestMock->method('getAllItems')->willReturn([$rateRequestMock]);
         $rateRequestMock->method('getQuote')->willReturnSelf();
 
+        $appStateMock = $this->getFakeMock(State::class)->setMethods(['getAreaCode'])->getMock();
+        $appStateMock->expects($this->once())->method('getAreaCode')->willReturn('crontab');
+
         $methodMock = $this->getFakeMock(Method::class)->setMethods(['setPrice'])->getMock();
 
         $methodFactoryMock = $this->getFakeMock(MethodFactory::class)->setMethods(['create'])->getMock();
@@ -59,10 +63,27 @@ class VendiroTest extends TestCase
         $resultFactoryMock = $this->getFakeMock(ResultFactory::class)->setMethods(['create'])->getMock();
         $resultFactoryMock->expects($this->once())->method('create')->willReturn($resultMock);
 
-        $instance = $this->getInstance(['methodFactory' => $methodFactoryMock, 'resultFactory' => $resultFactoryMock]);
+        $instance = $this->getInstance([
+            'appState' => $appStateMock,
+            'methodFactory' => $methodFactoryMock,
+            'resultFactory' => $resultFactoryMock
+        ]);
         $result = $instance->collectRates($rateRequestMock);
 
         $this->assertEquals($resultMock, $result);
         $this->assertEquals($result->getAllRates()[0]->getData(), $methodMock->getData());
+    }
+
+    public function testCollectRatesReturnsFalse()
+    {
+        $rateRequestMock = $this->getFakeMock(RateRequest::class, true);
+
+        $appStateMock = $this->getFakeMock(State::class)->setMethods(['getAreaCode'])->getMock();
+        $appStateMock->expects($this->once())->method('getAreaCode')->willReturn('frontend');
+
+        $instance = $this->getInstance(['appState' => $appStateMock]);
+        $result = $instance->collectRates($rateRequestMock);
+
+        $this->assertFalse($result);
     }
 }
