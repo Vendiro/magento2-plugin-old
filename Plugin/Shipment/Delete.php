@@ -31,15 +31,34 @@
  */
 namespace TIG\Vendiro\Plugin\Shipment;
 
+use TIG\Vendiro\Api\TrackQueueRepositoryInterface;
+use TIG\Vendiro\Model\ResourceModel\TrackQueue;
+use TIG\Vendiro\Model\TrackQueueRepository;
+
 class Delete
 {
+    /** @var TrackQueueRepository $trackQueueRepository */
+    private $trackQueueRepository;
+
+    /** @var TrackQueue $trackQueueResourceModel */
+    private $trackQueueResourceModel;
+
     public function __construct(
+        TrackQueueRepositoryInterface $trackQueueRepository,
+        TrackQueue $trackQueueResourceModel
 
     ) {
+        $this->trackQueueRepository = $trackQueueRepository;
+        $this->trackQueueResourceModel = $trackQueueResourceModel;
     }
 
-    public function afterDelete()
+    public function afterDelete($subject)
     {
-        die();
+        $tracks = $this->trackQueueRepository->getByFieldWithValue('track_id', $subject->getId());
+
+        /** @var \TIG\Vendiro\Model\TrackQueue $track */
+        $track = array_pop($tracks);
+
+        $this->trackQueueResourceModel->delete($track);
     }
 }
