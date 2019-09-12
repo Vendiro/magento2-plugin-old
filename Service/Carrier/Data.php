@@ -78,15 +78,9 @@ class Data
      */
     public function updateCarriers()
     {
-        $carriers = $this->getCarriers->call();
+        $carriers = $this->getCarriers();
 
-        if (array_key_exists('message', $carriers)) {
-            return false;
-        }
-
-        $carrierIds = [];
-        array_push($carrierIds, array_keys($carriers));
-        $duplicateCarriers = $this->carrierRepository->getByFieldWithValue('carrier_id', $carrierIds, 0, 'in');
+        $duplicateCarriers = $this->getDuplicateCarriers();
 
         foreach ($duplicateCarriers as $duplicateCarrier) {
             $this->updateCarrier($duplicateCarrier, $carriers[$duplicateCarrier->getCarrierId()]);
@@ -96,6 +90,33 @@ class Data
         foreach ($carriers as $carrierId => $carrier) {
             $this->saveCarrier($carrierId, $carrier);
         }
+    }
+
+    public function getCarriers()
+    {
+        $carriers = $this->getCarriers->call();
+
+        if (array_key_exists('message', $carriers)) {
+            return false;
+        }
+
+        return $carriers;
+    }
+
+    public function getDuplicateCarriers()
+    {
+        $carriers = $this->getCarriers();
+
+        $carrierIds = [];
+        array_push($carrierIds, array_keys($carriers));
+
+        $duplicateCarriers = $this->carrierRepository->getByFieldWithValue('carrier_id', $carrierIds, 0, 'in');
+
+        if ($duplicateCarriers === null) {
+            $duplicateCarriers = [];
+        }
+
+        return $duplicateCarriers;
     }
 
     /**

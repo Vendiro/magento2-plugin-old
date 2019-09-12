@@ -23,4 +23,6 @@
 "The order could not be exported. The store that was requested wasn't found.","De bestelling kan niet worden geëxporteerd. De gevraagde winkel is niet gevonden."
 "The order could not be exported from Vendiro. The product that was requested wasn't found.","De bestelling kan niet worden geëxporteerd vanuit Vendiro. Het gevraagde product is niet gevonden."
 "The order could not be exported from Vendiro. The product that was requested is not in stock.","De bestelling kan niet worden geëxporteerd vanuit Vendiro. Het gevraagde product is niet op voorraad."
-
+"Please refresh the page after you have updated the carriers.","Refresh de pagina wanneer u de carriers heeft bijgewerkt."
+"Your Vendiro Carriers are successfully updated, please refresh the page.","Uw Vendiro Carriers zijn succesvol geupdate, refresh de pagina."
+"Your Vendiro Carriers could not be retreived.","Uw Vendiro Carriers konden niet worden opgehaald."

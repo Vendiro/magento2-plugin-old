@@ -57,13 +57,16 @@ class ApiStatusManager
     }
 
     /**
-     * @param null|int|string $orderId
+     * @param bool $includeAddresses
      *
      * @return array|mixed|\Zend_Http_Response
      */
-    public function getOrders($orderId = null)
+    public function getOrders()
     {
-        return $this->getOrders->call($orderId);
+        $requestData = ['include_addresses' => 'true'];
+        $this->getOrders->setRequestData($requestData);
+
+        return $this->getOrders->call();
     }
 
     /**

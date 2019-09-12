@@ -107,7 +107,9 @@ class Save
     }
 
     /**
-     * @param $subject
+     * @param      $subject
+     *
+     * @param null $shipment
      *
      * @throws \Exception
      */
