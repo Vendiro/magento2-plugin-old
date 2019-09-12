@@ -80,16 +80,13 @@ class Data
 
     public function updateProductInventory()
     {
-        if (!$this->apiConfiguration->canUpdateInventory()) {
+        $newStocks = $this->stockRepository->getNewStock();
+
+        if (!$this->apiConfiguration->canUpdateInventory() || empty($newStocks)) {
             return;
         }
 
         $requestData = [];
-        $newStocks = $this->stockRepository->getNewStock();
-
-        if (empty($newStocks)) {
-            return;
-        }
 
         foreach ($newStocks as $stock) {
             $sku = $stock->getProductSku();
@@ -98,7 +95,6 @@ class Data
         }
 
         $this->updateProductsStock->setRequestData($requestData);
-
         $response = $this->updateProductsStock->call();
 
         $this->processResponse($response, $newStocks);
