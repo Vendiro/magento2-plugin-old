@@ -86,7 +86,9 @@
     <type name="Magento\Sales\Api\ShipmentRepositoryInterface">
         <plugin name="ShipmentCreate" type="TIG\Vendiro\Plugin\Shipment\Save" />
     </type>
-
+    <type name="Magento\Sales\Model\Order\Shipment\Track">
+        <plugin name="ShipmentCreate" type="TIG\Vendiro\Plugin\Shipment\Delete" />
+    </type>
     <type name="TIG\Vendiro\Webservices\Endpoints\AbstractEndpoint">
         <arguments>
             <argument name="restApi" xsi:type="object">TIG\Vendiro\Webservices\Rest</argument>
