@@ -122,6 +122,7 @@ class OrderRepository
     private function setRequestProductsQueued()
     {
         $params = $this->request->getParams();
+        //@codingStandardsIgnoreLine
 //        $params['tig_vendiro_products_queued'] = true;
         $this->request->setParams($params);
     }

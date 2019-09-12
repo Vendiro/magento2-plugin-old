@@ -76,6 +76,7 @@ class Import
         $this->logger = $logger;
     }
 
+    //@codingStandardsIgnoreStart
     public function importToMagento()
     {
         if (!$this->apiConfiguration->canImportOrders()) {
@@ -100,6 +101,7 @@ class Import
             $this->createOrder($order, $valuesToSkip);
         }
     }
+    //@codingStandardsIgnoreEnd
 
     /**
      * @param $order

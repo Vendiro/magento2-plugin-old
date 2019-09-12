@@ -46,7 +46,6 @@ class Delete
     public function __construct(
         TrackQueueRepositoryInterface $trackQueueRepository,
         TrackQueue $trackQueueResourceModel
-
     ) {
         $this->trackQueueRepository = $trackQueueRepository;
         $this->trackQueueResourceModel = $trackQueueResourceModel;
