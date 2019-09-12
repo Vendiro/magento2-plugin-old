@@ -33,6 +33,6 @@ namespace TIG\Vendiro\Webservices\Endpoints;
 
 class ConfirmShipment extends AbstractEndpoint
 {
-    const ENDPOINT_URL = 'orders/%s/shipment/';
+    const ENDPOINT_URL = 'orders/%s/shipment/?id_type=order_ref';
     const METHOD       = 'PUT';
 }

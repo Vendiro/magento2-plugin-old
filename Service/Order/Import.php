@@ -84,6 +84,10 @@ class Import
 
         $orders = $this->apiStatusManager->getOrders();
 
+        if (isset($orders['message'])) {
+            return;
+        }
+
         $orderIds = array_column($orders, 'id');
         $valuesToSkip = $this->orderRepository->getAlreadyInsertedOrders($orderIds);
 

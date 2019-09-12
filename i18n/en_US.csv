@@ -38,3 +38,4 @@ Mode,Mode
 "Successfully connected to account ","Successfully connected to account "
 "Don't forget to save changes.","Don't forget to save changes."
 "Your API Credentials could not be validated","Your API Credentials could not be validated"
+"Please select a default vendiro shipping method in the vendiro configuration.","Please select a default vendiro shipping method in the vendiro configuration."

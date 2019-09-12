@@ -47,7 +47,7 @@ class InstallOrderTable extends AbstractTableInstaller
     protected function defineTable()
     {
         $this->addEntityId();
-        $this->addText('order_id', 'Order ID', 32);
+        $this->addText('order_id', 'Order Increment ID', 32);
         $this->addInt('vendiro_id', 'Vendiro ID');
         $this->addText('marketplace_reference', 'Marketplace reference', 32, false);
         $this->addText('status', 'Status', 32, false);

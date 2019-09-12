@@ -100,7 +100,7 @@ class Save
 
         if ($shipment->getVendiroCarrier() == '0') {
             $errorMessage = __(
-                "Please select a default shipping method."
+                "Please select a default vendiro shipping method in the vendiro configuration."
             );
             throw new LocalizedException($errorMessage);
         }
