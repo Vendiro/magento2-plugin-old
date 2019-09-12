@@ -63,7 +63,7 @@ class ApiStatusManager
      */
     public function getOrders()
     {
-        $requestData = ['include_addresses' => 'true'];
+        $requestData = ['order_status' => 'new','include_addresses' => 'true'];
         $this->getOrders->setRequestData($requestData);
 
         return $this->getOrders->call();
