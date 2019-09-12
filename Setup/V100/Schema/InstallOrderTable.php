@@ -47,11 +47,11 @@ class InstallOrderTable extends AbstractTableInstaller
     protected function defineTable()
     {
         $this->addEntityId();
-        $this->addInt('order_id', 'Order ID');
+        $this->addText('order_id', 'Order ID', 32);
         $this->addInt('vendiro_id', 'Vendiro ID');
         $this->addText('marketplace_reference', 'Marketplace reference', 32, false);
         $this->addText('status', 'Status', 32, false);
         $this->addTimestamp('created_at', 'Created at', false, Table::TIMESTAMP_INIT);
-        $this->addIndex('vendiro_id');
+        $this->addIndex(['vendiro_id']);
     }
 }

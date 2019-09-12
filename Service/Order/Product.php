@@ -34,12 +34,16 @@ namespace TIG\Vendiro\Service\Order;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Model\StockState;
+use Magento\Framework\DataObject\Factory as DataObjectFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use TIG\Vendiro\Exception as VendiroException;
 use TIG\Vendiro\Logging\Log;
 
 class Product
 {
+    /** @var DataObjectFactory */
+    private $dataObjectFactory;
+
     /** @var ProductRepositoryInterface */
     private $productRepository;
 
@@ -50,13 +54,27 @@ class Product
     private $logger;
 
     public function __construct(
+        DataObjectFactory $dataObjectFactory,
         ProductRepositoryInterface $productRepository,
         StockState $stockState,
         Log $logger
     ) {
+        $this->dataObjectFactory = $dataObjectFactory;
         $this->productRepository = $productRepository;
         $this->stockState = $stockState;
         $this->logger = $logger;
+    }
+
+    public function createProductDataFromApiData($apiProduct)
+    {
+        $data = [
+            'qty' => (int)$apiProduct['amount'],
+            'custom_price' => $apiProduct['value'],
+        ];
+
+        $quoteProductData = $this->dataObjectFactory->create($data);
+
+        return $quoteProductData;
     }
 
     /**
