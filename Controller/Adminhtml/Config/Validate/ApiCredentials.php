@@ -52,15 +52,16 @@ class ApiCredentials extends Action
     {
         $result = [
             'error' => true,
-            'message' => 'Your API Credentials could not be validated'
+            //@codingStandardsIgnoreLine
+            'message' => __('Your API Credentials could not be validated')
         ];
 
         $validatedAccountName = $this->validateAccount();
 
         if ($validatedAccountName) {
             $result['error'] = false;
-            $result['message'] = 'Successfully connected to account ' . $validatedAccountName . '. '
-                               . "Don't forget to save changes.";
+            $result['message'] = __('Successfully connected to account ') . $validatedAccountName . '. '
+                               . __("Don't forget to save changes.");
         }
 
         $response = $this->getResponse();
