@@ -31,15 +31,13 @@
  */
 namespace TIG\Vendiro\Service\Order;
 
-use Magento\Framework\DataObject\Factory as DataObjectFactory;
-use \Magento\Framework\Session\SessionManagerInterface as CoreSession;
+use Magento\Framework\Session\SessionManagerInterface as CoreSession;
 use TIG\Vendiro\Exception as VendiroException;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Carrier\Vendiro as VendiroCarrier;
 use TIG\Vendiro\Model\Payment\Vendiro as VendiroPayment;
 use TIG\Vendiro\Service\Order\Create\CartManager;
 
-//@codingStandardsIgnoreFile
 class Create
 {
     /** @var CartManager */
@@ -51,51 +49,37 @@ class Create
     /** @var Product */
     private $product;
 
-    /** @var DataObjectFactory */
-    private $dataObjectFactory;
-
     /** @var Log */
     private $logger;
 
     /** @var CoreSession */
-    protected $coreSession;
+    private $coreSession;
 
     /**
-     * @param CartManager          $cart
-     * @param OrderStatusManager  $orderStatusManager
-     * @param Product              $product
-     * @param DataObjectFactory    $dataObjectFactory
-     * @param Log                  $logger
-     * @param CoreSession          $coreSession
+     * @param CartManager        $cart
+     * @param OrderStatusManager $orderStatusManager
+     * @param Product            $product
+     * @param Log                $logger
+     * @param CoreSession        $coreSession
      */
     public function __construct(
         CartManager $cart,
         OrderStatusManager $orderStatusManager,
         Product $product,
-        DataObjectFactory $dataObjectFactory,
         Log $logger,
         CoreSession $coreSession
     ) {
         $this->cart = $cart;
         $this->orderStatusManager = $orderStatusManager;
         $this->product = $product;
-        $this->dataObjectFactory = $dataObjectFactory;
         $this->logger = $logger;
         $this->coreSession = $coreSession;
     }
 
     /**
-     * @return CoreSession
-     */
-    public function getCoreSession()
-    {
-        return $this->coreSession;
-    }
-
-    /**
      * @param $vendiroOrder
      *
-     * @return int
+     * @return int|string
      * @throws VendiroException
      */
     public function execute($vendiroOrder)
@@ -118,7 +102,7 @@ class Create
             $this->updateOrderCommentAndStatus($newOrderId, $vendiroOrder);
         }
 
-        return $newOrderId;
+        return $this->orderStatusManager->getIncrementId($newOrderId);
     }
 
     /**
@@ -129,21 +113,22 @@ class Create
      */
     private function prepareAndPlaceOrder($vendiroOrder)
     {
-        if ($this->getCoreSession()->getFulfilmentByMarketplace() == true) {
-            throw new VendiroException(__('Fulfilment by marketplace flag already set, this means another order is busy.'));
+        if ($this->coreSession->getFulfilmentByMarketplace() == true) {
+            // @codingStandardsIgnoreLine
+            $exceptionMessage = __('Fulfilment by marketplace flag already set, this means another order is busy.');
+            throw new VendiroException($exceptionMessage);
         }
 
         if (isset($vendiroOrder['fulfilment_by_marketplace']) && $vendiroOrder['fulfilment_by_marketplace'] == 'true') {
-            $this->getCoreSession()->setFulfilmentByMarketplace(true);
+            $this->coreSession->setFulfilmentByMarketplace(true);
         }
 
         $newOrderId = $this->placeOrder();
 
-        $this->getCoreSession()->unsFulfilmentByMarketplace();
+        $this->coreSession->unsFulfilmentByMarketplace();
 
         return $newOrderId;
     }
-
 
     /**
      * @param $apiProduct
@@ -153,13 +138,7 @@ class Create
      */
     private function addProducts($apiProduct, $storeCode = null)
     {
-        $data = [
-            'qty' => (int)$apiProduct['amount'],
-            'custom_price' => $apiProduct['value'],
-        ];
-
-        $quoteProductData = $this->dataObjectFactory->create($data);
-
+        $quoteProductData = $this->product->createProductDataFromApiData($apiProduct);
         $product = $this->product->getBySku($apiProduct['sku'], $storeCode);
 
         $this->cart->addProduct($product, $quoteProductData);

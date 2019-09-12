@@ -85,6 +85,18 @@ class OrderStatusManager
     }
 
     /**
+     * @param int $orderId
+     *
+     * @return string|null
+     */
+    public function getIncrementId($orderId)
+    {
+        $order = $this->orderRepository->get($orderId);
+
+        return $order->getIncrementId();
+    }
+
+    /**
      * @param int    $orderId
      * @param string $state
      */

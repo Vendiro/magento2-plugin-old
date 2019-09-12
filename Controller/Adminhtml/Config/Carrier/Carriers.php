@@ -56,6 +56,7 @@ class Carriers extends Action
     {
         $result = [
             'error' => true,
+            // @codingStandardsIgnoreLine
             'message' => __('Your Vendiro Carriers could not be retreived.')
         ];
 
