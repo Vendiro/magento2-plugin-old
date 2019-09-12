@@ -115,8 +115,13 @@ class Save
      */
     public function afterSave($subject, $shipment = null)
     {
-        $tracks = $this->getTracks($subject, $shipment);
-        $this->saveTracks($tracks);
+        $order = $shipment->getOrder();
+        $shippingMethod = $order->getShippingMethod();
+
+        if ($shippingMethod === 'tig_vendiro_shipping') {
+            $tracks = $this->getTracks($subject, $shipment);
+            $this->saveTracks($tracks);
+        }
     }
 
     /**
