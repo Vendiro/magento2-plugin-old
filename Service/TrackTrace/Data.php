@@ -96,7 +96,7 @@ class Data
     }
 
     /**
-     * @param $vendiroOrderId
+     * @param $incrementId
      * @param $carrierId
      * @param $shipmentCode
      * @param $carrierName
@@ -104,12 +104,12 @@ class Data
      * @return mixed
      * @throws \TIG\Vendiro\Exception
      */
-    public function confirmShipmentCall($vendiroOrderId, $carrierId, $shipmentCode, $carrierName)
+    public function confirmShipmentCall($incrementId, $carrierId, $shipmentCode, $carrierName)
     {
-        $requestData = ['carrier_id' => $carrierId, 'shipment_code' => $shipmentCode, 'carrier_name' => $carrierName];
+        $requestData = ['carrier_id' => $carrierId, 'id_type'  => 'order_ref', 'shipment_code' => $shipmentCode, 'carrier_name' => $carrierName];
         $this->confirmShipment->setRequestData($requestData);
 
-        $result = $this->confirmShipment->call($vendiroOrderId);
+        $result = $this->confirmShipment->call($incrementId);
 
         if ($result['message']) {
             throw new VendiroException(__($result['message']));
@@ -122,7 +122,6 @@ class Data
      * @param $trackQueueItem
      *
      * @return array
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getTracks($trackQueueItem)
     {
@@ -131,12 +130,12 @@ class Data
         $track = $this->getTrack($trackQueueItem);
 
         $shipmentCode = $track->getTrackNumber();
-        $vendiroOrderId = $this->getVendiroOrderId($trackQueueItem);
+        $incrementId = $this->getIncrementId($trackQueueItem);
         $carrierId = $this->getCarrier();
         $carrierName = $this->getCarrierName($trackQueueItem);
 
         $data['shipment_code'] = $shipmentCode;
-        $data['vendiro_order_id'] = $vendiroOrderId;
+        $data['order_ref'] = $incrementId;
         $data['carrier_id'] = $carrierId;
         $data['carrier_name'] = $carrierName;
 
@@ -173,17 +172,14 @@ class Data
      * @param $trackQueueItem
      *
      * @return int
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getVendiroOrderId($trackQueueItem)
+    public function getIncrementId($trackQueueItem)
     {
         $track = $this->getTrack($trackQueueItem);
-        $orderId = $track->getShipment()->getOrderId();
-        $vendiroOrder = $this->orderRepository->getByOrderId($orderId);
-        $entityId = array_keys($vendiroOrder)['0'];
-        $vendiroOrderId = $this->orderRepository->getById($entityId)->getVendiroId();
+        $order = $track->getShipment()->getOrder();
+        $incrementId = $order->getIncrementId();
 
-        return $vendiroOrderId;
+        return $incrementId;
     }
 
     public function getCarrier()
@@ -197,14 +193,13 @@ class Data
     /**
      * @param $trackQueueItem
      *
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function shipmentCall($trackQueueItem)
     {
         $data = $this->getTracks($trackQueueItem);
 
         try {
-            $this->confirmShipmentCall($data['vendiro_order_id'], $data['carrier_id'], $data['shipment_code'], $data['carrier_name']);
+            $this->confirmShipmentCall($data['order_ref'], $data['carrier_id'], $data['shipment_code'], $data['carrier_name']);
             $this->saveTrackItem($trackQueueItem);
         } catch (CouldNotSaveException $exception) {
             $this->logger->addNotice('Could not confirm Vendiro shipment');

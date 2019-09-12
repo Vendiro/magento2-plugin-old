@@ -122,8 +122,6 @@ class Save
             $tracks = $this->getTracks($subject, $shipment);
             $this->saveTracks($tracks);
         }
-
-        return;
     }
 
     /**
