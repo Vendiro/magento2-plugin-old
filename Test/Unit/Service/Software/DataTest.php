@@ -44,7 +44,7 @@ class DataTest extends TestCase
         $instance = $this->getInstance();
         $result = $instance->getModuleVersion();
 
-        $this->assertEquals('1.0.0', $result);
+        $this->assertEquals('1.1.0', $result);
     }
 
     public function testGetModuleName()
