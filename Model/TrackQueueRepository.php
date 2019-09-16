@@ -132,15 +132,15 @@ class TrackQueueRepository extends AbstractRepository implements TrackQueueRepos
     }
 
     /**
-     * @param TrackQueueInterface $track_queue
+     * @param TrackQueueInterface $trackQueue
      *
      * @return bool
      * @throws \Magento\Framework\Exception\CouldNotDeleteException
      */
-    public function delete(TrackQueueInterface $track_queue)
+    public function delete(TrackQueueInterface $trackQueue)
     {
         try {
-            $track_queue->delete();
+            $trackQueue->delete();
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
             throw new CouldNotDeleteException(__($exception->getMessage()));

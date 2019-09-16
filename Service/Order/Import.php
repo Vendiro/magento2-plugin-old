@@ -84,16 +84,11 @@ class Import
 
         $orders = $this->apiStatusManager->getOrders();
 
-        if (isset($orders) && !is_array($orders)) {
-            $orders = [$orders];
-        }
-
         $orderIds = array_column($orders, 'id');
         $valuesToSkip = $this->orderRepository->getAlreadyInsertedOrders($orderIds);
 
         if (isset($orders) && !is_array($orders)) {
-            $this->createOrder($orders, $valuesToSkip);
-            return;
+            $orders = [$orders];
         }
 
         foreach ($orders as $order) {

@@ -34,7 +34,6 @@
 namespace TIG\Vendiro\Service\TrackTrace;
 
 use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\Track\CollectionFactory;
 use TIG\Vendiro\Exception as VendiroException;
 use TIG\Vendiro\Logging\Log;
@@ -57,9 +56,6 @@ class Data
     /** @var Configuration $configuration */
     private $configuration;
 
-    /** @var ShipmentInterface $shipmentInterface */
-    private $shipmentInterface;
-
     /** @var Log $logger */
     private $logger;
 
@@ -68,7 +64,6 @@ class Data
      * @param TrackQueueRepository     $trackQueueItemRepository
      * @param CollectionFactory        $collectionFactory
      * @param Configuration            $configuration
-     * @param ShipmentInterface        $shipmentInterface
      * @param Log                      $logger
      */
     public function __construct(
@@ -76,14 +71,12 @@ class Data
         TrackQueueRepository $trackQueueItemRepository,
         CollectionFactory $collectionFactory,
         Configuration $configuration,
-        ShipmentInterface $shipmentInterface,
         Log $logger
     ) {
         $this->confirmShipment = $confirmShipment;
         $this->trackQueueItemRepository = $trackQueueItemRepository;
         $this->collectionFactory = $collectionFactory;
         $this->configuration = $configuration;
-        $this->shipmentInterface = $shipmentInterface;
         $this->logger = $logger;
     }
 
@@ -123,7 +116,7 @@ class Data
 
         $shipmentCode = $track->getTrackNumber();
         $incrementId = $this->getIncrementId($trackQueueItem);
-        $carrierId = $this->getCarrier();
+        $carrierId = $this->getCarrier($track->getStoreId());
         $carrierName = $this->getCarrierName($trackQueueItem);
 
         $data['shipment_code'] = $shipmentCode;
@@ -176,11 +169,12 @@ class Data
     }
 
     /**
+     * @param $storeId
+     *
      * @return int
      */
-    public function getCarrier()
+    public function getCarrier($storeId)
     {
-        $storeId = $this->shipmentInterface->getStoreId();
         $carrierId = $this->configuration->getDefaultCarrier($storeId);
 
         return $carrierId;
