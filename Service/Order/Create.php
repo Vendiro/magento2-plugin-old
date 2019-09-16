@@ -190,7 +190,7 @@ class Create
             $vendiroOrder['marketplace']['name'] . " ID: " . $vendiroOrder['marketplace_order_id'];
 
         if (isset($vendiroOrder['fulfilment_by_marketplace']) && $vendiroOrder['fulfilment_by_marketplace'] == 'true') {
-            $comment .= "<br/>Fulfilment by marketplace: true";
+            $comment .= "<br/>Fulfilment by Marketplace";
         }
 
         $this->orderStatusManager->addHistoryComment($magentoOrderId, $comment);

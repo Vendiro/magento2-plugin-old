@@ -53,7 +53,7 @@ class CreateTest extends TestCase
                     'marketplace_order_id' => 'TIG-058275',
                     'fulfilment_by_marketplace' => 'true'
                 ],
-                'Order via Vendiro<br>Marketplace: TIG Marketplace<br/>TIG Marketplace ID: TIG-058275<br/>Fulfilment by marketplace: true'
+                'Order via Vendiro<br>Marketplace: TIG Marketplace<br/>TIG Marketplace ID: TIG-058275<br/>Fulfilment by Marketplace'
             ],
             'not fulfilled by marketplace' => [
                 85,
