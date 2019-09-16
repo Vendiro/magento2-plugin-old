@@ -36,7 +36,6 @@ namespace TIG\Vendiro\Service\Carrier;
 use TIG\Vendiro\Api\CarrierRepositoryInterface;
 use TIG\Vendiro\Exception;
 use TIG\Vendiro\Logging\Log;
-use TIG\Vendiro\Model\CarrierRepository;
 use TIG\Vendiro\Webservices\Endpoints\GetCarriers;
 
 class Data
@@ -50,25 +49,19 @@ class Data
     /** @var CarrierRepositoryInterface $carrierRepository */
     private $carrierRepositoryInterface;
 
-    /** @var CarrierRepository */
-    private $carrierRepository;
-
     /**
      * @param Log                                         $logger
      * @param GetCarriers                                 $getCarriers
      * @param CarrierRepositoryInterface                  $carrierRepositoryInterface
-     * @param CarrierRepository                           $carrierRepository
      */
     public function __construct(
         Log $logger,
         GetCarriers $getCarriers,
-        CarrierRepositoryInterface $carrierRepositoryInterface,
-        CarrierRepository $carrierRepository
+        CarrierRepositoryInterface $carrierRepositoryInterface
     ) {
         $this->logger                     = $logger;
         $this->getCarriers                = $getCarriers;
         $this->carrierRepositoryInterface = $carrierRepositoryInterface;
-        $this->carrierRepository          = $carrierRepository;
     }
 
     /**
@@ -112,7 +105,7 @@ class Data
         $carrierIds = [];
         array_push($carrierIds, array_keys($carriers));
 
-        $duplicateCarriers = $this->carrierRepository->getDuplicateCarriers($carrierIds);
+        $duplicateCarriers = $this->carrierRepositoryInterface->getDuplicateCarriers($carrierIds);
 
         if ($duplicateCarriers === null) {
             $duplicateCarriers = [];

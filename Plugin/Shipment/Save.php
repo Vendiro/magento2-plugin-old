@@ -117,9 +117,14 @@ class Save
         $order = $shipment->getOrder();
         $shippingMethod = $order->getShippingMethod();
 
-        if ($shippingMethod === 'tig_vendiro_shipping') {
-            $tracks = $this->getTracks($subject, $shipment);
-            $this->saveTracks($tracks);
+        if ($shippingMethod !== 'tig_vendiro_shipping') {
+            return;
+        }
+
+        $tracks = $this->getTracks($subject, $shipment);
+
+        foreach ($tracks as $track) {
+            $this->saveTrack($track);
         }
     }
 
@@ -175,18 +180,16 @@ class Save
     }
 
     /**
-     * @param $tracks
+     * @param $track
      *
      * @throws \Exception
      */
-    public function saveTracks($tracks)
+    public function saveTrack($track)
     {
-        foreach ($tracks as $track) {
-            $vendiroTrackQueueItem = $this->trackQueueRepository->create();
-            $vendiroTrackQueueItem->setTrackId($track->getId());
-            $vendiroTrackQueueItem->setStatus(QueueStatus::QUEUE_STATUS_NEW);
+        $vendiroTrackQueueItem = $this->trackQueueRepository->create();
+        $vendiroTrackQueueItem->setTrackId($track->getId());
+        $vendiroTrackQueueItem->setStatus(QueueStatus::QUEUE_STATUS_NEW);
 
-            $this->trackQueueRepository->save($vendiroTrackQueueItem);
-        }
+        $this->trackQueueRepository->save($vendiroTrackQueueItem);
     }
 }
