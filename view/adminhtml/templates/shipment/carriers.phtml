@@ -63,10 +63,11 @@
                     jQuery('#carrier_message_span .error').hide();
                     jQuery('#carrier_message_span .success').text(response.message).fadeIn(200);
                 }
-            }).fail(function () {
-                jQuery('#carrier_message_span .success').hide();
-                jQuery('#carrier_message_span .error').text('Fields already in database, could not run the update.').fadeIn(200);
-            });
+            })
+            // .fail(function () {
+            //     jQuery('#carrier_message_span .success').hide();
+            //     jQuery('#carrier_message_span .error').text('Fields already in database, could not run the update.').fadeIn(200);
+            // });
         });
 
     });

@@ -54,8 +54,6 @@ class Data
     private $carrierRepository;
 
     /**
-     * Data constructor.
-     *
      * @param Log                                         $logger
      * @param GetCarriers                                 $getCarriers
      * @param CarrierRepositoryInterface                  $carrierRepositoryInterface
@@ -80,7 +78,7 @@ class Data
     {
         $carriers = $this->getCarriers();
 
-        $duplicateCarriers = $this->getDuplicateCarriers();
+        $duplicateCarriers = $this->getDuplicateCarriers($carriers);
 
         foreach ($duplicateCarriers as $duplicateCarrier) {
             $this->updateCarrier($duplicateCarrier, $carriers[$duplicateCarrier->getCarrierId()]);
@@ -92,6 +90,9 @@ class Data
         }
     }
 
+    /**
+     * @return array|bool|mixed|\Zend_Http_Response
+     */
     public function getCarriers()
     {
         $carriers = $this->getCarriers->call();
@@ -103,14 +104,15 @@ class Data
         return $carriers;
     }
 
-    public function getDuplicateCarriers()
+    /**
+     * @return array|null
+     */
+    public function getDuplicateCarriers($carriers)
     {
-        $carriers = $this->getCarriers();
-
         $carrierIds = [];
         array_push($carrierIds, array_keys($carriers));
 
-        $duplicateCarriers = $this->carrierRepository->getByFieldWithValue('carrier_id', $carrierIds, 0, 'in');
+        $duplicateCarriers = $this->carrierRepository->getDuplicateCarriers($carrierIds);
 
         if ($duplicateCarriers === null) {
             $duplicateCarriers = [];
@@ -138,11 +140,15 @@ class Data
         }
     }
 
+    /**
+     * @param $duplicateCarrier
+     * @param $carrier
+     */
     public function updateCarrier($duplicateCarrier, $carrier)
     {
         if ($duplicateCarrier->getCarrier() != $carrier) {
             $duplicateCarrier->setCarrier($carrier);
-            $duplicateCarrier->save();
+            $this->carrierRepositoryInterface->save($duplicateCarrier);
         }
     }
 }

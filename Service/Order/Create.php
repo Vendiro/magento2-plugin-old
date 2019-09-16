@@ -100,9 +100,9 @@ class Create
 
         if ($newOrderId) {
             $this->updateOrderCommentAndStatus($newOrderId, $vendiroOrder);
-        }
 
-        return $this->orderStatusManager->getIncrementId($newOrderId);
+            return $this->orderStatusManager->getIncrementId($newOrderId);
+        }
     }
 
     /**

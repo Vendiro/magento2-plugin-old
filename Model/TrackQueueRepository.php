@@ -34,8 +34,11 @@ namespace TIG\Vendiro\Model;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\ScopeInterface;
+use TIG\Vendiro\Api\Data\OrderInterface;
 use TIG\Vendiro\Api\Data\TrackQueueInterface;
 use TIG\Vendiro\Api\TrackQueueRepositoryInterface;
 use TIG\Vendiro\Model\ResourceModel\TrackQueue\CollectionFactory;
@@ -107,5 +110,42 @@ class TrackQueueRepository extends AbstractRepository implements TrackQueueRepos
         $shipmentsLimit = $this->scopeInterface->getValue(self::VENDIRO_SHIPMENTS_LIMIT, ScopeInterface::SCOPE_STORE);
 
         return $this->getByFieldWithValue('status', 'new', $shipmentsLimit);
+    }
+
+    /**
+     * @param $trackId
+     *
+     * @return TrackQueueInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getByTrackId($trackId)
+    {
+        $track = $this->trackQueueFactory->create();
+        $track->load($trackId);
+
+        if (!$track->getId()) {
+            // @codingStandardsIgnoreLine
+            throw new NoSuchEntityException(__('Order with id "%1" does not exist.', $entityId));
+        }
+
+        return $track;
+    }
+
+    /**
+     * @param TrackQueueInterface $track_queue
+     *
+     * @return bool
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
+     */
+    public function delete(TrackQueueInterface $track_queue)
+    {
+        try {
+            $track_queue->delete();
+        } catch (\Exception $exception) {
+            // @codingStandardsIgnoreLine
+            throw new CouldNotDeleteException(__($exception->getMessage()));
+        }
+
+        return true;
     }
 }

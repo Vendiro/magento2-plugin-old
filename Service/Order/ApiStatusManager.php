@@ -46,6 +46,11 @@ class ApiStatusManager
     /** @var RejectOrder */
     private $rejectOrder;
 
+    /**
+     * @param GetOrders   $getOrders
+     * @param AcceptOrder $acceptOrder
+     * @param RejectOrder $rejectOrder
+     */
     public function __construct(
         GetOrders $getOrders,
         AcceptOrder $acceptOrder,
@@ -57,8 +62,6 @@ class ApiStatusManager
     }
 
     /**
-     * @param bool $includeAddresses
-     *
      * @return array|mixed|\Zend_Http_Response
      */
     public function getOrders()

@@ -34,7 +34,7 @@ namespace TIG\Vendiro\Plugin\Shipment;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use TIG\Vendiro\Api\TrackQueueRepositoryInterface;
-use TIG\Vendiro\Model\Config\Provider\General\CarrierConfiguration;
+use TIG\Vendiro\Model\Config\Provider\General\Configuration;
 use TIG\Vendiro\Model\Config\Provider\QueueStatus;
 use TIG\Vendiro\Model\TrackQueueRepository;
 
@@ -43,15 +43,15 @@ class Save
     /** @var TrackQueueRepository $trackQueueRepository */
     private $trackQueueRepository;
 
-    /** @var CarrierConfiguration $configuration */
+    /** @var Configuration $configuration */
     private $configuration;
 
     /**
-     * @param CarrierConfiguration                   $configuration
+     * @param Configuration                          $configuration
      * @param TrackQueueRepositoryInterface          $trackQueueRepository
      */
     public function __construct(
-        CarrierConfiguration $configuration,
+        Configuration $configuration,
         TrackQueueRepositoryInterface $trackQueueRepository
     ) {
         $this->configuration          = $configuration;
@@ -108,7 +108,6 @@ class Save
 
     /**
      * @param      $subject
-     *
      * @param null $shipment
      *
      * @throws \Exception
@@ -187,7 +186,7 @@ class Save
             $vendiroTrackQueueItem->setTrackId($track->getId());
             $vendiroTrackQueueItem->setStatus(QueueStatus::QUEUE_STATUS_NEW);
             // @codingStandardsIgnoreLine
-            $vendiroTrackQueueItem->save();
+            $this->trackQueueRepository->save($vendiroTrackQueueItem);
         }
     }
 }

@@ -55,6 +55,15 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      */
     private $orderFactory;
 
+    /**
+     * OrderRepository constructor.
+     *
+     * @param ScopeConfigInterface              $scopeConfig
+     * @param SearchResultsInterfaceFactory     $searchResultsFactory
+     * @param SearchCriteriaBuilder             $searchCriteriaBuilder
+     * @param OrderFactory                      $orderFactory
+     * @param CollectionFactory                 $collectionFactory
+     */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         SearchResultsInterfaceFactory $searchResultsFactory,
@@ -150,9 +159,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      */
     public function getNewOrders()
     {
-        $newOrdersLimit = $this->scopeConfig->getValue(self::VENDIRO_NEW_ORDERS_LIMIT, ScopeInterface::SCOPE_STORE);
-
-        return $this->getByFieldWithValue('order_id', true, $newOrdersLimit, 'null');
+        return $this->getByFieldWithValue('order_id', true, 'null');
     }
 
     /**

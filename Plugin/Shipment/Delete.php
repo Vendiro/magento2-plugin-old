@@ -43,6 +43,10 @@ class Delete
     /** @var TrackQueue $trackQueueResourceModel */
     private $trackQueueResourceModel;
 
+    /**
+     * @param TrackQueueRepositoryInterface $trackQueueRepository
+     * @param TrackQueue                    $trackQueueResourceModel
+     */
     public function __construct(
         TrackQueueRepositoryInterface $trackQueueRepository,
         TrackQueue $trackQueueResourceModel
@@ -51,13 +55,19 @@ class Delete
         $this->trackQueueResourceModel = $trackQueueResourceModel;
     }
 
+    /**
+     * @param $subject
+     *
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function afterDelete($subject)
     {
-        $tracks = $this->trackQueueRepository->getByFieldWithValue('track_id', $subject->getId());
+        $tracks = $this->trackQueueRepository->getByTrackId($subject->getId());
 
         /** @var \TIG\Vendiro\Model\TrackQueue $track */
         $track = array_pop($tracks);
 
-        $this->trackQueueResourceModel->delete($track);
+        $this->trackQueueRepository->delete($track);
     }
 }

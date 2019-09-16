@@ -38,13 +38,11 @@ use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Model\ResourceModel\Order\Shipment\Track\CollectionFactory;
 use TIG\Vendiro\Exception as VendiroException;
 use TIG\Vendiro\Logging\Log;
-use TIG\Vendiro\Model\Config\Provider\General\CarrierConfiguration;
+use TIG\Vendiro\Model\Config\Provider\General\Configuration;
 use TIG\Vendiro\Model\Config\Provider\QueueStatus;
-use TIG\Vendiro\Model\OrderRepository;
 use TIG\Vendiro\Model\TrackQueueRepository;
 use TIG\Vendiro\Webservices\Endpoints\ConfirmShipment;
 
-//@codingStandardsIgnoreFile
 class Data
 {
     /** @var ConfirmShipment $confirmShipment */
@@ -56,14 +54,11 @@ class Data
     /** @var CollectionFactory $collectionFactory */
     private $collectionFactory;
 
-    /** @var CarrierConfiguration $carrierConfiguration */
-    private $carrierConfiguration;
+    /** @var Configuration $configuration */
+    private $configuration;
 
     /** @var ShipmentInterface $shipmentInterface */
     private $shipmentInterface;
-
-    /** @var OrderRepository $orderRepository */
-    private $orderRepository;
 
     /** @var Log $logger */
     private $logger;
@@ -72,26 +67,23 @@ class Data
      * @param ConfirmShipment          $confirmShipment
      * @param TrackQueueRepository     $trackQueueItemRepository
      * @param CollectionFactory        $collectionFactory
-     * @param CarrierConfiguration     $carrierConfiguration
+     * @param Configuration            $configuration
      * @param ShipmentInterface        $shipmentInterface
-     * @param OrderRepository          $orderRepository
      * @param Log                      $logger
      */
     public function __construct(
         ConfirmShipment $confirmShipment,
         TrackQueueRepository $trackQueueItemRepository,
         CollectionFactory $collectionFactory,
-        CarrierConfiguration $carrierConfiguration,
+        Configuration $configuration,
         ShipmentInterface $shipmentInterface,
-        OrderRepository $orderRepository,
         Log $logger
     ) {
         $this->confirmShipment = $confirmShipment;
         $this->trackQueueItemRepository = $trackQueueItemRepository;
         $this->collectionFactory = $collectionFactory;
-        $this->carrierConfiguration = $carrierConfiguration;
+        $this->configuration = $configuration;
         $this->shipmentInterface = $shipmentInterface;
-        $this->orderRepository = $orderRepository;
         $this->logger = $logger;
     }
 
@@ -182,10 +174,13 @@ class Data
         return $incrementId;
     }
 
+    /**
+     * @return int
+     */
     public function getCarrier()
     {
         $storeId = $this->shipmentInterface->getStoreId();
-        $carrierId = $this->carrierConfiguration->getDefaultCarrier($storeId);
+        $carrierId = $this->configuration->getDefaultCarrier($storeId);
 
         return $carrierId;
     }

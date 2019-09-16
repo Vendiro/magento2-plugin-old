@@ -76,7 +76,6 @@ class Import
         $this->logger = $logger;
     }
 
-    //@codingStandardsIgnoreStart
     public function importToMagento()
     {
         if (!$this->apiConfiguration->canImportOrders()) {
@@ -85,8 +84,8 @@ class Import
 
         $orders = $this->apiStatusManager->getOrders();
 
-        if (isset($orders['message'])) {
-            return;
+        if (isset($orders) && !is_array($orders)) {
+            $orders = [$orders];
         }
 
         $orderIds = array_column($orders, 'id');
@@ -101,7 +100,6 @@ class Import
             $this->createOrder($order, $valuesToSkip);
         }
     }
-    //@codingStandardsIgnoreEnd
 
     /**
      * @param $order
@@ -146,6 +144,10 @@ class Import
         }
     }
 
+    /**
+     * @param $newOrderId
+     * @param $order
+     */
     public function saveOrder($newOrderId, $order)
     {
         $vendiroOrder = $this->orderRepository->create();

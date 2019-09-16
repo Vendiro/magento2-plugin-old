@@ -47,6 +47,15 @@ class CarrierRepository extends AbstractRepository implements CarrierRepositoryI
     /** @var CarrierResourceModel $carrierResourceModel */
     private $carrierResourceModel;
 
+    /**
+     * CarrierRepository constructor.
+     *
+     * @param SearchResultsInterfaceFactory            $searchResultsFactory
+     * @param SearchCriteriaBuilder                    $searchCriteriaBuilder
+     * @param CarrierFactory                           $carrierFactory
+     * @param \TIG\Vendiro\Model\ResourceModel\Carrier $carrierResourceModel
+     * @param CollectionFactory                        $collectionFactory
+     */
     public function __construct(
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
@@ -87,5 +96,13 @@ class CarrierRepository extends AbstractRepository implements CarrierRepositoryI
     public function create(array $data = [])
     {
         return $this->carrierFactory->create($data);
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getDuplicateCarriers($carrierIds)
+    {
+        return $this->getByFieldWithValue('carrier_id', $carrierIds, 0, 'in');
     }
 }

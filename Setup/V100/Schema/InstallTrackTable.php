@@ -41,7 +41,6 @@ class InstallTrackTable extends AbstractTableInstaller
     /**
      * @return void
      * @throws \Zend_Db_Exception
-     * @codingStandardsIgnoreLine§
      */
     // @codingStandardsIgnoreLine
     protected function defineTable()

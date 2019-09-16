@@ -39,6 +39,10 @@ class ApiCredentials extends Action
     /** @var GetAccount */
     private $getAccount;
 
+    /**
+     * @param \Magento\Backend\App\Action\Context           $context
+     * @param \TIG\Vendiro\Webservices\Endpoints\GetAccount $getAccount
+     */
     public function __construct(
         Action\Context $context,
         GetAccount $getAccount
@@ -48,6 +52,9 @@ class ApiCredentials extends Action
         $this->getAccount = $getAccount;
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     */
     public function execute()
     {
         $result = [
@@ -59,9 +66,9 @@ class ApiCredentials extends Action
         $validatedAccountName = $this->validateAccount();
 
         if ($validatedAccountName) {
+            $message = "Successfully connected to account %s. Don't forget to save changes.";
             $result['error'] = false;
-            $result['message'] = __('Successfully connected to account ') . $validatedAccountName . '. '
-                               . __("Don't forget to save changes.");
+            $result['message'] = __($message, $validatedAccountName);
         }
 
         $response = $this->getResponse();

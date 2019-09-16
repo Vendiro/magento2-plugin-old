@@ -32,9 +32,10 @@
 namespace TIG\Vendiro\Block\Adminhtml\Shipment\Options;
 
 use Magento\Backend\Block\Template;
+use Magento\Framework\App\Config;
 use Magento\Framework\View\Element\BlockInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use TIG\Vendiro\Model\Config\Provider\General\CarrierConfiguration;
+use TIG\Vendiro\Model\Config\Provider\General\Configuration;
 use TIG\Vendiro\Model\ResourceModel\Carrier\CollectionFactory;
 
 class Create extends Template implements BlockInterface
@@ -42,25 +43,23 @@ class Create extends Template implements BlockInterface
     /** @var StoreManagerInterface */
     private $storeManager;
 
-    /** @var CarrierConfiguration */
+    /** @var Configuration */
     private $configuration;
 
-    /**
-     * @var CollectionFactory
-     */
+    /** @var CollectionFactory  */
     private $collectionFactory;
 
     /**
      * @param Template\Context          $context
      * @param CollectionFactory         $collectionFactory
-     * @param CarrierConfiguration      $configuration
+     * @param Configuration             $configuration
      * @param StoreManagerInterface     $storeManager
      * @param array                     $data
      */
     public function __construct(
         Template\Context $context,
         CollectionFactory $collectionFactory,
-        CarrierConfiguration $configuration,
+        Configuration $configuration,
         StoreManagerInterface $storeManager,
         array $data = []
     ) {
@@ -81,6 +80,10 @@ class Create extends Template implements BlockInterface
         return $collection->getItems();
     }
 
+    /**
+     * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getDefaultCarrier()
     {
         $store = $this->storeManager->getStore();
