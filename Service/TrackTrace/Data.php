@@ -168,7 +168,8 @@ class Data
     public function getIncrementId($trackQueueItem)
     {
         $track = $this->getTrack($trackQueueItem);
-        $order = $track->getShipment()->getOrder();
+        $shipment = $track->getShipment();
+        $order = $shipment->getOrder();
         $incrementId = $order->getIncrementId();
 
         return $incrementId;
@@ -194,7 +195,12 @@ class Data
         $data = $this->getTracks($trackQueueItem);
 
         try {
-            $this->confirmShipmentCall($data['order_ref'], $data['carrier_id'], $data['shipment_code'], $data['carrier_name']);
+            $this->confirmShipmentCall(
+                $data['order_ref'],
+                $data['carrier_id'],
+                $data['shipment_code'],
+                $data['carrier_name']
+            );
             $this->saveTrackItem($trackQueueItem);
         } catch (CouldNotSaveException $exception) {
             $this->logger->addNotice('Could not confirm Vendiro shipment');

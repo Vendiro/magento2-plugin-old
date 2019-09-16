@@ -33,7 +33,7 @@
 namespace TIG\Vendiro\Model\Config\Provider\General;
 
 use TIG\Vendiro\Model\AbstractConfigProvider;
-
+//@codingStandardsIgnoreFile
 class Configuration extends AbstractConfigProvider
 {
     const VENDIRO_GENERAL_MODE = 'tig_vendiro/general/mode';
