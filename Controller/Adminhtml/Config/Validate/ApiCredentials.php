@@ -66,7 +66,7 @@ class ApiCredentials extends Action
         $validatedAccountName = $this->validateAccount();
 
         if ($validatedAccountName) {
-            $message = "Successfully connected to account %s. Don't forget to save changes.";
+            $message = sprintf(__("Successfully connected to account %s. Don't forget to save changes."), $validatedAccountName);
             $result['error'] = false;
             $result['message'] = __($message, $validatedAccountName);
         }
