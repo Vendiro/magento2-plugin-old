@@ -94,7 +94,7 @@ class Carriers extends Field
             [
                 'id' => 'get_carriers',
                 //@codingStandardsIgnoreLine
-                'label' => __('Update Vendiro Carriers'),
+                'label' => __('Update Vendiro shipment providers'),
             ]
         );
 

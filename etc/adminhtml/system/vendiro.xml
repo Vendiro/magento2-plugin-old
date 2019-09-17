@@ -55,11 +55,11 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
         <field id="shipment" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Register shipment</label>
+            <label>Confirm shipment</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
         <field id="inventory" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Update inventory</label>
+            <label>Update stock</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
         <field id="inventory_quantity" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -68,7 +68,7 @@
             <source_model>TIG\Vendiro\Model\Config\Source\General\Inventory</source_model>
         </field>
         <field id="default_shipment_method" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Select your default shipping method</label>
+            <label>Select your default shipment provider</label>
             <source_model>TIG\Vendiro\Model\Config\Source\General\Carriers</source_model>
         </field>
         <field id="get_carriers" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
