@@ -55,12 +55,12 @@ class ProductTest extends TestCase
             'product id not found' => [
                 false,
                 15,
-                'The order could not be exported from Vendiro. The product that was requested wasn\'t found.'
+                'The order could not be imported. The product that was requested wasn\'t found.'
             ],
             'product not in stock' => [
                 987,
                 0,
-                'The order could not be exported from Vendiro. The product that was requested is not in stock.'
+                'The order could not be imported. The product that was requested is not in stock.'
             ]
         ];
     }

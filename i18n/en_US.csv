@@ -6,8 +6,8 @@ Live,Live
 Test,Test
 "Order with id ""%1"" does not exist.","Order with id ""%1"" does not exist."
 "The order could not be exported. The store that was requested wasn't found.","The order could not be exported. The store that was requested wasn't found."
-"The order could not be exported from Vendiro. The product that was requested wasn't found.","The order could not be exported from Vendiro. The product that was requested wasn't found."
-"The order could not be exported from Vendiro. The product that was requested is not in stock.","The order could not be exported from Vendiro. The product that was requested is not in stock."
+"The order could not be imported. The product that was requested wasn't found.","The order could not be imported. The product that was requested wasn't found."
+"The order could not be imported. The product that was requested is not in stock.","The order could not be imported. The product that was requested is not in stock."
 "Exception message.","Exception message."
 "Magento version compatibility","Magento version compatibility"
 "Supported Magento versions","Supported Magento versions"

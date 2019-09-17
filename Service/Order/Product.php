@@ -90,7 +90,7 @@ class Product
 
         if (!$product->getId()) {
             $errorMessage = __(
-                "The order could not be exported from Vendiro. The product that was requested wasn't found."
+                "The order could not be imported. The product that was requested wasn't found."
             );
             throw new VendiroException($errorMessage);
         }
@@ -99,7 +99,7 @@ class Product
 
         if ($qty <= 0) {
             $errorMessage = __(
-                "The order could not be exported from Vendiro. The product that was requested is not in stock."
+                "The order could not be imported. The product that was requested is not in stock."
             );
             throw new VendiroException($errorMessage);
         }
@@ -121,7 +121,7 @@ class Product
             $this->logger->critical('Vendiro load product went wrong: ' . $exception->getMessage());
 
             $errorMessage = __(
-                "The order could not be exported from Vendiro. The product that was requested wasn't found."
+                "The order could not be imported. The product that was requested wasn't found."
             );
             throw new VendiroException($errorMessage);
         }
