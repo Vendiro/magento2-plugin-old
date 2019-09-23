@@ -116,7 +116,7 @@ class Data
 
         $shipmentCode = $track->getTrackNumber();
         $incrementId = $this->getIncrementId($trackQueueItem);
-        $storeId = $track->getData()['store_id'];
+        $storeId = $track->getStoreId();
         $carrierId = $this->getCarrier($storeId);
         $carrierName = $this->getCarrierName($trackQueueItem);
 
