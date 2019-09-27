@@ -125,7 +125,7 @@ class Import
         $newOrderId = null;
 
         if (in_array($order['id'], array_keys($valuesToSkip))) {
-            $this->apiStatusManager->acceptOrder($valuesToSkip[$order['id']]['order_id'], $newOrderId);
+            $this->apiStatusManager->acceptOrder($order['id'], $newOrderId);
             return;
         }
 
