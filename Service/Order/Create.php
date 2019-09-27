@@ -38,6 +38,7 @@ use TIG\Vendiro\Model\Carrier\Vendiro as VendiroCarrier;
 use TIG\Vendiro\Model\Payment\Vendiro as VendiroPayment;
 use TIG\Vendiro\Service\Order\Create\CartManager;
 
+
 class Create
 {
     /** @var CartManager */
@@ -123,7 +124,7 @@ class Create
             $this->coreSession->setFulfilmentByMarketplace(true);
         }
 
-        $newOrderId = $this->placeOrder();
+        $newOrderId = $this->placeOrder($vendiroOrder['id']);
 
         $this->coreSession->unsFulfilmentByMarketplace();
 
@@ -166,12 +167,12 @@ class Create
     /**
      * @return bool|int
      */
-    private function placeOrder()
+    private function placeOrder($vendiroId)
     {
         $newOrderId = false;
 
         try {
-            $newOrderId = $this->cart->placeOrder();
+            $newOrderId = $this->cart->placeOrder($vendiroId);
         } catch (\Exception $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
         }
