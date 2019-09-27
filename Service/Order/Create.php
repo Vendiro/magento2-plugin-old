@@ -38,7 +38,6 @@ use TIG\Vendiro\Model\Carrier\Vendiro as VendiroCarrier;
 use TIG\Vendiro\Model\Payment\Vendiro as VendiroPayment;
 use TIG\Vendiro\Service\Order\Create\CartManager;
 
-
 class Create
 {
     /** @var CartManager */
