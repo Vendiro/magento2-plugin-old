@@ -41,6 +41,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Service\Order\ApiStatusManager;
 
+//@codingStandardsIgnoreFile
 class CartManager
 {
     /** @var StoreManagerInterface */
