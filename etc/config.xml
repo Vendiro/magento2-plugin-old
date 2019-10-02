@@ -52,9 +52,9 @@
             </tig_vendiro>
         </payment>
         <tig_vendiro>
-            <vendiro_advanced>
-                <vendiro_stock_cron>*/5 * * * *</vendiro_stock_cron>
-            </vendiro_advanced>
+            <advanced>
+                <vendiro_import_to_magento>*/5 * * * *</vendiro_import_to_magento>
+            </advanced>
             <stability />
             <supported_magento_version>2.2.0 - 2.2.9, 2.3.0 - 2.3.2</supported_magento_version>
 

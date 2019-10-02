@@ -79,32 +79,12 @@
         </field>
     </group>
 
-    <group id="vendiro_advanced" translate="label comment" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Advanced Configuration</label>
-        <comment><![CDATA[These options are only intended for expert users. Tampering with the default settings may negatively affect the workflow and performance of the Vendiro extension.]]></comment>
-        ​
-        <field id="vendiro_stock_cron" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Vendiro stock cron</label>
-            <comment><![CDATA[Default setting: */5 * * * * ]]></comment>
+    <group id="advanced" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+        <label>Advanced Settings</label>
+        <field id="vendiro_import_to_magento" translate="label comment" sortOrder="10" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Interval</label>
+            <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
         </field>
-        ​
-        <field id="vendiro_import_to_magento_cron" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Vendiro import orders to Magento cron</label>
-            <comment><![CDATA[Default setting: */5 * * * * ]]></comment>
-            <config_path>crontab/default/jobs/vendiro_import_to_magento/schedule/cron_expr</config_path>
-        </field>
-        ​
-        <field id="vendiro_confirm_shipments_cron" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Vendiro confirm shipments cron</label>
-            <comment><![CDATA[Default setting: */5 * * * * ]]></comment>
-            <config_path>crontab/default/jobs/vendiro_confirm_shipments/schedule/cron_expr</config_path>
-        </field>
-        ​
-        <field id="vendiro_update_carriers_cron" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Vendiro update carriers cron</label>
-            <comment><![CDATA[Default setting: 0 0 * * * ]]></comment>
-            <config_path>crontab/default/jobs/vendiro_update_carriers/schedule/cron_expr</config_path>
-        </field>
-        ​
     </group>
+
 </include>
