@@ -137,7 +137,7 @@ class QueueAll
     private function insertProductData($productData)
     {
         if (empty($productData)) {
-            return false;
+            return true;
         }
 
         try {

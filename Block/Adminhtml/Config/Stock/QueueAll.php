@@ -94,7 +94,7 @@ class QueueAll extends Field
             [
                 'id' => 'queue_all_stocks',
                 //@codingStandardsIgnoreLine
-                'label' => __('Queue all products for updating their stock at Vendiro'),
+                'label' => __('Force queue all products'),
             ]
         );
 
