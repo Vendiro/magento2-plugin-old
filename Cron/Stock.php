@@ -63,4 +63,13 @@ class Stock
 
         $this->inventoryService->updateProductInventory();
     }
+
+    public function updateForcedStock()
+    {
+        if (!$this->apiConfiguration->canUpdateInventory()) {
+            return;
+        }
+
+        $this->inventoryService->updateForcedProductInventory();
+    }
 }

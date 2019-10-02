@@ -33,10 +33,11 @@ namespace TIG\Vendiro\Model\Config\Provider;
 
 class QueueStatus
 {
-    const QUEUE_STATUS_NEW              = 'new';
-    const QUEUE_STATUS_IMPORTED         = 'imported';
-    const QUEUE_STATUS_SHIPMENT_CREATED = 'shipment_created';
-    const QUEUE_STATUS_STOCK_UPDATED    = 'stock_updated';
-    const QUEUE_STATUS_COMPLETE         = 'complete';
-    const QUEUE_STATUS_FAILED           = 'failed';
+    const QUEUE_STATUS_NEW                = 'new';
+    const QUEUE_STATUS_IMPORTED           = 'imported';
+    const QUEUE_STATUS_SHIPMENT_CREATED   = 'shipment_created';
+    const QUEUE_STATUS_STOCK_UPDATED      = 'stock_updated';
+    const QUEUE_STATUS_FORCE_STOCK_UPDATE = 'force_stock_update';
+    const QUEUE_STATUS_COMPLETE           = 'complete';
+    const QUEUE_STATUS_FAILED             = 'failed';
 }

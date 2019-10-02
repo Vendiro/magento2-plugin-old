@@ -33,6 +33,8 @@
 namespace TIG\Vendiro\Service\Inventory;
 
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
 use TIG\Vendiro\Api\Data\StockInterface;
 use TIG\Vendiro\Api\StockRepositoryInterface;
 use TIG\Vendiro\Logging\Log;
@@ -78,6 +80,29 @@ class Data
         $this->logger = $logger;
     }
 
+    public function updateForcedProductInventory()
+    {
+        $forcedStocks = $this->stockRepository->getForcedStock();
+
+        if (!$this->apiConfiguration->canUpdateInventory() || empty($forcedStocks)) {
+            return;
+        }
+
+        list($requestData, $updatedSkus) = $this->getRequestData($forcedStocks);
+
+        $this->updateProductsStock->setRequestData($requestData);
+        $response = $this->updateProductsStock->call();
+
+        if (!isset($response['count_processed_skus'])) {
+            $this->logApiMessage($response['message']);
+            return;
+        }
+
+        if (!empty($updatedSkus)) {
+            $this->stockRepository->deleteMultipleBySku($updatedSkus);
+        }
+    }
+
     public function updateProductInventory()
     {
         $newStocks = $this->stockRepository->getNewStock();
@@ -86,18 +111,34 @@ class Data
             return;
         }
 
-        $requestData = [];
-
-        foreach ($newStocks as $stock) {
-            $sku = $stock->getProductSku();
-            $qty = $this->productStock->getStockBySku($sku);
-            $requestData[] = ['sku' => $sku, 'stock' => $qty];
-        }
+        list($requestData) = $this->getRequestData($newStocks);
 
         $this->updateProductsStock->setRequestData($requestData);
         $response = $this->updateProductsStock->call();
 
         $this->processResponse($response, $newStocks);
+    }
+
+    /**
+     * @param StockInterface[] $stocks
+     *
+     * @return array
+     * @throws InputException
+     * @throws LocalizedException
+     */
+    private function getRequestData($stocks)
+    {
+        $requestData = [];
+        $updatedSkus = [];
+
+        foreach ($stocks as $stock) {
+            $sku = $stock->getProductSku();
+            $qty = $this->productStock->getStockBySku($sku);
+            $requestData[] = ['sku' => $sku, 'stock' => $qty];
+            $updatedSkus[] = $sku;
+        }
+
+        return [$requestData, $updatedSkus];
     }
 
     /**
@@ -107,9 +148,7 @@ class Data
     private function processResponse($response, $stockQueue)
     {
         if (!isset($response['count_processed_skus'])) {
-            // @codingStandardsIgnoreLine
-            $criticalString = sprintf(__("The Vendiro endpoint API reported an error: %s"), $response['message']);
-            $this->logger->critical($criticalString);
+            $this->logApiMessage($response['message']);
             return;
         }
 
@@ -123,6 +162,16 @@ class Data
         foreach ($stockQueue as $stock) {
             $this->updateStockQueue($stock, $invalidSkus);
         }
+    }
+
+    /**
+     * @param string $message
+     */
+    private function logApiMessage($message)
+    {
+        // @codingStandardsIgnoreLine
+        $criticalString = sprintf(__("The Vendiro endpoint API reported an error: %s"), $message);
+        $this->logger->critical($criticalString);
     }
 
     /**

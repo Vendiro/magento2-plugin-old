@@ -33,9 +33,11 @@ namespace TIG\Vendiro\Api;
 
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use TIG\Vendiro\Api\Data\StockInterface;
 
+//@codingStandardsIgnoreFile
 interface StockRepositoryInterface
 {
     /**
@@ -48,6 +50,37 @@ interface StockRepositoryInterface
      * @throws CouldNotSaveException
      */
     public function save(StockInterface $stock);
+
+    /**
+     * Save multiple Vendiro stocks to the queue simultaneous
+     *
+     * @api
+     * @param array $data
+     * @return int
+     *
+     * @throws LocalizedException
+     */
+    public function insertMultiple(array $data);
+
+    /**
+     * Update multiple Vendiro stocks to the queue simultaneous
+     *
+     * @api
+     * @param array  $data
+     * @param string $condition
+     * @return int
+     *
+     * @throws LocalizedException
+     */
+    public function updateMultiple($data, $condition = '');
+
+    /**
+     * @param array $skus
+     *
+     * @return int
+     * @throws LocalizedException
+     */
+    public function deleteMultipleBySku($skus);
 
     /**
      * Return a specific Vendiro stock.
@@ -70,6 +103,18 @@ interface StockRepositoryInterface
      * @throws NoSuchEntityException
      */
     public function getBySku($sku);
+
+    /**
+     * @return array
+     */
+    public function fetchExistingSkus();
+
+    /**
+     * Get all Vendiro stock where the status is a forced update
+     *
+     * @return StockInterface[]|array|null
+     */
+    public function getForcedStock();
 
     /**
      * Get all Vendiro stock where the status is new

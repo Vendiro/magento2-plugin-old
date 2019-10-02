@@ -31,23 +31,21 @@
  */
 namespace TIG\Vendiro\Service\Inventory\ProductStock;
 
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Catalog\Model\Product;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 class NormalQty
 {
-    /** @var ProductRepositoryInterface */
-    private $productRepository;
+    /** @var StockRegistryInterface */
+    private $stockRegistry;
 
     /**
-     * @param ProductRepositoryInterface $productRepository
+     * @param StockRegistryInterface $stockRegistry
      */
     public function __construct(
-        ProductRepositoryInterface $productRepository
+        StockRegistryInterface $stockRegistry
     ) {
-        $this->productRepository = $productRepository;
+        $this->stockRegistry = $stockRegistry;
     }
 
     /**
@@ -60,10 +58,8 @@ class NormalQty
         $qty = 0;
 
         try {
-            /** @var ProductInterface|Product $product */
-            $product = $this->productRepository->get($sku);
-            $stockData = $product->getQuantityAndStockStatus();
-            $qty = $stockData['qty'];
+            $stockItem = $this->stockRegistry->getStockItemBySku($sku);
+            $qty = $stockItem->getQty();
         } catch (NoSuchEntityException $exception) {
             return $qty;
         }

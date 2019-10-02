@@ -33,16 +33,26 @@ namespace TIG\Vendiro\Model;
 
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Model\ScopeInterface;
 use TIG\Vendiro\Api\Data\StockInterface;
 use TIG\Vendiro\Api\StockRepositoryInterface;
 use TIG\Vendiro\Model\Config\Provider\QueueStatus;
 use TIG\Vendiro\Model\ResourceModel\Stock\CollectionFactory;
 
+//@codingStandardsIgnoreFile
 class StockRepository extends AbstractRepository implements StockRepositoryInterface
 {
+    const VENDIRO_FORCED_STOCK_LIMIT = 'tig_vendiro/forced_stock_limit';
+
+    /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
     /**
      * @var StockFactory $stockFactory
      */
@@ -51,9 +61,11 @@ class StockRepository extends AbstractRepository implements StockRepositoryInter
     public function __construct(
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
+        ScopeConfigInterface $scopeConfig,
         StockFactory $stockFactory,
         CollectionFactory $collectionFactory
     ) {
+        $this->scopeConfig = $scopeConfig;
         $this->stockFactory = $stockFactory;
         $this->collectionFactory = $collectionFactory;
 
@@ -74,6 +86,39 @@ class StockRepository extends AbstractRepository implements StockRepositoryInter
         }
 
         return $stock;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function insertMultiple(array $data)
+    {
+        $resource = $this->create()->getResource();
+        $connection = $resource->getConnection();
+
+        return $connection->insertMultiple($resource->getMainTable(), $data);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function updateMultiple($data, $condition = '')
+    {
+        $resource = $this->create()->getResource();
+        $connection = $resource->getConnection();
+
+        return $connection->update($resource->getMainTable(), $data, $condition);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function deleteMultipleBySku($skus)
+    {
+        $resource = $this->create()->getResource();
+        $connection = $resource->getConnection();
+
+        return $connection->delete($resource->getMainTable(), ['product_sku in (?)' => $skus]);
     }
 
     /**
@@ -104,6 +149,33 @@ class StockRepository extends AbstractRepository implements StockRepositoryInter
         }
 
         return $foundStock;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function fetchExistingSkus()
+    {
+        $stockList = [];
+        $stocks = $this->collectionFactory->create();
+        $stocks->addFieldToSelect('product_sku');
+        $stocks->load();
+
+        foreach ($stocks as $stock) {
+            $stockList[] = $stock->getProductSku();
+        }
+
+        return $stockList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getForcedStock()
+    {
+        $forcedStockLimit = $this->scopeConfig->getValue(self::VENDIRO_FORCED_STOCK_LIMIT, ScopeInterface::SCOPE_STORE);
+
+        return $this->getByFieldWithValue('status', QueueStatus::QUEUE_STATUS_FORCE_STOCK_UPDATE, $forcedStockLimit);
     }
 
     /**
