@@ -79,10 +79,32 @@
         </field>
     </group>
 
-    <group id="advanced" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
-        <label>Advanced Settings</label>
+    <group id="advanced" translate="label comment" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+        <label>Cron Settings</label>
+        <comment><![CDATA[These options are only intended for expert users. Tampering with the default settings may negatively affect the workflow and performance of the Vendiro extension.]]></comment>
+        <field id="vendiro_confirm_shipments" translate="label comment" sortOrder="10" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Vendiro confirm shipments cron</label>
+            <comment><![CDATA[Default setting: */5 * * * *]]></comment>
+            <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
+        </field>
+        <field id="vendiro_forced_stock" translate="label comment" sortOrder="10" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Vendiro forced stock cron</label>
+            <comment><![CDATA[Default setting: */5 * * * *]]></comment>
+            <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
+        </field>
         <field id="vendiro_import_to_magento" translate="label comment" sortOrder="10" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
-            <label>Interval</label>
+            <label>Vendiro import to Magento cron</label>
+            <comment><![CDATA[Default setting: */5 * * * *]]></comment>
+            <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
+        </field>
+        <field id="vendiro_stock" translate="label comment" sortOrder="10" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Vendiro stock cron</label>
+            <comment><![CDATA[Default setting: */5 * * * *]]></comment>
+            <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
+        </field>
+        <field id="vendiro_update_carriers" translate="label comment" sortOrder="10" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Vendiro update carriers cron</label>
+            <comment><![CDATA[Default setting: 0 0 * * *]]></comment>
             <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
         </field>
     </group>

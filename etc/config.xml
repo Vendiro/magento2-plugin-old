@@ -53,9 +53,13 @@
         </payment>
         <tig_vendiro>
             <advanced>
+                <vendiro_confirm_shipments>*/5 * * * *</vendiro_confirm_shipments>
+                <vendiro_forced_stock>*/5 * * * *</vendiro_forced_stock>
                 <vendiro_import_to_magento>*/5 * * * *</vendiro_import_to_magento>
+                <vendiro_stock>*/5 * * * *</vendiro_stock>
+                <vendiro_update_carriers>0 0 * * *</vendiro_update_carriers>
             </advanced>
-            <stability />
+
             <supported_magento_version>2.2.0 - 2.2.9, 2.3.0 - 2.3.2</supported_magento_version>
 
             <shipments_limit>100</shipments_limit>
