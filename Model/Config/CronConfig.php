@@ -86,7 +86,7 @@ class CronConfig extends Value
     {
         $results = preg_split('#\s+#', $this->getValue(), null, PREG_SPLIT_NO_EMPTY);
 
-        if (sizeof($results) < 5 || sizeof($results) > 6) {
+        if (count($results) < 5 || count($results) > 6) {
             throw new CronException(__('Invalid cron expression: %1', $this->getValue()));
         }
 
