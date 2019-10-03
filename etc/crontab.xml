@@ -4,7 +4,7 @@
         <job name="vendiro_stock" instance="TIG\Vendiro\Cron\Stock" method="updateStock">
             <schedule>*/5 * * * *</schedule>
         </job>
-        <job name="vendiro_forced_stock" instance="TIG\Vendiro\Cron\Stock" method="updateForcedStock">
+        <job name="vendiro_forced_stock" instance="TIG\Vendiro\Cron\Stock" method="forceUpdateStock">
             <schedule>*/5 * * * *</schedule>
         </job>
         <job name="vendiro_import_to_magento" instance="TIG\Vendiro\Cron\Order" method="importToMagento">

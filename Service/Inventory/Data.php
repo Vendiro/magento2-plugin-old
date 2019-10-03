@@ -80,7 +80,7 @@ class Data
         $this->logger = $logger;
     }
 
-    public function updateForcedProductInventory()
+    public function forceUpdateProductInventory()
     {
         $forcedStocks = $this->stockRepository->getForcedStock();
 
