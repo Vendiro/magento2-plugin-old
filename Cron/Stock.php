@@ -64,12 +64,12 @@ class Stock
         $this->inventoryService->updateProductInventory();
     }
 
-    public function updateForcedStock()
+    public function forceUpdateStock()
     {
         if (!$this->apiConfiguration->canUpdateInventory()) {
             return;
         }
 
-        $this->inventoryService->updateForcedProductInventory();
+        $this->inventoryService->forceUpdateProductInventory();
     }
 }

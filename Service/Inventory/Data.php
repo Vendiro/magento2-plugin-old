@@ -80,7 +80,7 @@ class Data
         $this->logger = $logger;
     }
 
-    public function updateForcedProductInventory()
+    public function forceUpdateProductInventory()
     {
         $forcedStocks = $this->stockRepository->getForcedStock();
 
@@ -152,15 +152,12 @@ class Data
             return;
         }
 
-        $invalidSkus = [];
-
         if ((int)$response['count_invalid_skus'] > 0 && isset($response['invalid_skus'])) {
-            $invalidSkus = $response['invalid_skus'];
-            $this->logInvalidSkus($invalidSkus);
+            $this->logInvalidSkus($response['invalid_skus']);
         }
 
         foreach ($stockQueue as $stock) {
-            $this->updateStockQueue($stock, $invalidSkus);
+            $this->updateStockQueue($stock);
         }
     }
 
@@ -191,14 +188,9 @@ class Data
 
     /**
      * @param StockInterface $stock
-     * @param array          $invalidSkus
      */
-    private function updateStockQueue($stock, $invalidSkus)
+    private function updateStockQueue($stock)
     {
-        if (in_array($stock->getProductSku(), $invalidSkus)) {
-            return;
-        }
-
         $stock->setStatus(QueueStatus::QUEUE_STATUS_STOCK_UPDATED);
 
         try {
