@@ -65,6 +65,14 @@
         </arguments>
     </type>
 
+   <type name="Magento\Framework\Console\CommandList">
+       <arguments>
+           <argument name="commands" xsi:type="array">
+               <item name="AllProductsToQueue" xsi:type="object">TIG\Vendiro\Console\AllProductsToQueue</item>
+           </argument>
+       </arguments>
+   </type>
+
     <!-- Plugins to observe product quantity changes -->
     <!-- Catalog Quantity -->
     <type name="Magento\CatalogInventory\Api\StockItemRepositoryInterface">
