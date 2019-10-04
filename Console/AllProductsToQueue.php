@@ -43,6 +43,12 @@ class AllProductsToQueue extends Command
     /** @var QueueAllService $queueAllService */
     private $queueAllService;
 
+    /**
+     * AllProductsToQueue constructor.
+     *
+     * @param QueueAllService $queueAllService
+     * @param string|null     $name
+     */
     public function __construct(
         QueueAllService $queueAllService,
         ?string $name = null
