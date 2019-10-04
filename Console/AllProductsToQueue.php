@@ -73,13 +73,14 @@ class AllProductsToQueue extends Command
      *
      * @return int|void|null
      */
+    // @codingStandardsIgnoreLine
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $queueingResult = $this->queueAllService->queueAll();
 
         if ($queueingResult) {
-            $output->writeln('Your products have been successfully queued and their stock will be send to Vendiro soon. '
-                . 'Depending on your amount of products, this may take a few minutes up to a few hours.');
+            $output->writeln('Your products have been successfully queued and their stock will be send to Vendiro soon.'
+                . ' Depending on your amount of products, this may take a few minutes up to a few hours.');
 
             return;
         }
