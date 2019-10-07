@@ -40,7 +40,7 @@ Mode,Mode
 "Please select a default vendiro shipping method in the vendiro configuration.","Please select a default vendiro shipping method in the vendiro configuration."
 "Update Vendiro shipment providers","Update Vendiro shipment providers"
 "Cron Settings","Cron Settings"
-"These options are only intended for expert users. Tampering with the default settings may negatively affect the workflow and performance of the Vendiro extension.","These options are only intended for expert users. Tampering with the default settings may negatively affect the workflow and performance of the Vendiro extension."
+"These options are only intended for expert users. Tampering with the default settings may negatively affect the workflow and performance of the Vendiro extension. Click <a href='https://en.wikipedia.org/wiki/Cron'>here</a> for more information about cronjobs.","These options are only intended for expert users. Tampering with the default settings may negatively affect the workflow and performance of the Vendiro extension. Click <a href='https://en.wikipedia.org/wiki/Cron'>here</a> for more information about cronjobs."
 "Vendiro confirm shipments cron","Vendiro confirm shipments cron"
 "Vendiro forced stock cron","Vendiro forced stock cron"
 "Vendiro import to Magento cron","Vendiro import to Magento cron"

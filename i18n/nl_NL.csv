@@ -31,7 +31,7 @@
 "Please select a default vendiro shipping method in the vendiro configuration.","Selecteer een standaard vendiro verzendmethode in de vendiro configuratie"
 "Update Vendiro shipment providers","Update Vendiro verzend providers"
 "Cron Settings","Cron Instellingen"
-"These options are only intended for expert users. Tampering with the default settings may negatively affect the workflow and performance of the Vendiro extension.","Deze opties zijn alleen bedoeld voor ervaren gebruikers. Het wijzigen van de standaardinstelling kan de werkflow en prestaties van de Vendiro extensie negatief bëinvloeden."
+"These options are only intended for expert users. Tampering with the default settings may negatively affect the workflow and performance of the Vendiro extension. Click <a href='https://en.wikipedia.org/wiki/Cron'>here</a> for more information about cronjobs.","Deze opties zijn alleen bedoeld voor ervaren gebruikers. Het wijzigen van de standaardinstelling kan de werkflow en prestaties van de Vendiro extensie negatief bëinvloeden. Klik <a href='https://nl.wikipedia.org/wiki/Cronjob'>hier</a> voor meer informatie over cronjobs"
 "Vendiro confirm shipments cron","Vendiro verzending bevestigen cron"
 "Vendiro forced stock cron","Vendiro gedwongen voorraad cron"
 "Vendiro import to Magento cron","Vendiro importeren naar Magento cron"
