@@ -93,7 +93,6 @@ class Save
     {
         $defaultCarrier = $this->configuration->getDefaultCarrier($shipment->getStoreId());
         $shipment->setVendiroCarrier($defaultCarrier);
-
     }
 
     /**
