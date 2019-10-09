@@ -31,7 +31,6 @@
  */
 namespace TIG\Vendiro\Plugin\Shipment;
 
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use TIG\Vendiro\Api\TrackQueueRepositoryInterface;
 use TIG\Vendiro\Model\Config\Provider\General\Configuration;
@@ -64,7 +63,6 @@ class Save
      * @param null $shipment
      *
      * @return ShipmentInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function beforeSave($subject, $shipment = null)
     {
@@ -90,20 +88,12 @@ class Save
 
     /**
      * @param ShipmentInterface $shipment
-     *
-     * @throws \Magento\Framework\Exception\LocalizedException
      */
     private function saveVendiroCarrier(ShipmentInterface $shipment)
     {
         $defaultCarrier = $this->configuration->getDefaultCarrier($shipment->getStoreId());
         $shipment->setVendiroCarrier($defaultCarrier);
 
-        if ($shipment->getVendiroCarrier() == '0') {
-            $errorMessage = __(
-                "Please select a default vendiro shipping method in the vendiro configuration."
-            );
-            throw new LocalizedException($errorMessage);
-        }
     }
 
     /**
