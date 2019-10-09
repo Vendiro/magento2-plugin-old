@@ -82,7 +82,7 @@
 
     <group id="advanced" translate="label comment" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
         <label>Cron Settings</label>
-        <comment><![CDATA[These options are only intended for expert users. Tampering with the default settings may negatively affect the workflow and performance of the Vendiro extension. Click <a href='https://en.wikipedia.org/wiki/Cron'>here</a> for more information about cronjobs.]]></comment>
+        <comment><![CDATA[These options are only intended for expert users. Tampering with the default settings may negatively affect the workflow and performance of the Vendiro extension. Click <a href='https://confluence.tig.nl/x/PoCLB' target='_blank'>here</a> for more information about cronjobs.]]></comment>
         <field id="vendiro_confirm_shipments" translate="label comment" sortOrder="10" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Vendiro confirm shipments cron</label>
             <comment><![CDATA[Default setting: */5 * * * *]]></comment>
