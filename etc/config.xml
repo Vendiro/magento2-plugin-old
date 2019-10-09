@@ -60,7 +60,7 @@
                 <vendiro_update_carriers>0 0 * * *</vendiro_update_carriers>
             </advanced>
 
-            <supported_magento_version>2.2.0 - 2.2.9, 2.3.0 - 2.3.2</supported_magento_version>
+            <supported_magento_version>2.2.0 - 2.2.9, 2.3.0 - 2.3.2 - 2.3.3</supported_magento_version>
 
             <shipments_limit>100</shipments_limit>
             <forced_stock_limit>5000</forced_stock_limit>
