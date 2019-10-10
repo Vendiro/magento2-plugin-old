@@ -40,6 +40,7 @@ use Magento\Quote\Api\Data\CartInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Service\Order\ApiStatusManager;
+use TIG\Vendiro\Exception as VendiroException;
 
 //@codingStandardsIgnoreFile
 class CartManager
@@ -174,6 +175,7 @@ class CartManager
      * @param $vendiroId
      *
      * @return int
+     * @throws VendiroException
      */
     public function placeOrder($vendiroId)
     {
@@ -186,7 +188,7 @@ class CartManager
             $orderId = $this->cartManagement->placeOrder($this->cart->getId());
         } catch (LocalizedException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
-            $this->apiStatusManager->rejectOrder($vendiroId, $exception->getMessage());
+            throw new VendiroException(__($exception->getMessage()));
         }
 
         return $orderId;
