@@ -38,7 +38,6 @@ use TIG\Vendiro\Model\Carrier\Vendiro as VendiroCarrier;
 use TIG\Vendiro\Model\Payment\Vendiro as VendiroPayment;
 use TIG\Vendiro\Service\Order\Create\CartManager;
 
-//@codingStandardsIgnoreFile
 class Create
 {
     /** @var CartManager */
@@ -56,31 +55,25 @@ class Create
     /** @var CoreSession */
     private $coreSession;
 
-    /** @var ApiStatusManager */
-    private $apiStatusManager;
-
     /**
      * @param CartManager        $cart
      * @param OrderStatusManager $orderStatusManager
      * @param Product            $product
      * @param Log                $logger
      * @param CoreSession        $coreSession
-     * @param ApiStatusManager   $apiStatusManager
      */
     public function __construct(
         CartManager $cart,
         OrderStatusManager $orderStatusManager,
         Product $product,
         Log $logger,
-        CoreSession $coreSession,
-        ApiStatusManager $apiStatusManager
+        CoreSession $coreSession
     ) {
         $this->cart = $cart;
         $this->orderStatusManager = $orderStatusManager;
         $this->product = $product;
         $this->logger = $logger;
         $this->coreSession = $coreSession;
-        $this->apiStatusManager = $apiStatusManager;
     }
 
     /**
@@ -181,8 +174,6 @@ class Create
         try {
             $newOrderId = $this->cart->placeOrder($vendiroId);
         } catch (\Exception $exception) {
-            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
-            $this->apiStatusManager->rejectOrder($vendiroId, $exception->getMessage());
             throw new VendiroException(__($exception->getMessage()));
         }
 
