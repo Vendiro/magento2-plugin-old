@@ -101,4 +101,12 @@ interface OrderRepositoryInterface
      * @return array
      */
     public function getNewOrders();
+
+    /**
+     * @param     $orderId
+     * @param int $limit
+     *
+     * @return array|null
+     */
+    public function getByVendiroId($orderId, $limit = 1);
 }
