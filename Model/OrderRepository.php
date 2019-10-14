@@ -195,4 +195,15 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
 
         return $this->delete($order);
     }
+
+    /**
+     * @param     $orderId
+     * @param int $limit
+     *
+     * @return array|null
+     */
+    public function getByVendiroId($orderId, $limit = 1)
+    {
+        return $this->getByFieldWithValue('vendiro_id', $orderId, $limit);
+    }
 }

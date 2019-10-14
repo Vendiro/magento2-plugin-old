@@ -125,7 +125,8 @@ class Import
         $newOrderId = null;
 
         if (in_array($order['id'], array_keys($valuesToSkip))) {
-            $this->apiStatusManager->acceptOrder($order['id'], $newOrderId);
+            $magentoOrderId = $this->getMagentoOrderId($order['id']);
+            $this->apiStatusManager->acceptOrder($order['id'], $magentoOrderId);
             return;
         }
 
@@ -154,5 +155,19 @@ class Import
         $vendiroOrder->setMarketplaceReference($order['marketplace']['reference']);
         $vendiroOrder->setStatus(QueueStatus::QUEUE_STATUS_IMPORTED);
         $this->saveVendiroOrder($vendiroOrder);
+    }
+
+    /**
+     * @param $vendiroId
+     *
+     * @return mixed
+     */
+    private function getMagentoOrderId($vendiroId)
+    {
+        $order = $this->orderRepository->getByVendiroId($vendiroId);
+        $order = array_pop($order);
+        $magentoOrderId = $order->getOrderId();
+
+        return $magentoOrderId;
     }
 }
