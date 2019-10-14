@@ -121,21 +121,20 @@ class Import
      */
     private function createOrder($order, $valuesToSkip)
     {
-        $vendiroId = $order['id'];
         $newOrderId = null;
-
         if (in_array($order['id'], array_keys($valuesToSkip))) {
             $magentoOrderId = $this->getMagentoOrderId($order['id']);
             $this->apiStatusManager->acceptOrder($order['id'], $magentoOrderId);
+
             return;
         }
 
         try {
             $newOrderId = $this->createOrder->execute($order);
-            $this->apiStatusManager->acceptOrder($vendiroId, $newOrderId);
+            $this->apiStatusManager->acceptOrder($order['id'], $newOrderId);
         } catch (VendiroException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
-            $this->apiStatusManager->rejectOrder($vendiroId, $exception->getMessage());
+            $this->apiStatusManager->rejectOrder($order['id'], $exception->getMessage());
         }
 
         if ($newOrderId) {
@@ -165,7 +164,6 @@ class Import
     private function getMagentoOrderId($vendiroId)
     {
         $order = $this->orderRepository->getByVendiroId($vendiroId);
-        $order = array_pop($order);
         $magentoOrderId = $order->getOrderId();
 
         return $magentoOrderId;

@@ -82,14 +82,6 @@ interface OrderRepositoryInterface
     public function create(array $data = []);
 
     /**
-     * @param int $orderId
-     * @param int $limit
-     *
-     * @return OrderInterface|array|null
-     */
-    public function getByOrderId($orderId, $limit = 1);
-
-    /**
      * @param array $orderIds
      * @param int   $limit
      *
@@ -104,9 +96,8 @@ interface OrderRepositoryInterface
 
     /**
      * @param     $orderId
-     * @param int $limit
      *
      * @return array|null
      */
-    public function getByVendiroId($orderId, $limit = 1);
+    public function getByVendiroId($orderId);
 }
