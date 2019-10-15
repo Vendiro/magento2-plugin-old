@@ -96,7 +96,7 @@ class Data
 
         $result = $this->confirmShipment->call($incrementId);
 
-        if($result['http_status'] == 422) {
+        if ($result['http_status'] == 422) {
             return $result;
         }
 
