@@ -159,7 +159,7 @@ class Import
     /**
      * @param $vendiroId
      *
-     * @return mixed
+     * @return string
      */
     private function getMagentoOrderId($vendiroId)
     {

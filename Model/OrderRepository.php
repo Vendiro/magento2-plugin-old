@@ -191,7 +191,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     /**
      * @param     $orderId
      *
-     * @return array|null
+     * @return OrderInterface|null
      */
     public function getByVendiroId($orderId)
     {
