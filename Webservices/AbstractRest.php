@@ -85,7 +85,9 @@ abstract class AbstractRest
 
         try {
             $response = $this->zendClient->request();
+            $httpStatus = $response->getStatus();
             $response = $this->formatResponse($response->getBody());
+            $response['http_status'] = $httpStatus;
         } catch (\Zend_Http_Client_Exception $exception) {
             $response = [
                 'success' => false,
