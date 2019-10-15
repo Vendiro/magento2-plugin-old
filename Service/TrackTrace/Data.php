@@ -96,6 +96,10 @@ class Data
 
         $result = $this->confirmShipment->call($incrementId);
 
+        if ($result['http_status'] == 422) {
+            return $result;
+        }
+
         if (isset($result['message']) && $result['message']) {
             throw new VendiroException(__($result['message']));
         }
