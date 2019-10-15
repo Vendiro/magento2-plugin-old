@@ -121,7 +121,7 @@ class Product
             $this->logger->critical('Vendiro load product went wrong: ' . $exception->getMessage());
 
             $errorMessage = __(
-                "The order could not be imported. The product that was requested wasn't found."
+                "The order could not be imported. The requested product SKU " . $sku . " wasn't found."
             );
             throw new VendiroException($errorMessage);
         }
