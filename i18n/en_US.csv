@@ -48,3 +48,4 @@ Mode,Mode
 "Vendiro update carriers cron","Vendiro update carriers cron"
 "Default setting: */5 * * * *","Default setting: */5 * * * *"
 "Default setting: 0 0 * * *","Default setting: 0 0 * * *"
+"Vendiro force queue all products","Vendiro force queue all products"
