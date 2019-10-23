@@ -34,6 +34,8 @@ namespace TIG\Vendiro\Cron;
 
 use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 use TIG\Vendiro\Service\Inventory\Data;
+use TIG\Vendiro\Service\Inventory\QueueAll;
+use TIG\Vendiro\Logging\Log;
 
 class Stock
 {
@@ -43,16 +45,28 @@ class Stock
     /** @var ApiConfiguration */
     private $apiConfiguration;
 
+    /** @var QueueAll */
+    private $queueAll;
+
+    /** @var Log */
+    private $logger;
+
     /**
      * @param Data             $inventoryService
      * @param ApiConfiguration $apiConfiguration
+     * @param QueueAll         $queueAll
+     * @param Log              $logger
      */
     public function __construct(
         Data $inventoryService,
-        ApiConfiguration $apiConfiguration
+        ApiConfiguration $apiConfiguration,
+        QueueAll $queueAll,
+        Log $logger
     ) {
         $this->inventoryService = $inventoryService;
         $this->apiConfiguration = $apiConfiguration;
+        $this->queueAll = $queueAll;
+        $this->logger = $logger;
     }
 
     public function updateStock()
@@ -71,5 +85,24 @@ class Stock
         }
 
         $this->inventoryService->forceUpdateProductInventory();
+    }
+
+    public function forceStockQueue()
+    {
+        if (!$this->apiConfiguration->canUpdateInventory()) {
+            return;
+        }
+
+        $queueingResult = $this->queueAll->queueAll();
+
+        if ($queueingResult) {
+            $this->logger->log('debug', 'Your products have been successfully queued and their stock will 
+            be send to Vendiro soon.' . ' Depending on your amount of products, this may take a few minutes up to a
+            few hours.');
+
+            return;
+        }
+
+        $this->logger->log('debug', 'The products could not be queued for updating the stock at Vendiro.');
     }
 }
