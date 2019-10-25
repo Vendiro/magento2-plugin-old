@@ -212,8 +212,9 @@ class Data
         try {
             $this->stockRepository->updateMultiple($data, $condition);
         } catch (LocalizedException $exception) {
-            $noticeString = __("Vendiro stock notice: Could not update the stock queue for SKUS %s");
-            $this->logger->notice(sprintf($noticeString, implode(', ', $skus)));
+            $skusString = implode(', ', $skus);
+            $noticeString = __("Vendiro stock notice: Could not update the stock queue for SKUS %1", $skusString);
+            $this->logger->notice($noticeString);
         }
     }
 }
