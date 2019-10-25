@@ -99,7 +99,7 @@ class Data
         }
 
         if (!empty($updatedSkus)) {
-            $this->stockRepository->deleteMultipleBySku($updatedSkus);
+            $this->updateMultipleStockBySku($updatedSkus);
         }
     }
 
@@ -198,6 +198,22 @@ class Data
         } catch (CouldNotSaveException $exception) {
             $noticeString = __("Vendiro stock notice: Could not update the stock queue for SKU %s");
             $this->logger->notice(sprintf($noticeString, $stock->getProductSku()));
+        }
+    }
+
+    /**
+     * @param array $skus
+     */
+    private function updateMultipleStockBySku($skus)
+    {
+        $data = ['status' => QueueStatus::QUEUE_STATUS_STOCK_UPDATED];
+        $condition = ['product_sku in (?)' => $skus];
+
+        try {
+            $this->stockRepository->updateMultiple($data, $condition);
+        } catch (LocalizedException $exception) {
+            $noticeString = __("Vendiro stock notice: Could not update the stock queue for SKUS %s");
+            $this->logger->notice(sprintf($noticeString, implode(', ', $skus)));
         }
     }
 }
