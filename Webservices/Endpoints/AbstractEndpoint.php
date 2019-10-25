@@ -56,11 +56,11 @@ abstract class AbstractEndpoint implements EndpointInterface
     /**
      * {@inheritDoc}
      */
-    public function call($urlParameter = null)
+    public function call($urlParameter = null, $includeHttpStatus = false)
     {
         $this->setUrlArguments($urlParameter);
 
-        return $this->restApi->getRequest($this);
+        return $this->restApi->getRequest($this, $includeHttpStatus);
     }
 
     /**

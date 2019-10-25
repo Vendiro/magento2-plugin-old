@@ -87,14 +87,15 @@ class Data
      * @param $carrierName
      *
      * @return mixed
-     * @throws \TIG\Vendiro\Exception
+     * @throws VendiroException
+     * @throws \Zend_Http_Client_Exception
      */
     public function confirmShipmentCall($incrementId, $carrierId, $shipmentCode, $carrierName)
     {
         $requestData = ['carrier_id' => $carrierId, 'shipment_code' => $shipmentCode, 'carrier_name' => $carrierName];
         $this->confirmShipment->setRequestData($requestData);
 
-        $result = $this->confirmShipment->call($incrementId);
+        $result = $this->confirmShipment->call($incrementId, true);
 
         if ($result['http_status'] == 422) {
             return $result;

@@ -71,28 +71,33 @@ abstract class AbstractRest
 
     /**
      * @param EndpointInterface $endpoint
+     * @param bool              $includeHttpStatus
      *
      * @return array|\Zend_Http_Response
      * @throws \Zend_Http_Client_Exception
      */
-    public function getRequest(EndpointInterface $endpoint)
+    public function getRequest(EndpointInterface $endpoint, $includeHttpStatus = false)
     {
         $this->zendClient->resetParameters(true);
 
         $this->setUri($endpoint->getEndpointUrl());
         $this->setHeaders();
         $this->setParameters($endpoint);
+        $httpStatus = 0;
 
         try {
             $response = $this->zendClient->request();
             $httpStatus = $response->getStatus();
             $response = $this->formatResponse($response->getBody());
-            $response['http_status'] = $httpStatus;
         } catch (\Zend_Http_Client_Exception $exception) {
             $response = [
                 'success' => false,
                 'error' => __('%1 : Zend Http Client exception', $exception->getCode())
             ];
+        }
+
+        if ($includeHttpStatus) {
+            $response['http_status'] = $httpStatus;
         }
 
         return $response;
