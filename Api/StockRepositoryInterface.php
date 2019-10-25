@@ -75,14 +75,6 @@ interface StockRepositoryInterface
     public function updateMultiple($data, $condition = '');
 
     /**
-     * @param array $skus
-     *
-     * @return int
-     * @throws LocalizedException
-     */
-    public function deleteMultipleBySku($skus);
-
-    /**
      * Return a specific Vendiro stock.
      *
      * @api

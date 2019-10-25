@@ -113,17 +113,6 @@ class StockRepository extends AbstractRepository implements StockRepositoryInter
     /**
      * {@inheritDoc}
      */
-    public function deleteMultipleBySku($skus)
-    {
-        $resource = $this->create()->getResource();
-        $connection = $resource->getConnection();
-
-        return $connection->delete($resource->getMainTable(), ['product_sku in (?)' => $skus]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getById($entityId)
     {
         $stock = $this->create();
