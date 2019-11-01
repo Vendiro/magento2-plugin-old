@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *          ..::..
@@ -18,7 +19,7 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@tig.nl so we can send you a copy immediately.
+ * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
@@ -29,29 +30,16 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Setup\Schema;
+namespace TIG\Vendiro\Model\ResourceModel;
 
-use Magento\Framework\DB\Ddl\Table;
-use TIG\Vendiro\Setup\AbstractTableInstaller;
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
-class InstallOrderTable extends AbstractTableInstaller
+class Carrier extends AbstractDb
 {
-    const TABLE_NAME = 'tig_vendiro_order';
-
-    /**
-     * @return void
-     * @throws \Zend_Db_Exception
-     * @codingStandardsIgnoreLine
-     */
     // @codingStandardsIgnoreLine
-    protected function defineTable()
+    protected function _construct()
     {
-        $this->addEntityId();
-        $this->addInt('order_id', 'Order ID');
-        $this->addInt('vendiro_id', 'Vendiro ID');
-        $this->addText('marketplace_reference', 'Marketplace reference', 32, false);
-        $this->addText('status', 'Status', 32, false);
-        $this->addTimestamp('created_at', 'Created at', false, Table::TIMESTAMP_INIT);
-        $this->addIndex('vendiro_id');
+        // @codingStandardsIgnoreLine
+        $this->_init('tig_vendiro_carrier', 'entity_id');
     }
 }

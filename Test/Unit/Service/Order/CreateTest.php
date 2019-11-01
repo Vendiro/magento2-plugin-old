@@ -53,8 +53,7 @@ class CreateTest extends TestCase
                     'marketplace_order_id' => 'TIG-058275',
                     'fulfilment_by_marketplace' => 'true'
                 ],
-                'Order via Vendiro<br>Marketplace: TIG Marketplace<br/>TIG Marketplace ID: TIG-058275',
-                1
+                'Order via Vendiro<br>Marketplace: TIG Marketplace<br/>TIG Marketplace ID: TIG-058275<br/>Fulfilment by Marketplace'
             ],
             'not fulfilled by marketplace' => [
                 85,
@@ -63,8 +62,7 @@ class CreateTest extends TestCase
                     'marketplace_order_id' => 'TIG-37974',
                     'fulfilment_by_marketplace' => 'false'
                 ],
-                'Order via Vendiro<br>Marketplace: TIG Marketplace<br/>TIG Marketplace ID: TIG-37974',
-                0
+                'Order via Vendiro<br>Marketplace: TIG Marketplace<br/>TIG Marketplace ID: TIG-37974'
             ],
             'fulfilled by marketplace parameter does not exist' => [
                 73,
@@ -72,8 +70,7 @@ class CreateTest extends TestCase
                     'marketplace' => ['name' => 'TIG Marketplace'],
                     'marketplace_order_id' => 'TIG-375378'
                 ],
-                'Order via Vendiro<br>Marketplace: TIG Marketplace<br/>TIG Marketplace ID: TIG-375378',
-                0
+                'Order via Vendiro<br>Marketplace: TIG Marketplace<br/>TIG Marketplace ID: TIG-375378'
             ]
         ];
     }
@@ -82,23 +79,19 @@ class CreateTest extends TestCase
      * @param $magentoOrderId
      * @param $vendiroOrderData
      * @param $expectedComment
-     * @param $expectedFulfillment
      *
      * @throws \Exception
      *
      * @dataProvider updateOrderCommentAndStatusProvider
      */
-    public function testUpdateOrderCommentAndStatus($magentoOrderId, $vendiroOrderData, $expectedComment, $expectedFulfillment)
+    public function testUpdateOrderCommentAndStatus($magentoOrderId, $vendiroOrderData, $expectedComment)
     {
         $statusManagerMock = $this->getFakeMock(OrderStatusManager::class)
-            ->setMethods(['addHistoryComment', 'setNewState'])
+            ->setMethods(['addHistoryComment'])
             ->getMock();
         $statusManagerMock->expects($this->once())
             ->method('addHistoryComment')
             ->with($magentoOrderId, $expectedComment);
-        $statusManagerMock->expects($this->exactly($expectedFulfillment))
-            ->method('setNewState')
-            ->with($magentoOrderId, Order::STATE_COMPLETE);
 
         $instance = $this->getInstance(['orderStatusManager' => $statusManagerMock]);
         $this->invokeArgs('updateOrderCommentAndStatus', [$magentoOrderId, $vendiroOrderData], $instance);

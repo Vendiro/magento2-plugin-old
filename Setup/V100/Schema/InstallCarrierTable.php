@@ -18,7 +18,7 @@
  * It is available through the world-wide-web at this URL:
  * http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  * If you are unable to obtain it through the world-wide-web, please send an email
- * to servicedesk@totalinternetgroup.nl so we can send you a copy immediately.
+ * to servicedesk@tig.nl so we can send you a copy immediately.
  *
  * DISCLAIMER
  *
@@ -29,38 +29,26 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+namespace TIG\Vendiro\Setup\V100\Schema;
 
-namespace TIG\Vendiro\Cron;
+use TIG\Vendiro\Setup\AbstractTableInstaller;
 
-use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
-use TIG\Vendiro\Service\Inventory\Data;
-
-class Inventory
+class InstallCarrierTable extends AbstractTableInstaller
 {
-    /** @var Data $orderService */
-    private $inventoryService;
-
-    /** @var ApiConfiguration */
-    private $apiConfiguration;
+    const TABLE_NAME = 'tig_vendiro_carrier';
 
     /**
-     * @param Data             $inventoryService
-     * @param ApiConfiguration $apiConfiguration
+     * @return void
+     * @throws \Zend_Db_Exception
      */
-    public function __construct(
-        Data $inventoryService,
-        ApiConfiguration $apiConfiguration
-    ) {
-        $this->inventoryService = $inventoryService;
-        $this->apiConfiguration = $apiConfiguration;
-    }
-
-    public function updateInventory()
+    // @codingStandardsIgnoreLine
+    protected function defineTable()
     {
-        if (!$this->apiConfiguration->canUpdateInventory()) {
-            return;
-        }
+        $columns = ['carrier_id'];
 
-        $this->inventoryService->get();
+        $this->addEntityId();
+        $this->addInt('carrier_id', 'carrier id');
+        $this->addIndex($columns);
+        $this->addText('carrier', 'carrier', 64, false);
     }
 }

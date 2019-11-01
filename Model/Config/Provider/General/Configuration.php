@@ -33,7 +33,7 @@
 namespace TIG\Vendiro\Model\Config\Provider\General;
 
 use TIG\Vendiro\Model\AbstractConfigProvider;
-
+//@codingStandardsIgnoreFile
 class Configuration extends AbstractConfigProvider
 {
     const VENDIRO_GENERAL_MODE = 'tig_vendiro/general/mode';
@@ -45,6 +45,7 @@ class Configuration extends AbstractConfigProvider
     const VENDIRO_REGISTER_SHIPMENT_ENABLED = 'tig_vendiro/vendiro/shipment';
     const VENDIRO_UPDATE_INVENTORY_ENABLED  = 'tig_vendiro/vendiro/inventory';
     const VENDIRO_INVENTORY_QUANTITY_TYPE   = 'tig_vendiro/vendiro/inventory_quantity';
+    const VENDIRO_DEFAULT_SHIPPING_METHOD = 'tig_vendiro/vendiro/default_shipment_method';
 
     /**
      * @param null $store
@@ -156,5 +157,15 @@ class Configuration extends AbstractConfigProvider
     public function getInventoryQuantityType($store = null)
     {
         return $this->getConfigValue(static::VENDIRO_INVENTORY_QUANTITY_TYPE, $store);
+    }
+
+    /**
+     * @param $store
+     *
+     * @return int
+     */
+    public function getDefaultCarrier($store = null)
+    {
+        return $this->getConfigValue(static::VENDIRO_DEFAULT_SHIPPING_METHOD, $store);
     }
 }

@@ -34,9 +34,13 @@ namespace TIG\Vendiro\Webservices\Endpoints;
 interface EndpointInterface
 {
     /**
-     * @return mixed
+     * @param null $urlParameter
+     * @param bool $includeHttpStatus
+     *
+     * @return array|mixed|\Zend_Http_Response
+     * @throws \Zend_Http_Client_Exception
      */
-    public function call();
+    public function call($urlParameter = null, $includeHttpStatus = false);
 
     /**
      * @return string

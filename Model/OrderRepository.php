@@ -55,17 +55,27 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      */
     private $orderFactory;
 
+    /**
+     * OrderRepository constructor.
+     *
+     * @param ScopeConfigInterface              $scopeConfig
+     * @param SearchResultsInterfaceFactory     $searchResultsFactory
+     * @param SearchCriteriaBuilder             $searchCriteriaBuilder
+     * @param OrderFactory                      $orderFactory
+     * @param CollectionFactory                 $collectionFactory
+     */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         SearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        CollectionFactory $orderCollectionFactory,
-        OrderFactory $orderFactory
+        OrderFactory $orderFactory,
+        CollectionFactory $collectionFactory
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->orderFactory = $orderFactory;
+        $this->collectionFactory = $collectionFactory;
 
-        parent::__construct($searchResultsFactory, $searchCriteriaBuilder, $orderCollectionFactory);
+        parent::__construct($searchResultsFactory, $searchCriteriaBuilder);
     }
 
     /**
@@ -118,22 +128,6 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     /**
      * {@inheritDoc}
      */
-    public function getByOrderId($orderId, $limit = 1)
-    {
-        return $this->getByFieldWithValue('order_id', $orderId, $limit);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getByStatus($status, $limit = 10)
-    {
-        return $this->getByFieldWithValue('status', $status, $limit);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getAlreadyInsertedOrders($orderIds, $limit = 999)
     {
         $insertedOrders = [];
@@ -144,7 +138,9 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         }
 
         foreach ($list as $dbOrder) {
-            $insertedOrders[] = $dbOrder->getVendiroId();
+            $insertedOrders[$dbOrder->getVendiroId()] = ([
+                'order_id' => $dbOrder->getOrderId()
+            ]);
         }
 
         return $insertedOrders;
@@ -155,9 +151,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      */
     public function getNewOrders()
     {
-        $newOrdersLimit = $this->scopeConfig->getValue(self::VENDIRO_NEW_ORDERS_LIMIT, ScopeInterface::SCOPE_STORE);
-
-        return $this->getByFieldWithValue('order_id', true, $newOrdersLimit, 'null');
+        return $this->getByFieldWithValue('order_id', true, 'null');
     }
 
     /**
@@ -192,5 +186,16 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
         $order = $this->getById($entityId);
 
         return $this->delete($order);
+    }
+
+    /**
+     * @param     $orderId
+     *
+     * @return OrderInterface|null
+     */
+    public function getByVendiroId($orderId)
+    {
+        $result = $this->getByFieldWithValue('vendiro_id', $orderId, 1);
+        return array_pop($result);
     }
 }

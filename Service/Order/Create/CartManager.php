@@ -39,7 +39,10 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use TIG\Vendiro\Logging\Log;
+use TIG\Vendiro\Service\Order\ApiStatusManager;
+use TIG\Vendiro\Exception as VendiroException;
 
+//@codingStandardsIgnoreFile
 class CartManager
 {
     /** @var StoreManagerInterface */
@@ -57,22 +60,28 @@ class CartManager
     /** @var CartInterface|\Magento\Quote\Model\Quote */
     private $cart;
 
+    /** @var ApiStatusManager $apiStatusManager */
+    private $apiStatusManager;
+
     /**
-     * @param StoreManagerInterface   $storeManager
-     * @param CartManagementInterface $cartManagement
-     * @param CartRepositoryInterface $cartRepository
-     * @param Log                     $logger
+     * @param StoreManagerInterface                       $storeManager
+     * @param CartManagementInterface                     $cartManagement
+     * @param CartRepositoryInterface                     $cartRepository
+     * @param Log                                         $logger
+     * @param ApiStatusManager                            $apiStatusManager
      */
     public function __construct(
         StoreManagerInterface $storeManager,
         CartManagementInterface $cartManagement,
         CartRepositoryInterface $cartRepository,
-        Log $logger
+        Log $logger,
+        ApiStatusManager $apiStatusManager
     ) {
         $this->storeManager = $storeManager;
         $this->cartManagement = $cartManagement;
         $this->cartRepository = $cartRepository;
         $this->logger = $logger;
+        $this->apiStatusManager = $apiStatusManager;
     }
 
     /**
@@ -163,9 +172,12 @@ class CartManager
     }
 
     /**
+     * @param $vendiroId
+     *
      * @return int
+     * @throws VendiroException
      */
-    public function placeOrder()
+    public function placeOrder($vendiroId)
     {
         $orderId = false;
         $this->cart->collectTotals();
@@ -176,6 +188,7 @@ class CartManager
             $orderId = $this->cartManagement->placeOrder($this->cart->getId());
         } catch (LocalizedException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
+            throw new VendiroException(__($exception->getMessage()));
         }
 
         return $orderId;

@@ -39,6 +39,10 @@ class ApiCredentials extends Action
     /** @var GetAccount */
     private $getAccount;
 
+    /**
+     * @param \Magento\Backend\App\Action\Context           $context
+     * @param \TIG\Vendiro\Webservices\Endpoints\GetAccount $getAccount
+     */
     public function __construct(
         Action\Context $context,
         GetAccount $getAccount
@@ -48,16 +52,26 @@ class ApiCredentials extends Action
         $this->getAccount = $getAccount;
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     */
     public function execute()
     {
         $result = [
             'error' => true,
-            'message' => 'Your API Credentials could not be validated'
+            //@codingStandardsIgnoreLine
+            'message' => __('Your API Credentials could not be validated')
         ];
 
-        if ($this->validateAccount()) {
+        $validatedAccountName = $this->validateAccount();
+
+        if ($validatedAccountName) {
+            $message = sprintf(__(
+                "Successfully connected to account %s. Don't forget to save changes."
+            ), $validatedAccountName);
+
             $result['error'] = false;
-            $result['message'] = 'Your API Credentials are successfully validated';
+            $result['message'] = __($message, $validatedAccountName);
         }
 
         $response = $this->getResponse();
@@ -65,7 +79,7 @@ class ApiCredentials extends Action
     }
 
     /**
-     * @return bool
+     * @return bool|string
      */
     private function validateAccount()
     {
@@ -82,6 +96,10 @@ class ApiCredentials extends Action
             $hasUser = true;
         }
 
-        return $hasAccount && $hasUser;
+        if ($hasAccount && $hasUser) {
+            return $accountResult['account'];
+        }
+
+        return false;
     }
 }

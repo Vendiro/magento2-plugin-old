@@ -39,14 +39,6 @@ class DataTest extends TestCase
 {
     protected $instanceClass = Data::class;
 
-    public function testGetModuleVersion()
-    {
-        $instance = $this->getInstance();
-        $result = $instance->getModuleVersion();
-
-        $this->assertEquals('1.0.0', $result);
-    }
-
     public function testGetModuleName()
     {
         $instance = $this->getInstance();

@@ -31,7 +31,7 @@
  */
 namespace TIG\Vendiro\Webservices\Endpoints;
 
-use TIG\Vendiro\Webservices\Rest;
+use TIG\Vendiro\Webservices\AbstractRest;
 
 abstract class AbstractEndpoint implements EndpointInterface
 {
@@ -42,13 +42,13 @@ abstract class AbstractEndpoint implements EndpointInterface
 
     private $urlArguments;
 
-    /** @var Rest */
+    /** @var AbstractRest */
     private $restApi;
 
     /**
-     * @param Rest $restApi
+     * @param AbstractRest $restApi
      */
-    public function __construct(Rest $restApi)
+    public function __construct(AbstractRest $restApi)
     {
         $this->restApi = $restApi;
     }
@@ -56,11 +56,11 @@ abstract class AbstractEndpoint implements EndpointInterface
     /**
      * {@inheritDoc}
      */
-    public function call($urlParameter = null)
+    public function call($urlParameter = null, $includeHttpStatus = false)
     {
         $this->setUrlArguments($urlParameter);
 
-        return $this->restApi->getRequest($this);
+        return $this->restApi->getRequest($this, $includeHttpStatus);
     }
 
     /**

@@ -46,6 +46,11 @@ class ApiStatusManager
     /** @var RejectOrder */
     private $rejectOrder;
 
+    /**
+     * @param GetOrders   $getOrders
+     * @param AcceptOrder $acceptOrder
+     * @param RejectOrder $rejectOrder
+     */
     public function __construct(
         GetOrders $getOrders,
         AcceptOrder $acceptOrder,
@@ -57,13 +62,14 @@ class ApiStatusManager
     }
 
     /**
-     * @param null|int|string $orderId
-     *
      * @return array|mixed|\Zend_Http_Response
      */
-    public function getOrders($orderId = null)
+    public function getOrders()
     {
-        return $this->getOrders->call($orderId);
+        $requestData = ['order_status' => 'new','include_addresses' => 'true'];
+        $this->getOrders->setRequestData($requestData);
+
+        return $this->getOrders->call();
     }
 
     /**

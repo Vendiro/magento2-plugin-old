@@ -36,6 +36,9 @@ use Magento\Framework\Option\ArrayInterface;
 
 class Inventory implements ArrayInterface
 {
+    const INVENTORY_TYPE_REGULAR = 0;
+    const INVENTORY_TYPE_SALABLE = 1;
+
     /**
      * Return option array for the inventory mode.
      * @return array
@@ -44,12 +47,11 @@ class Inventory implements ArrayInterface
     {
         // @codingStandardsIgnoreStart
         $options = [
-            ['value' => '0', 'label' => __('Off')],
-            ['value' => '1', 'label' => __('Regular quantity')],
-            ['value' => '1', 'label' => __('Saleable quantity')]
+            ['value' => self::INVENTORY_TYPE_REGULAR, 'label' => __('Regular quantity')],
+            ['value' => self::INVENTORY_TYPE_SALABLE, 'label' => __('Saleable quantity')]
         ];
-        
         // @codingStandardsIgnoreEnd
+
         return $options;
     }
 }

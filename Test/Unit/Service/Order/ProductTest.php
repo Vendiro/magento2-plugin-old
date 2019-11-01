@@ -34,12 +34,39 @@ namespace TIG\Vendiro\Test\Unit\Service\Order;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Model\StockState;
+use Magento\Framework\DataObject;
+use Magento\Framework\DataObject\Factory as DataObjectFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
 use TIG\Vendiro\Service\Order\Product;
 use TIG\Vendiro\Test\TestCase;
 
 class ProductTest extends TestCase
 {
     protected $instanceClass = Product::class;
+
+    public function testCreateProductDataFromApiData()
+    {
+        $apiData = [
+            'company' => 'TIG',
+            'amount' => '2',
+            'status' => 'new',
+            'value' => '3.45',
+            'sku' => 'TIG123'
+        ];
+
+        $expectedResult = [
+            'qty' => 2,
+            'custom_price' => '3.45'
+        ];
+
+        $dataObjectMock = $this->getFakeMock(DataObjectFactory::class)->setMethods(null)->getMock();
+
+        $instance = $this->getInstance(['dataObjectFactory' => $dataObjectMock]);
+        $result = $instance->createProductDataFromApiData($apiData);
+
+        $this->assertInstanceOf(DataObject::class, $result);
+        $this->assertEquals($expectedResult, $result->getData());
+    }
 
     /**
      * @return array
@@ -55,12 +82,12 @@ class ProductTest extends TestCase
             'product id not found' => [
                 false,
                 15,
-                'The order could not be exported from Vendiro. The product that was requested wasn\'t found.'
+                'The order could not be imported. The requested product SKU 123456 wasn\'t found.'
             ],
             'product not in stock' => [
                 987,
                 0,
-                'The order could not be exported from Vendiro. The product that was requested is not in stock.'
+                'The order could not be imported. The requested product SKU 123456 is not in stock.'
             ]
         ];
     }
@@ -99,5 +126,19 @@ class ProductTest extends TestCase
         if ($exceptionMessage === null) {
             $this->assertEquals($productMock, $result);
         }
+    }
+
+    public function testLoadProductThrowsException()
+    {
+        $this->expectException(\TIG\Vendiro\Exception::class);
+        $this->expectExceptionMessage("The order could not be imported. The requested product SKU sku12 wasn't found.");
+
+        $productRepoMock = $this->getFakeMock(ProductRepositoryInterface::class)
+            ->setMethods(['get'])
+            ->getMockForAbstractClass();
+        $productRepoMock->method('get')->willThrowException(new NoSuchEntityException(__('Product not found')));
+
+        $instance = $this->getInstance(['productRepository' => $productRepoMock]);
+        $this->invokeArgs('loadProduct', ['sku12'], $instance);
     }
 }

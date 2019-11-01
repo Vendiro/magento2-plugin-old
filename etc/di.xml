@@ -35,12 +35,21 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="TIG\Vendiro\Api\OrderRepositoryInterface" type="TIG\Vendiro\Model\OrderRepository" />
     <preference for="TIG\Vendiro\Api\Data\OrderInterface" type="TIG\Vendiro\Model\Order" />
+    <preference for="TIG\Vendiro\Api\CarrierRepositoryInterface" type="TIG\Vendiro\Model\CarrierRepository" />
+    <preference for="TIG\Vendiro\Api\Data\CarrierInterface" type="TIG\Vendiro\Model\Carrier" />
+    <preference for="TIG\Vendiro\Api\TrackQueueRepositoryInterface" type="TIG\Vendiro\Model\TrackQueueRepository" />
+    <preference for="TIG\Vendiro\Api\Data\TrackQueueInterface" type="TIG\Vendiro\Model\TrackQueue" />
+    <preference for="TIG\Vendiro\Api\StockRepositoryInterface" type="TIG\Vendiro\Model\StockRepository" />
+    <preference for="TIG\Vendiro\Api\Data\StockInterface" type="TIG\Vendiro\Model\Stock" />
 
     <type name="TIG\Vendiro\Setup\InstallSchema">
         <arguments>
             <argument name="installSchemaObjects" xsi:type="array">
                 <item name="v1.0.0" xsi:type="array">
-                    <item name="InstallOrderTable" xsi:type="object">TIG\Vendiro\Setup\Schema\InstallOrderTable</item>
+                    <item name="InstallOrderTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallOrderTable</item>
+                    <item name="InstallCarrierTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallCarrierTable</item>
+                    <item name="InstallTrackTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallTrackTable</item>
+                    <item name="InstallStockTable" xsi:type="object">TIG\Vendiro\Setup\V100\Schema\InstallStockTable</item>
                 </item>
             </argument>
         </arguments>
@@ -53,6 +62,49 @@
                 <item name="exception" xsi:type="object">TIG\Vendiro\Logging\CriticalHandler</item>
                 <item name="debug" xsi:type="object">TIG\Vendiro\Logging\DebugHandler</item>
             </argument>
+        </arguments>
+    </type>
+
+   <type name="Magento\Framework\Console\CommandList">
+       <arguments>
+           <argument name="commands" xsi:type="array">
+               <item name="AllProductsToQueue" xsi:type="object">TIG\Vendiro\Console\AllProductsToQueue</item>
+           </argument>
+       </arguments>
+   </type>
+
+    <!-- Plugins to observe product quantity changes -->
+    <!-- Catalog Quantity -->
+    <type name="Magento\CatalogInventory\Api\StockItemRepositoryInterface">
+        <plugin name="TIG_Vendiro_StockQueue_StockItemRepository" type="TIG\Vendiro\Plugin\StockQueue\Catalog\StockItemRepository" />
+    </type>
+    <!-- Inventory Quantity -->
+    <type name="Magento\InventoryReservationsApi\Model\AppendReservationsInterface">
+        <plugin name="TIG_Vendiro_StockQueue_AppendReservations" type="TIG\Vendiro\Plugin\StockQueue\Inventory\AppendReservations" />
+    </type>
+    <!-- Sales Quantity -->
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="TIG_Vendiro_StockQueue_OrderRepository" type="TIG\Vendiro\Plugin\StockQueue\Sales\OrderRepository" />
+        <plugin name="tig_vendiro_plugin_fbmordercomplete" type="TIG\Vendiro\Plugin\Order\FBMOrderComplete" sortOrder="1"/>
+    </type>
+
+    <type name="Magento\Sales\Api\Data\ShipmentInterface">
+        <plugin name="ShipmentCreate" type="TIG\Vendiro\Plugin\Shipment\Save" />
+    </type>
+    <type name="Magento\Sales\Api\ShipmentRepositoryInterface">
+        <plugin name="ShipmentCreate" type="TIG\Vendiro\Plugin\Shipment\Save" />
+    </type>
+    <type name="Magento\Sales\Model\Order\Shipment\Track">
+        <plugin name="ShipmentCreate" type="TIG\Vendiro\Plugin\Shipment\Delete" />
+    </type>
+    <type name="TIG\Vendiro\Webservices\Endpoints\AbstractEndpoint">
+        <arguments>
+            <argument name="restApi" xsi:type="object">TIG\Vendiro\Webservices\Rest</argument>
+        </arguments>
+    </type>
+    <type name="TIG\Vendiro\Webservices\Endpoints\GetAccount">
+        <arguments>
+            <argument name="restApi" xsi:type="object">TIG\Vendiro\Webservices\ValidationRest</argument>
         </arguments>
     </type>
 </config>
