@@ -53,11 +53,12 @@ abstract class AbstractConfigProvider
 
     /**
      * @param $path
+     * @param $store
      *
      * @return mixed
      */
-    public function getConfigValue($path)
+    public function getConfigValue($path, $store = null)
     {
-        return $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $store);
     }
 }

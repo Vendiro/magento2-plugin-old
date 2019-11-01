@@ -32,9 +32,44 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
+        <carriers>
+            <tig_vendiro>
+                <active>1</active>
+                <name>Vendiro Shipping</name>
+                <model>TIG\Vendiro\Model\Carrier\Vendiro</model>
+                <sallowspecific>0</sallowspecific>
+                <title>Vendiro</title>
+                <price>0.00</price>
+            </tig_vendiro>
+        </carriers>
+        <payment>
+            <tig_vendiro>
+                <active>1</active>
+                <model>TIG\Vendiro\Model\Payment\Vendiro</model>
+                <order_status>pending</order_status>
+                <title>Vendiro Payment</title>
+                <allowspecific>0</allowspecific>
+            </tig_vendiro>
+        </payment>
         <tig_vendiro>
-            <stability />
-            <supported_magento_version>2.2.0 - 2.2.9, 2.3.0 - 2.3.2</supported_magento_version>
+            <advanced>
+                <vendiro_confirm_shipments>*/5 * * * *</vendiro_confirm_shipments>
+                <vendiro_forced_stock>*/5 * * * *</vendiro_forced_stock>
+                <vendiro_import_to_magento>*/5 * * * *</vendiro_import_to_magento>
+                <vendiro_stock>*/5 * * * *</vendiro_stock>
+                <vendiro_update_carriers>0 0 * * *</vendiro_update_carriers>
+                <vendiro_force_queue_stock>0 6 * * *</vendiro_force_queue_stock>
+            </advanced>
+
+            <supported_magento_version>2.2.0 - 2.2.9, 2.3.0 - 2.3.2 - 2.3.3</supported_magento_version>
+
+            <shipments_limit>100</shipments_limit>
+            <forced_stock_limit>5000</forced_stock_limit>
+
+            <endpoints>
+                <api_base_url>https://api.vendiro.nl/client/</api_base_url>
+                <test_api_base_url>https://pre-prod-api.vendiro.nl/client/</test_api_base_url>
+            </endpoints>
         </tig_vendiro>
     </default>
 </config>

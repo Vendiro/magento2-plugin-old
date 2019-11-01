@@ -33,7 +33,6 @@
 namespace TIG\Vendiro\Block\Adminhtml\Config\Support;
 
 use Magento\Backend\Block\Template;
-use Magento\Backend\Block\Template\Context;
 use Magento\Framework\View\Element\BlockInterface;
 
 class BodyClass extends Template implements BlockInterface
@@ -41,6 +40,7 @@ class BodyClass extends Template implements BlockInterface
     /**
      * @return \Magento\Backend\Block\Template
      */
+    // @codeCoverageIgnoreStart
     // @codingStandardsIgnoreLine
     protected function _prepareLayout()
     {
@@ -49,4 +49,5 @@ class BodyClass extends Template implements BlockInterface
         }
         return parent::_prepareLayout();
     }
+    // @codeCoverageIgnoreEnd
 }

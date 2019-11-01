@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="vendiro_stock" instance="TIG\Vendiro\Cron\Stock" method="updateStock">
+            <schedule>*/5 * * * *</schedule>
+        </job>
+        <job name="vendiro_forced_stock" instance="TIG\Vendiro\Cron\Stock" method="forceUpdateStock">
+            <schedule>*/5 * * * *</schedule>
+        </job>
+        <job name="vendiro_import_to_magento" instance="TIG\Vendiro\Cron\Order" method="importToMagento">
+            <schedule>*/5 * * * *</schedule>
+        </job>
+        <job name="vendiro_confirm_shipments" instance="TIG\Vendiro\Cron\TrackTrace" method="confirmShipment">
+            <schedule>*/5 * * * *</schedule>
+        </job>
+        <job name="vendiro_update_carriers" instance="TIG\Vendiro\Cron\Carrier" method="updateCarriers">
+            <schedule>0 0 * * *</schedule>
+        </job>
+        <job name="vendiro_force_queue_stock" instance="TIG\Vendiro\Cron\Stock" method="forceStockQueue">
+            <schedule>0 6 * * *</schedule>
+        </job>
+    </group>
+</config>

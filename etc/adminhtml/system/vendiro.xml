@@ -33,29 +33,33 @@
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <!-- Vendiro Configuration -->
-    <group id="vendiro" translate="label" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="vendiro" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Vendiro Configuration</label>
-        <field id="key" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="key" translate="label comment" type="obscure" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>API key</label>
             <comment><![CDATA[Fill in your Vendiro API key.]]></comment>
+            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+            <config_path>tig_vendiro/vendiro/key</config_path>
         </field>
         <field id="token" translate="label comment" type="obscure" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>API token</label>
             <comment><![CDATA[Fill in your Vendiro API token.]]></comment>
+            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+            <config_path>tig_vendiro/vendiro/token</config_path>
+        </field>
+        <field id="validate_api_credentials" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <frontend_model>TIG\Vendiro\Block\Adminhtml\Config\Validate\ApiCredentials</frontend_model>
         </field>
         <field id="orders" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Import orders</label>
-            <comment><![CDATA[]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
         <field id="shipment" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Register shipment</label>
-            <comment><![CDATA[]]></comment>
+            <label>Confirm shipment</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
         <field id="inventory" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Update inventory</label>
-            <comment><![CDATA[]]></comment>
+            <label>Update stock</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
         <field id="inventory_quantity" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -63,6 +67,58 @@
             <comment><![CDATA[Only use this when you are using Magento version 2.3 or higher]]></comment>
             <source_model>TIG\Vendiro\Model\Config\Source\General\Inventory</source_model>
         </field>
+        <field id="queue_all_stocks" translate="label comment" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <comment><![CDATA[Queue all products for updating their stock at Vendiro.]]></comment>
+            <frontend_model>TIG\Vendiro\Block\Adminhtml\Config\Stock\QueueAll</frontend_model>
+        </field>
+        <field id="default_shipment_method" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Select your default shipment provider</label>
+            <source_model>TIG\Vendiro\Model\Config\Source\General\Carriers</source_model>
+        </field>
+        <field id="get_carriers" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <frontend_model>TIG\Vendiro\Block\Adminhtml\Config\Carrier\Carriers</frontend_model>
+        </field>
+    </group>
+
+    <group id="advanced" translate="label comment" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+        <label>Cron Settings</label>
+        <comment><![CDATA[These options are only intended for expert users. Tampering with the default settings may negatively affect the workflow and performance of the Vendiro extension. Click <a href='https://confluence.tig.nl/x/PoCLB' target='_blank'>here</a> for more information about cronjobs.]]></comment>
+        <field id="vendiro_stock" translate="label comment" sortOrder="10" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Vendiro stock updater</label>
+            <comment><![CDATA[Default setting: */5 * * * *]]></comment>
+            <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
+        </field>
+
+        <field id="vendiro_forced_stock" translate="label comment" sortOrder="20" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Vendiro full stock updater</label>
+            <comment><![CDATA[Default setting: */5 * * * *]]></comment>
+            <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
+        </field>
+
+        <field id="vendiro_force_queue_stock" translate="label comment" sortOrder="30" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Vendiro full stock trigger</label>
+            <comment><![CDATA[Default setting: 0 6 * * *]]></comment>
+            <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
+        </field>
+
+        <field id="vendiro_import_to_magento" translate="label comment" sortOrder="40" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Vendiro order import</label>
+            <comment><![CDATA[Default setting: */5 * * * *]]></comment>
+            <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
+        </field>
+
+        <field id="vendiro_confirm_shipments" translate="label comment" sortOrder="50" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Vendiro shipments confirm</label>
+            <comment><![CDATA[Default setting: */5 * * * *]]></comment>
+            <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
+        </field>
+
+        <field id="vendiro_update_carriers" translate="label comment" sortOrder="60" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Vendiro carriers update</label>
+            <comment><![CDATA[Default setting: 0 0 * * *]]></comment>
+            <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
+        </field>
 
     </group>
+
 </include>
