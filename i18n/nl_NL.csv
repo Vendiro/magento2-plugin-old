@@ -39,6 +39,7 @@
 "Vendiro update carriers cron","Vendiro update verzend providers cron"
 "Default setting: */5 * * * *","Standaard instelling: */5 * * * *"
 "Default setting: 0 0 * * *","Standaard instelling: 0 0 * * *"
+"Default setting: 0 6 * * *","Standaard instelling: 0 6 * * *"
 "Queue all products for updating their stock at Vendiro.","Zet alle producten in de wachtrij om hun voorraad bij Vendiro up te daten."
 "Force queue all products","Forceer alle producten in de wachtrij"
 "The products could not be queued for updating the stock at Vendiro.","De producten konden niet in de wachtrij gezet worden."

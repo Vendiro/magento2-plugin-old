@@ -17,7 +17,7 @@
             <schedule>0 0 * * *</schedule>
         </job>
         <job name="vendiro_force_queue_stock" instance="TIG\Vendiro\Cron\Stock" method="forceStockQueue">
-            <schedule>0 0 * * *</schedule>
+            <schedule>0 6 * * *</schedule>
         </job>
     </group>
 </config>
