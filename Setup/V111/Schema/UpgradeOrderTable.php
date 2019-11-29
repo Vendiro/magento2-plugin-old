@@ -38,6 +38,7 @@ class UpgradeOrderTable extends AbstractColumnInstaller
 {
     const TABLE_NAME = 'tig_vendiro_order';
 
+    // @codingStandardsIgnoreLine
     protected $columns = [
         'marketplace_orderid',
         'marketplace_name'

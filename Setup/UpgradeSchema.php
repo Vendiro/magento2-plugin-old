@@ -62,16 +62,13 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         if (version_compare($context->getVersion(), '1.0.0', '<')) {
             $tableName = $setup->getTable('sales_shipment');
-
             $connection = $setup->getConnection();
-
             $column = [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'comment' => 'Vendiro Carrier',
                     'default' => null
                 ];
-
             $connection->addColumn($tableName, 'vendiro_carrier', $column);
         }
 
