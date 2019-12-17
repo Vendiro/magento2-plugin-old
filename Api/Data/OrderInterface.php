@@ -42,7 +42,7 @@ interface OrderInterface
     /**
      * @param int $entityId
      *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
+     * @return OrderInterface
      */
     public function setEntityId($entityId);
 
@@ -54,7 +54,7 @@ interface OrderInterface
     /**
      * @param $value
      *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
+     * @return OrderInterface
      */
     public function setOrderId($value);
 
@@ -66,9 +66,33 @@ interface OrderInterface
     /**
      * @param $value
      *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
+     * @return OrderInterface
      */
     public function setVendiroId($value);
+
+    /**
+     * @return string
+     */
+    public function getMarketplaceOrderid();
+
+    /**
+     * @param $value
+     *
+     * @return OrderInterface
+     */
+    public function setMarketplaceOrderid($value);
+
+    /**
+     * @return string
+     */
+    public function getMarketplaceName();
+
+    /**
+     * @param $value
+     *
+     * @return OrderInterface
+     */
+    public function setMarketplaceName($value);
 
     /**
      * @return string
@@ -78,7 +102,7 @@ interface OrderInterface
     /**
      * @param $value
      *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
+     * @return OrderInterface
      */
     public function setMarketplaceReference($value);
 
@@ -90,7 +114,7 @@ interface OrderInterface
     /**
      * @param $value
      *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
+     * @return OrderInterface
      */
     public function setStatus($value);
 
@@ -102,7 +126,7 @@ interface OrderInterface
     /**
      * @param $value
      *
-     * @return \TIG\Vendiro\Api\Data\OrderInterface
+     * @return OrderInterface
      */
     public function setCreatedAt($value);
 }

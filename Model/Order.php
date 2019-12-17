@@ -45,6 +45,8 @@ class Order extends AbstractModel implements OrderInterface
 {
     const FIELD_ORDER_ID = 'order_id';
     const FIELD_VENDIRO_ID = 'vendiro_id';
+    const FIELD_MARKETPLACE_ORDERID = 'marketplace_orderid';
+    const FIELD_MARKETPLACE_NAME = 'marketplace_name';
     const FIELD_MARKETPLACE_REFERENCE = 'marketplace_reference';
     const FIELD_STATUS = 'status';
     const FIELD_CREATED_AT = 'created_at';
@@ -88,6 +90,38 @@ class Order extends AbstractModel implements OrderInterface
     public function setVendiroId($value)
     {
         return $this->setData(self::FIELD_VENDIRO_ID, $value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getMarketplaceOrderid()
+    {
+        return $this->getData(self::FIELD_MARKETPLACE_ORDERID);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setMarketplaceOrderid($value)
+    {
+        return $this->setData(self::FIELD_MARKETPLACE_ORDERID, $value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getMarketplaceName()
+    {
+        return $this->getData(self::FIELD_MARKETPLACE_NAME);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setMarketplaceName($value)
+    {
+        return $this->setData(self::FIELD_MARKETPLACE_NAME, $value);
     }
 
     /**

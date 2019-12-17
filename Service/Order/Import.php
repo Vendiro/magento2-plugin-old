@@ -151,6 +151,8 @@ class Import
         $vendiroOrder = $this->orderRepository->create();
         $vendiroOrder->setOrderId($newOrderId);
         $vendiroOrder->setVendiroId($order['id']);
+        $vendiroOrder->setMarketplaceOrderid($order['marketplace_order_id']);
+        $vendiroOrder->setMarketplaceName($order['marketplace']['name']);
         $vendiroOrder->setMarketplaceReference($order['marketplace']['reference']);
         $vendiroOrder->setStatus(QueueStatus::QUEUE_STATUS_IMPORTED);
         $this->saveVendiroOrder($vendiroOrder);
