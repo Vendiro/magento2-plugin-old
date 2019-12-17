@@ -55,6 +55,16 @@
         </arguments>
     </type>
 
+    <type name="TIG\Vendiro\Setup\UpgradeSchema">
+        <arguments>
+            <argument name="upgradeSchemaObjects" xsi:type="array">
+                <item name="v1.1.1" xsi:type="array">
+                    <item name="UpgradeOrderTable" xsi:type="object">TIG\Vendiro\Setup\V111\Schema\UpgradeOrderTable</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
     <type name="TIG\Vendiro\Logging\Log">
         <arguments>
             <argument name="name" xsi:type="string">vendiro_logging</argument>
