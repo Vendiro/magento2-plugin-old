@@ -101,7 +101,7 @@ class Save
         $shippingMethod = $order->getShippingMethod();
 
         if ($shippingMethod !== 'tig_vendiro_shipping') {
-            return $subject;
+            return;
         }
 
         $tracks = $this->getTracks($subject, $shipment);
