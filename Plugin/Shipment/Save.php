@@ -59,10 +59,7 @@ class Save
 
     /**
      * @param      $subject
-     *
      * @param null $shipment
-     *
-     * @return void
      */
     public function beforeSave($subject, $shipment = null)
     {
@@ -92,7 +89,6 @@ class Save
      * @param      $subject
      * @param null $shipment
      *
-     * @return mixed
      * @throws \Exception
      */
     public function afterSave($subject, $shipment = null)
