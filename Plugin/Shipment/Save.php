@@ -62,7 +62,7 @@ class Save
      *
      * @param null $shipment
      *
-     * @return ShipmentInterface
+     * @return void
      */
     public function beforeSave($subject, $shipment = null)
     {
@@ -76,7 +76,7 @@ class Save
         }
 
         if ($order->getShippingMethod() != 'tig_vendiro_shipping') {
-            return $subject;
+            return;
         }
 
         if (!$shipment) {
