@@ -59,28 +59,18 @@ class Save
 
     /**
      * @param      $subject
-     *
      * @param null $shipment
-     *
-     * @return ShipmentInterface
      */
     public function beforeSave($subject, $shipment = null)
     {
-        $order = null;
-        if ($shipment) {
-            $order = $shipment->getOrder();
-        }
-
-        if (!$order) {
-            $order = $subject->getOrder();
-        }
-
-        if ($order->getShippingMethod() != 'tig_vendiro_shipping') {
-            return $subject;
-        }
-
         if (!$shipment) {
             $shipment = $subject;
+        }
+
+        $order = $shipment->getOrder();
+
+        if ($order->getShippingMethod() != 'tig_vendiro_shipping') {
+            return;
         }
 
         $this->saveVendiroCarrier($shipment);
