@@ -39,12 +39,13 @@ class Data
     const MODULE_CODE = 'TIG_Vendiro';
 
     /** Version of Module */
-    const VENDIRO_VERSION = '1.1.1';
+    const VENDIRO_VERSION = '1.2.0';
 
     /** @var array */
     private $phpVersionSupport = [
         '2.2' => ['7.1' => ['+']],
-        '2.3' => ['7.1' => ['+'], '7.2' => ['+'], '7.3' => ['+']]
+        '2.3' => ['7.1' => ['+'], '7.2' => ['+'], '7.3' => ['+']],
+        '2.4' => ['7.3' => ['+'], '7.4' => ['+']]
     ];
 
     /** @var ProductMetadataInterface */
