@@ -123,7 +123,7 @@ class Create
             $this->coreSession->setFulfilmentByMarketplace(true);
         }
 
-        $newOrderId = $this->placeOrder($vendiroOrder['id']);
+        $newOrderId = $this->placeOrder($vendiroOrder['marketplace']['reference']);
 
         $this->coreSession->unsFulfilmentByMarketplace();
 
@@ -164,15 +164,17 @@ class Create
     }
 
     /**
+     * @param $storeCode
+     *
      * @return bool|int
      * @throws VendiroException
      */
-    private function placeOrder($vendiroId)
+    private function placeOrder($storeCode)
     {
         $newOrderId = false;
 
         try {
-            $newOrderId = $this->cart->placeOrder($vendiroId);
+            $newOrderId = $this->cart->placeOrder($storeCode);
         } catch (\Exception $exception) {
             throw new VendiroException(__($exception->getMessage()));
         }

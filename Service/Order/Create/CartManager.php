@@ -107,7 +107,7 @@ class CartManager
         }
 
         $this->cart->setStoreId($store->getId());
-        $this->cart->setCurrency(); //Interface implement to set currency?
+        $this->cart->setCurrency();
         $this->cart->setCheckoutMethod(CartManagementInterface::METHOD_GUEST);
     }
 
@@ -172,19 +172,19 @@ class CartManager
     }
 
     /**
-     * @param $vendiroId
+     * @param $storeCode
      *
      * @return int
      * @throws VendiroException
      */
-    public function placeOrder($vendiroId)
+    public function placeOrder($storeCode)
     {
-        $orderId = false;
         $this->cart->collectTotals();
         $this->cartRepository->save($this->cart);
 
         try {
             $this->cart = $this->cartRepository->get($this->cart->getId());
+            $this->setCartCurrency($storeCode);
             $orderId = $this->cartManagement->placeOrder($this->cart->getId());
         } catch (LocalizedException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
@@ -214,5 +214,20 @@ class CartManager
         ];
 
         return $newAddress;
+    }
+
+    /**
+     * @param $storeCode
+     *
+     * @throws NoSuchEntityException
+     */
+    public function setCartCurrency($storeCode)
+    {
+        $store    = $this->storeManager->getStore($storeCode);
+        $currency = $store->getCurrentCurrency()->getCode();
+
+        $this->cart->setQuoteCurrencyCode($currency);
+        $this->cart->setStoreCurrencyCode($currency);
+        $this->cart->setBaseCurrencyCode($currency);
     }
 }
