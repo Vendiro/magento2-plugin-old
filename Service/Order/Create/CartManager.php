@@ -224,7 +224,7 @@ class CartManager
     public function setCartCurrency($storeCode)
     {
         $store    = $this->storeManager->getStore($storeCode);
-        $currency = $store->getCurrentCurrency()->getCode();
+        $currency = $store->getDefaultCurrencyCode();
 
         $this->cart->setQuoteCurrencyCode($currency);
         $this->cart->setStoreCurrencyCode($currency);
