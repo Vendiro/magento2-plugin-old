@@ -121,7 +121,7 @@ class Save
             $tracks = $shipment->getTracks();
         }
 
-        if (!$tracks) {
+        if (!$tracks && $subject instanceof \Magento\Sales\Api\Data\ShipmentInterface) {
             $tracks = $subject->getTracks();
         }
 
