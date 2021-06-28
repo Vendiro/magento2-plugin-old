@@ -100,6 +100,7 @@ class CartManager
     {
         try {
             $store = $this->storeManager->getStore($storeCode);
+            $this->storeManager->setCurrentStore($store->getId());
 
             $cartId = $this->cartManagement->createEmptyCart();
             $this->cart = $this->cartRepository->get($cartId);
@@ -114,7 +115,7 @@ class CartManager
         }
 
         $this->cart->setStoreId($store->getId());
-        $this->cart->setCurrency(); //Interface implement to set currency?
+        $this->cart->setCurrency();
         $this->cart->setCheckoutMethod(CartManagementInterface::METHOD_GUEST);
 
         return $this->cart;
