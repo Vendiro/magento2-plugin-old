@@ -109,6 +109,8 @@ class CartManager
         $this->cart->setStoreId($store->getId());
         $this->cart->setCurrency();
         $this->cart->setCheckoutMethod(CartManagementInterface::METHOD_GUEST);
+
+        return $this->cart;
     }
 
     /**
