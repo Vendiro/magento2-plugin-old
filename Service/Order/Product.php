@@ -79,27 +79,18 @@ class Product
 
     /**
      * @param $sku
-     * @param $store
+     * @param $storeId
      *
      * @return ProductInterface
      * @throws VendiroException
      */
-    public function getBySku($sku, $store = null)
+    public function getBySku($sku, $storeId = null)
     {
-        $product = $this->loadProduct($sku);
+        $product = $this->loadProduct($sku, $storeId);
 
         if (!$product->getId()) {
             $errorMessage = __(
                 "The order could not be imported. The requested product SKU " . $sku . " wasn't found."
-            );
-            throw new VendiroException($errorMessage);
-        }
-
-        $qty = $this->stockState->getStockQty($product->getId(), $store);
-
-        if ($qty <= 0) {
-            $errorMessage = __(
-                "The order could not be imported. The requested product SKU " . $sku . " is not in stock."
             );
             throw new VendiroException($errorMessage);
         }
@@ -109,14 +100,15 @@ class Product
 
     /**
      * @param $sku
+     * @param int|null $storeId
      *
      * @return ProductInterface
      * @throws VendiroException
      */
-    private function loadProduct($sku)
+    private function loadProduct($sku, $storeId = null)
     {
         try {
-            $product = $this->productRepository->get($sku);
+            $product = $this->productRepository->get($sku, false, $storeId);
         } catch (NoSuchEntityException $exception) {
             $this->logger->critical('Vendiro load product went wrong: ' . $exception->getMessage());
 
