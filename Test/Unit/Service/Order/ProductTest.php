@@ -83,11 +83,6 @@ class ProductTest extends TestCase
                 false,
                 15,
                 'The order could not be imported. The requested product SKU 123456 wasn\'t found.'
-            ],
-            'product not in stock' => [
-                987,
-                0,
-                'The order could not be imported. The requested product SKU 123456 is not in stock.'
             ]
         ];
     }
