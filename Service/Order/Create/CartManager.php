@@ -41,6 +41,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Service\Order\ApiStatusManager;
 use TIG\Vendiro\Exception as VendiroException;
+use Magento\CatalogInventory\Model\Quote\Item\QuantityValidator\QuoteItemQtyList;
 
 //@codingStandardsIgnoreFile
 class CartManager
@@ -63,25 +64,31 @@ class CartManager
     /** @var ApiStatusManager $apiStatusManager */
     private $apiStatusManager;
 
+    /** @var QuoteItemQtyList $quoteItemQtyList */
+    private $quoteItemQtyList;
+
     /**
      * @param StoreManagerInterface                       $storeManager
      * @param CartManagementInterface                     $cartManagement
      * @param CartRepositoryInterface                     $cartRepository
      * @param Log                                         $logger
      * @param ApiStatusManager                            $apiStatusManager
+     * @param QuoteItemQtyList $quoteItemQtyList
      */
     public function __construct(
         StoreManagerInterface $storeManager,
         CartManagementInterface $cartManagement,
         CartRepositoryInterface $cartRepository,
         Log $logger,
-        ApiStatusManager $apiStatusManager
+        ApiStatusManager $apiStatusManager,
+        QuoteItemQtyList $quoteItemQtyList
     ) {
         $this->storeManager = $storeManager;
         $this->cartManagement = $cartManagement;
         $this->cartRepository = $cartRepository;
         $this->logger = $logger;
         $this->apiStatusManager = $apiStatusManager;
+        $this->quoteItemQtyList = $quoteItemQtyList;
     }
 
     /**
@@ -93,6 +100,7 @@ class CartManager
     {
         try {
             $store = $this->storeManager->getStore($storeCode);
+            $this->storeManager->setCurrentStore($store->getId());
 
             $cartId = $this->cartManagement->createEmptyCart();
             $this->cart = $this->cartRepository->get($cartId);
@@ -109,11 +117,14 @@ class CartManager
         $this->cart->setStoreId($store->getId());
         $this->cart->setCurrency();
         $this->cart->setCheckoutMethod(CartManagementInterface::METHOD_GUEST);
+
+        return $this->cart;
     }
 
     /**
      * @param ProductInterface $product
      * @param $quantity
+     * @throws VendiroException
      */
     public function addProduct($product, $quantity)
     {
@@ -124,6 +135,7 @@ class CartManager
             $quoteItem->setNoDiscount(1);
         } catch (LocalizedException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
+            throw new VendiroException(__($exception->getMessage()));
         }
     }
 
@@ -179,10 +191,16 @@ class CartManager
      */
     public function placeOrder($storeCode)
     {
+        $orderId = false;
         $this->cart->collectTotals();
         $this->cartRepository->save($this->cart);
 
         try {
+            // Magento 2.3.7 fix for double quantity
+            // this check is because the method is removed in 2.4
+            if (method_exists($this->quoteItemQtyList, 'clear')) {
+                $this->quoteItemQtyList->clear();
+            }
             $this->cart = $this->cartRepository->get($this->cart->getId());
             $this->setCartCurrency($storeCode);
             $orderId = $this->cartManagement->placeOrder($this->cart->getId());
@@ -192,6 +210,21 @@ class CartManager
         }
 
         return $orderId;
+    }
+
+    /**
+     * @param $storeCode
+     *
+     * @throws NoSuchEntityException
+     */
+    public function setCartCurrency($storeCode)
+    {
+        $store    = $this->storeManager->getStore($storeCode);
+        $currency = $store->getCurrentCurrency()->getCode();
+
+        $this->cart->setQuoteCurrencyCode($currency);
+        $this->cart->setStoreCurrencyCode($currency);
+        $this->cart->setBaseCurrencyCode($currency);
     }
 
     /**
@@ -214,20 +247,5 @@ class CartManager
         ];
 
         return $newAddress;
-    }
-
-    /**
-     * @param $storeCode
-     *
-     * @throws NoSuchEntityException
-     */
-    public function setCartCurrency($storeCode)
-    {
-        $store    = $this->storeManager->getStore($storeCode);
-        $currency = $store->getDefaultCurrencyCode();
-
-        $this->cart->setQuoteCurrencyCode($currency);
-        $this->cart->setStoreCurrencyCode($currency);
-        $this->cart->setBaseCurrencyCode($currency);
     }
 }

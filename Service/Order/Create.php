@@ -85,10 +85,11 @@ class Create
     public function execute($vendiroOrder)
     {
         $storeCode = $vendiroOrder['marketplace']['reference'];
-        $this->cart->createCart($storeCode);
+        $createdCart = $this->cart->createCart($storeCode);
+        $storeId = $createdCart->getStoreId();
 
         foreach ($vendiroOrder['orderlines'] as $apiProduct) {
-            $this->addProducts($apiProduct, $storeCode);
+            $this->addProducts($apiProduct, $storeId);
         }
 
         $this->addAddresses($vendiroOrder['invoice_address'], $vendiroOrder['delivery_address']);
@@ -136,10 +137,10 @@ class Create
      *
      * @throws VendiroException
      */
-    private function addProducts($apiProduct, $storeCode = null)
+    private function addProducts($apiProduct, $storeId = null)
     {
         $quoteProductData = $this->product->createProductDataFromApiData($apiProduct);
-        $product = $this->product->getBySku($apiProduct['sku'], $storeCode);
+        $product = $this->product->getBySku($apiProduct['sku'], $storeId);
 
         $this->cart->addProduct($product, $quoteProductData);
     }
