@@ -45,7 +45,7 @@ if [ -z $MAGENTO_DB_NAME ]; then
     MAGENTO_DB_NAME="magento";
 fi
 
-CACHE_FILE="${CACHE_DIR}magento-${MAGENTO_VERSION}.tar.gz"
+CACHE_FILE="${CACHE_DIR}magento2-${MAGENTO_VERSION}.tar.gz"
 
 MYSQLPASS=""
 if [ ! -z $MAGENTO_DB_PASS ]; then MYSQLPASS="-p${MAGENTO_DB_PASS}"; fi
