@@ -20,7 +20,7 @@ env:
 matrix:
   include:
     - php: 7.3
-      env: MAGENTO_VERSION=2.3.6 # DI_COMPILE=true
+      env: MAGENTO_VERSION=2.3.6-p1 # DI_COMPILE=true
     - php: 7.4
       env: MAGENTO_VERSION=2.4.2 CODE_COVERAGE=true
 
