@@ -65,7 +65,7 @@ class DataTest extends TestCase
             ],
             'supported magento and php versions' => [
                 ['2', '3'],
-                ['7', '2'],
+                ['7', '3'],
                 ['+']
             ],
         ];

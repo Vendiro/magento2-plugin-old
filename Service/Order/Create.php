@@ -85,16 +85,16 @@ class Create
     public function execute($vendiroOrder)
     {
         $storeCode = $vendiroOrder['marketplace']['reference'];
-        $this->cart->createCart($storeCode);
+        $createdCart = $this->cart->createCart($storeCode);
+        $storeId = $createdCart->getStoreId();
 
         foreach ($vendiroOrder['orderlines'] as $apiProduct) {
-            $this->addProducts($apiProduct, $storeCode);
+            $this->addProducts($apiProduct, $storeId);
         }
 
         $this->addAddresses($vendiroOrder['invoice_address'], $vendiroOrder['delivery_address']);
         $shippingCost = $vendiroOrder['shipping_cost'] + $vendiroOrder['administration_cost'];
         $this->setMethods($shippingCost);
-
         $newOrderId = $this->prepareAndPlaceOrder($vendiroOrder);
 
         if ($newOrderId) {
@@ -123,7 +123,7 @@ class Create
             $this->coreSession->setFulfilmentByMarketplace(true);
         }
 
-        $newOrderId = $this->placeOrder($vendiroOrder['id']);
+        $newOrderId = $this->placeOrder($vendiroOrder['marketplace']['reference']);
 
         $this->coreSession->unsFulfilmentByMarketplace();
 
@@ -136,10 +136,10 @@ class Create
      *
      * @throws VendiroException
      */
-    private function addProducts($apiProduct, $storeCode = null)
+    private function addProducts($apiProduct, $storeId = null)
     {
         $quoteProductData = $this->product->createProductDataFromApiData($apiProduct);
-        $product = $this->product->getBySku($apiProduct['sku'], $storeCode);
+        $product = $this->product->getBySku($apiProduct['sku'], $storeId);
 
         $this->cart->addProduct($product, $quoteProductData);
     }
@@ -164,15 +164,17 @@ class Create
     }
 
     /**
+     * @param $storeCode
+     *
      * @return bool|int
      * @throws VendiroException
      */
-    private function placeOrder($vendiroId)
+    private function placeOrder($storeCode)
     {
         $newOrderId = false;
 
         try {
-            $newOrderId = $this->cart->placeOrder($vendiroId);
+            $newOrderId = $this->cart->placeOrder($storeCode);
         } catch (\Exception $exception) {
             throw new VendiroException(__($exception->getMessage()));
         }
