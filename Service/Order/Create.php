@@ -95,7 +95,6 @@ class Create
         $this->addAddresses($vendiroOrder['invoice_address'], $vendiroOrder['delivery_address']);
         $shippingCost = $vendiroOrder['shipping_cost'] + $vendiroOrder['administration_cost'];
         $this->setMethods($shippingCost);
-
         $newOrderId = $this->prepareAndPlaceOrder($vendiroOrder);
 
         if ($newOrderId) {
