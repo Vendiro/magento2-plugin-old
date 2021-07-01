@@ -172,19 +172,20 @@ class CartManager
     }
 
     /**
-     * @param $storeCode
+     * @param array $vendiroOrder
      *
      * @return int
      * @throws VendiroException
      */
-    public function placeOrder($storeCode)
+    public function placeOrder($vendiroOrder)
     {
         $this->cart->collectTotals();
         $this->cartRepository->save($this->cart);
 
         try {
             $this->cart = $this->cartRepository->get($this->cart->getId());
-            $this->setCartCurrency($storeCode);
+            $this->setCartCurrency($vendiroOrder['marketplace']['reference']);
+            $this->cart->setVendiroDiscount($vendiroOrder['discount']);
             $orderId = $this->cartManagement->placeOrder($this->cart->getId());
         } catch (LocalizedException $exception) {
             $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
