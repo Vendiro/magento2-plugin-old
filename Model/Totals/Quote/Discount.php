@@ -51,6 +51,9 @@ class Discount extends AbstractTotal
      */
     public function __construct(PriceCurrencyInterface $priceCurrency)
     {
+        /** Operations shouldn't be allowed in constructors, and thus the setCode() shouldn't be set here.
+         * However, Magento's Total classes work in a way that this is necessary, even Magento itself does this. */
+        //@codingStandardsIgnoreLine
         $this->setCode('vendirodiscount');
 
         $this->priceCurrency = $priceCurrency;
@@ -140,6 +143,7 @@ class Discount extends AbstractTotal
      *
      * @return array
      */
+    //@codingStandardsIgnoreLine
     public function fetch(Quote $quote, Total $total)
     {
         $result = null;

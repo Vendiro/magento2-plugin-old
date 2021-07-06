@@ -63,13 +63,14 @@ class OrderStatusManagerTest extends TestCase
     public function testCreateInvoice($canInvoice)
     {
         $orderId = rand(1, 100);
+        $vendiroDiscount['discount'] = rand(1, 100);
         $invokeExpects = ($canInvoice ? 1 : 0);
 
         $invoiceMock = $this->getFakeMock(Invoice::class)
             ->setMethods(['setRequestedCaptureCase', 'register', 'getOrder', 'save'])
             ->getMock();
         $orderMock = $this->getFakeMock(Order::class)
-            ->setMethods(['canInvoice', 'prepareInvoice', 'setIsInProcess'])
+            ->setMethods(['setVendiroDiscount', 'canInvoice', 'prepareInvoice', 'setIsInProcess'])
             ->getMock();
 
         $invoiceMock->method('setRequestedCaptureCase')->with(Invoice::CAPTURE_OFFLINE);
@@ -77,6 +78,7 @@ class OrderStatusManagerTest extends TestCase
         $invoiceMock->expects($this->exactly($invokeExpects))->method('getOrder')->willReturn($orderMock);
         $invoiceMock->expects($this->exactly($invokeExpects))->method('save');
 
+        $orderMock->expects($this->once())->method('setVendiroDiscount')->willReturn($vendiroDiscount['discount']);
         $orderMock->expects($this->once())->method('canInvoice')->willReturn($canInvoice);
         $orderMock->expects($this->exactly($invokeExpects))->method('prepareInvoice')->willReturn($invoiceMock);
         $orderMock->expects($this->exactly($invokeExpects))->method('setIsInProcess')->with(true);
@@ -94,6 +96,6 @@ class OrderStatusManagerTest extends TestCase
         $orderRepositoryMock->expects($this->once())->method('get')->with($orderId)->willReturn($orderMock);
 
         $instance = $this->getInstance(['orderRepository' => $orderRepositoryMock, 'transaction' => $transactionMock]);
-        $instance->createInvoice($orderId);
+        $instance->createInvoice($orderId, $vendiroDiscount);
     }
 }
