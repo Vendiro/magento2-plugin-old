@@ -126,9 +126,10 @@ class OrderStatusManager
     }
 
     /**
-     * @param int $orderId
+     * @param int   $orderId
+     * @param array $vendiroOrder
      */
-    public function createInvoice($orderId)
+    public function createInvoice($orderId, $vendiroOrder)
     {
         /** @var OrderInterface|Order $order */
         $order = $this->orderRepository->get($orderId);
@@ -137,6 +138,7 @@ class OrderStatusManager
             return;
         }
 
+        $order->setVendiroDiscount($vendiroOrder['discount']);
         $this->registerInvoiceAndTransaction($order);
     }
 

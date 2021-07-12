@@ -77,7 +77,7 @@ class Create
     }
 
     /**
-     * @param $vendiroOrder
+     * @param array $vendiroOrder
      *
      * @return int|string
      * @throws VendiroException
@@ -98,7 +98,7 @@ class Create
         $newOrderId = $this->prepareAndPlaceOrder($vendiroOrder);
 
         if ($newOrderId) {
-            $this->orderStatusManager->createInvoice($newOrderId);
+            $this->orderStatusManager->createInvoice($newOrderId, $vendiroOrder);
             $this->updateOrderCommentAndStatus($newOrderId, $vendiroOrder);
 
             return $this->orderStatusManager->getIncrementId($newOrderId);
@@ -106,7 +106,7 @@ class Create
     }
 
     /**
-     * @param $vendiroOrder
+     * @param array $vendiroOrder
      *
      * @return bool|int
      * @throws \TIG\Vendiro\Exception
@@ -123,7 +123,7 @@ class Create
             $this->coreSession->setFulfilmentByMarketplace(true);
         }
 
-        $newOrderId = $this->placeOrder($vendiroOrder['marketplace']['reference']);
+        $newOrderId = $this->placeOrder($vendiroOrder);
 
         $this->coreSession->unsFulfilmentByMarketplace();
 
@@ -164,17 +164,17 @@ class Create
     }
 
     /**
-     * @param $storeCode
+     * @param array $vendiroOrder
      *
      * @return bool|int
      * @throws VendiroException
      */
-    private function placeOrder($storeCode)
+    private function placeOrder($vendiroOrder)
     {
         $newOrderId = false;
 
         try {
-            $newOrderId = $this->cart->placeOrder($storeCode);
+            $newOrderId = $this->cart->placeOrder($vendiroOrder);
         } catch (\Exception $exception) {
             throw new VendiroException(__($exception->getMessage()));
         }
