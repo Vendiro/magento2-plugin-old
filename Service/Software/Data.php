@@ -39,7 +39,7 @@ class Data
     const MODULE_CODE = 'TIG_Vendiro';
 
     /** Version of Module */
-    const VENDIRO_VERSION = '1.3.0';
+    const VENDIRO_VERSION = '1.3.1';
 
     /** @var array */
     private $phpVersionSupport = [
