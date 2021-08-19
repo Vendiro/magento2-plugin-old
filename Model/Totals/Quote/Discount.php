@@ -77,7 +77,7 @@ class Discount extends AbstractTotal
         }
 
         $baseDiscount = $this->getBaseDiscount($quote, $total);
-        $this->applyDiscount($baseDiscount, $total);
+        $this->applyDiscount($baseDiscount, $quote, $total);
 
         $label = $total->getDiscountDescription() ? $total->getDiscountDescription() . ', ' : '';
         $total->setDiscountDescription($label . self::VENDIRO_DISCOUNT_LABEL);
@@ -122,11 +122,25 @@ class Discount extends AbstractTotal
 
     /**
      * @param int|float $baseDiscount
+     * @param Quote     $quote
      * @param Total     $total
      */
-    private function applyDiscount($baseDiscount, $total)
+    private function applyDiscount($baseDiscount, $quote, $total)
     {
         $discount =  $this->priceCurrency->convert($baseDiscount);
+
+        $items = $quote->getItems();
+
+        foreach ($items as $item) {
+            if ($item->getPrice() < 0) {
+                continue;
+            }
+
+            $item->setDiscountAmount(-$discount);
+            $item->setBaseDiscountAmount(-$baseDiscount);
+            $item->setOriginalDiscountAmount(-$discount);
+            $item->setBaseOriginalDiscountAmount(-$baseDiscount);
+        }
 
         $total->setDiscountAmount($discount);
         $total->setBaseDiscountAmount($baseDiscount);

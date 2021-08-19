@@ -32,17 +32,17 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Sales:etc/sales.xsd">
     <section name="quote">
         <group name="totals">
-            <item name="vendirodiscount" instance="TIG\Vendiro\Model\Totals\Quote\Discount" sort_order="500"/>
+            <item name="vendirodiscount" instance="TIG\Vendiro\Model\Totals\Quote\Discount" sort_order="310"/>
         </group>
     </section>
     <section name="order_invoice">
         <group name="totals">
-            <item name="vendirodiscount" instance="TIG\Vendiro\Model\Totals\Invoice\Discount" sort_order="200"/>
+            <item name="vendirodiscount" instance="TIG\Vendiro\Model\Totals\Invoice\Discount" sort_order="110"/>
         </group>
     </section>
     <section name="order_creditmemo">
         <group name="totals">
-            <item name="vendirodiscount" instance="TIG\Vendiro\Model\Totals\Creditmemo\Discount" sort_order="250"/>
+            <item name="vendirodiscount" instance="TIG\Vendiro\Model\Totals\Creditmemo\Discount" sort_order="160"/>
         </group>
     </section>
 </config>
