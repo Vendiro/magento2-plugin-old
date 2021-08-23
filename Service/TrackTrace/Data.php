@@ -154,6 +154,7 @@ class Data
     {
         $trackCollection = $this->collectionFactory->create();
         $trackId = $trackQueueItem->getTrackId();
+        $trackCollection->addFieldToFilter('entity_id', $trackId);
         $track = $trackCollection->getItemById($trackId);
 
         return $track;
