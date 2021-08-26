@@ -130,18 +130,18 @@ class Discount extends AbstractTotal
         $discount =  $this->priceCurrency->convert($baseDiscount);
         $items = $quote->getItems();
 
+        // @codingStandardsIgnoreStart
         foreach ($items as $item) {
-            // @codingStandardsIgnoreStart
             if ($item->getPrice() < 0) {
                 continue;
             }
-            // @codingStandardsIgnoreEnd
 
             $item->setDiscountAmount(-$discount);
             $item->setBaseDiscountAmount(-$baseDiscount);
             $item->setOriginalDiscountAmount(-$discount);
             $item->setBaseOriginalDiscountAmount(-$baseDiscount);
         }
+        // @codingStandardsIgnoreEnd
 
         $total->setDiscountAmount($discount);
         $total->setBaseDiscountAmount($baseDiscount);
