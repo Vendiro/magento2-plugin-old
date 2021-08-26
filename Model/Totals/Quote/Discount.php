@@ -128,13 +128,14 @@ class Discount extends AbstractTotal
     private function applyDiscount($baseDiscount, $quote, $total)
     {
         $discount =  $this->priceCurrency->convert($baseDiscount);
-
         $items = $quote->getItems();
 
         foreach ($items as $item) {
+            // @codingStandardsIgnoreStart
             if ($item->getPrice() < 0) {
                 continue;
             }
+            // @codingStandardsIgnoreEnd
 
             $item->setDiscountAmount(-$discount);
             $item->setBaseDiscountAmount(-$baseDiscount);
@@ -144,10 +145,8 @@ class Discount extends AbstractTotal
 
         $total->setDiscountAmount($discount);
         $total->setBaseDiscountAmount($baseDiscount);
-
         $total->setSubtotalWithDiscount($total->getSubtotal() + $discount);
         $total->setBaseSubtotalWithDiscount($total->getBaseSubtotal() + $baseDiscount);
-
         $total->addTotalAmount($this->getCode(), $discount);
         $total->addBaseTotalAmount($this->getCode(), $baseDiscount);
     }
