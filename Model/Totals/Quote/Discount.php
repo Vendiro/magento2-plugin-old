@@ -125,12 +125,13 @@ class Discount extends AbstractTotal
      * @param Quote     $quote
      * @param Total     $total
      */
+    // @codingStandardsIgnoreStart
     private function applyDiscount($baseDiscount, $quote, $total)
     {
         $discount =  $this->priceCurrency->convert($baseDiscount);
+
         $items = $quote->getItems();
 
-        // @codingStandardsIgnoreStart
         foreach ($items as $item) {
             if ($item->getPrice() < 0) {
                 continue;
@@ -141,15 +142,17 @@ class Discount extends AbstractTotal
             $item->setOriginalDiscountAmount(-$discount);
             $item->setBaseOriginalDiscountAmount(-$baseDiscount);
         }
-        // @codingStandardsIgnoreEnd
 
         $total->setDiscountAmount($discount);
         $total->setBaseDiscountAmount($baseDiscount);
+
         $total->setSubtotalWithDiscount($total->getSubtotal() + $discount);
         $total->setBaseSubtotalWithDiscount($total->getBaseSubtotal() + $baseDiscount);
+
         $total->addTotalAmount($this->getCode(), $discount);
         $total->addBaseTotalAmount($this->getCode(), $baseDiscount);
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * @param Quote $quote
