@@ -152,8 +152,9 @@ class Data
      */
     public function getTrack($trackQueueItem)
     {
-        $trackCollection = $this->collectionFactory->create();
         $trackId = $trackQueueItem->getTrackId();
+        $trackCollection = $this->collectionFactory->create();
+        $trackCollection->addFieldToFilter('entity_id', $trackId);
         $track = $trackCollection->getItemById($trackId);
 
         return $track;
