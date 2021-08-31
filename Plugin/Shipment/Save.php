@@ -60,6 +60,8 @@ class Save
     /**
      * @param      $subject
      * @param null $shipment
+     *
+     * @return mixed
      */
     public function beforeSave($subject, $shipment = null)
     {
@@ -69,11 +71,11 @@ class Save
 
         $order = $shipment->getOrder();
 
-        if ($order->getShippingMethod() != 'tig_vendiro_shipping') {
-            return;
+        if ($order->getShippingMethod() === 'tig_vendiro_shipping') {
+            $this->saveVendiroCarrier($shipment);
         }
 
-        $this->saveVendiroCarrier($shipment);
+        return null;
     }
 
     /**
@@ -89,6 +91,7 @@ class Save
      * @param      $subject
      * @param null $shipment
      *
+     * @return null
      * @throws \Exception
      */
     public function afterSave($subject, $shipment = null)
@@ -96,15 +99,15 @@ class Save
         $order = $shipment->getOrder();
         $shippingMethod = $order->getShippingMethod();
 
-        if ($shippingMethod !== 'tig_vendiro_shipping') {
-            return;
+        if ($shippingMethod === 'tig_vendiro_shipping') {
+            $tracks = $this->getTracks($subject, $shipment);
+
+            foreach ($tracks as $track) {
+                $this->saveTrack($track);
+            }
         }
 
-        $tracks = $this->getTracks($subject, $shipment);
-
-        foreach ($tracks as $track) {
-            $this->saveTrack($track);
-        }
+        return $shipment;
     }
 
     /**
