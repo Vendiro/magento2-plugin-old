@@ -101,13 +101,22 @@ class Save
 
         if ($shippingMethod === 'tig_vendiro_shipping') {
             $tracks = $this->getTracks($subject, $shipment);
-
-            foreach ($tracks as $track) {
-                $this->saveTrack($track);
-            }
+            $this->saveTracks($tracks);
         }
 
         return $shipment;
+    }
+
+    /**
+     * @param $tracks
+     *
+     * @throws \Exception
+     */
+    public function saveTracks($tracks)
+    {
+        foreach ($tracks as $track) {
+            $this->saveTrack($track);
+        }
     }
 
     /**
