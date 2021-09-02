@@ -39,6 +39,8 @@ use TIG\Vendiro\Model\TrackQueueRepository;
 
 class Save
 {
+    const VENDIRO_SHIPPING_METHOD = 'tig_vendiro_shipping';
+
     /** @var TrackQueueRepository $trackQueueRepository */
     private $trackQueueRepository;
 
@@ -71,7 +73,7 @@ class Save
 
         $order = $shipment->getOrder();
 
-        if ($order->getShippingMethod() === 'tig_vendiro_shipping') {
+        if ($order->getShippingMethod() === self::VENDIRO_SHIPPING_METHOD) {
             $this->saveVendiroCarrier($shipment);
         }
 
@@ -99,7 +101,7 @@ class Save
         $order = $shipment->getOrder();
         $shippingMethod = $order->getShippingMethod();
 
-        if ($shippingMethod === 'tig_vendiro_shipping') {
+        if ($shippingMethod === self::VENDIRO_SHIPPING_METHOD) {
             $tracks = $this->getTracks($subject, $shipment);
             $this->saveTracks($tracks);
         }
