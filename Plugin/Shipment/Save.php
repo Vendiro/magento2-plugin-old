@@ -133,7 +133,7 @@ class Save
             $tracks = $shipment->getTracks();
         }
 
-        if (!$tracks) {
+        if (!$tracks && $subject instanceof ShipmentInterface) {
             $tracks = $subject->getTracks();
         }
 
