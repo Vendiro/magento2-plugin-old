@@ -112,12 +112,18 @@ class Data
      * @param $trackQueueItem
      *
      * @return array
+     *
+     * @throws VendiroException
      */
     public function getTracks($trackQueueItem)
     {
         $data = [];
 
         $track = $this->getTrack($trackQueueItem);
+
+        if (is_null($track)) {
+            throw new VendiroException(__('Sales Shipment Track not found'));
+        }
 
         $shipmentCode = $track->getTrackNumber();
         $incrementId = $this->getIncrementId($trackQueueItem);
@@ -196,6 +202,8 @@ class Data
         $data = $this->getTracks($trackQueueItem);
 
         try {
+            $data = $this->getTracks($trackQueueItem);
+
             $this->confirmShipmentCall(
                 $data['order_ref'],
                 $data['carrier_id'],
