@@ -204,9 +204,9 @@ class Data
             );
             $this->saveTrackItem($trackQueueItem);
         } catch (CouldNotSaveException $exception) {
-            $this->logger->addNotice('Could not confirm Vendiro shipment');
+            $this->logger->addNotice('Could not confirm Vendiro shipment', $trackQueueItem->getData());
         } catch (VendiroException $exception) {
-            $this->logger->notice($exception->getMessage());
+            $this->logger->notice($exception->getMessage(), $trackQueueItem->getData());
         }
     }
 
