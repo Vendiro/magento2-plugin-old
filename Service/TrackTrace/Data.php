@@ -199,9 +199,7 @@ class Data
      */
     public function shipmentCall($trackQueueItem)
     {
-        $data = $this->getTracks($trackQueueItem);
-
-        try {
+         try {
             $data = $this->getTracks($trackQueueItem);
 
             $this->confirmShipmentCall(
