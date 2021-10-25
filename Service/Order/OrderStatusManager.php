@@ -159,7 +159,6 @@ class OrderStatusManager
             $invoice->register();
             $order->setIsInProcess(true);
             $invoice->save();
-
             $transaction = $this->transaction->addObject($invoice);
             $transaction->addObject($invoice->getOrder());
             $transaction->save();
