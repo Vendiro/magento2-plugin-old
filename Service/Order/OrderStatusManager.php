@@ -91,8 +91,9 @@ class OrderStatusManager
         try {
             $this->historyRepository->save($orderHistoryComment);
         } catch (CouldNotSaveException $exception) {
-            $this->logger->critical('Vendiro add history comment went wrong: ' . $exception->getMessage(),
-                ['orderId' => $orderId]);
+            $this->logger->critical('Vendiro add history comment went wrong: ' .
+                        $exception->getMessage(), ['orderId' => $orderId]
+            );
         }
     }
 
