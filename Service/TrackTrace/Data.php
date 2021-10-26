@@ -209,11 +209,11 @@ class Data
                  $data['carrier_name']
              );
             $this->saveTrackItem($trackQueueItem);
-         } catch (CouldNotSaveException $exception) {
-            $this->logger->addNotice('Could not confirm Vendiro shipment');
-         } catch (VendiroException $exception) {
-            $this->logger->notice($exception->getMessage());
-         }
+        } catch (CouldNotSaveException $exception) {
+            $this->logger->addNotice('Could not confirm Vendiro shipment', $trackQueueItem->getData());
+        } catch (VendiroException $exception) {
+            $this->logger->notice($exception->getMessage(), $trackQueueItem->getData());
+        }
     }
 
     /**

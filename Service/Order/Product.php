@@ -110,7 +110,7 @@ class Product
         try {
             $product = $this->productRepository->get($sku, false, $storeId);
         } catch (NoSuchEntityException $exception) {
-            $this->logger->critical('Vendiro load product went wrong: ' . $exception->getMessage());
+            $this->logger->critical('Vendiro load product went wrong: ' . $exception->getMessage(), ['sku' => $sku]);
 
             $errorMessage = __(
                 "The order could not be imported. The requested product SKU " . $sku . " wasn't found."
