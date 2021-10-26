@@ -40,7 +40,6 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Invoice;
 use TIG\Vendiro\Logging\Log;
 use TIG\Vendiro\Model\Order\Status\HistoryRepository;
-use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 
 class OrderStatusManager
 {
@@ -56,9 +55,6 @@ class OrderStatusManager
     /** @var Log */
     private $logger;
 
-    /** @var InvoiceSender */
-    private $invoiceSender;
-
     /**
      * @param OrderRepositoryInterface $orderRepository
      * @param HistoryRepository        $historyRepository
@@ -69,14 +65,12 @@ class OrderStatusManager
         OrderRepositoryInterface $orderRepository,
         HistoryRepository $historyRepository,
         Transaction $transaction,
-        Log $logger,
-        InvoiceSender $invoiceSender
+        Log $logger
     ) {
         $this->orderRepository = $orderRepository;
         $this->historyRepository = $historyRepository;
         $this->transaction = $transaction;
         $this->logger = $logger;
-        $this->invoiceSender = $invoiceSender;
     }
 
     /**
@@ -109,7 +103,6 @@ class OrderStatusManager
     public function getIncrementId($orderId)
     {
         $order = $this->orderRepository->get($orderId);
-
         return $order->getIncrementId();
     }
 
@@ -162,8 +155,6 @@ class OrderStatusManager
             $transaction = $this->transaction->addObject($invoice);
             $transaction->addObject($invoice->getOrder());
             $transaction->save();
-
-            $this->invoiceSender->send($invoice);
 
         } catch (LocalizedException $exception) {
             $message = 'Could not create an invoice for order #' . $order->getId() . ': ' . $exception->getMessage();
