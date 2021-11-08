@@ -107,7 +107,9 @@ class CartManager
         } catch (NoSuchEntityException $exception) {
             $this->logger->critical('Vendiro import create cart went wrong: ' . $exception->getMessage(), ['storeCode' => $storeCode]);
 
-            $errorMessage = __("The order could not be exported. The store that was requested wasn't found.");
+            $errorMessage = __(
+                "The store that was requested wasn't found. [StoreCode: " . $storeCode . "]"
+            );
             throw new \TIG\Vendiro\Exception($errorMessage);
         } catch (LocalizedException $exception) {
             $this->logger->critical('Vendiro import create cart went wrong: ' . $exception->getMessage(), ['storeCode' => $storeCode]);
@@ -135,7 +137,12 @@ class CartManager
             $quoteItem->setNoDiscount(1);
         } catch (LocalizedException $exception) {
             $this->logger->critical('Vendiro import add product went wrong: ' . $exception->getMessage(), ['sku' => $product->getSku()]);
-            throw new VendiroException(__($exception->getMessage()));
+
+            $errorMessage = __(
+                $exception->getMessage() . "  [SKU: " . $product->getSku() . "]"
+            );
+
+            throw new VendiroException(__($errorMessage));
         }
     }
 

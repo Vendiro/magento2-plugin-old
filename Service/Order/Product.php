@@ -90,7 +90,7 @@ class Product
 
         if (!$product->getId()) {
             $errorMessage = __(
-                "The order could not be imported. The requested product SKU " . $sku . " wasn't found."
+                "The order could not be imported. The requested product wasn't found. [SKU: " . $sku . "]"
             );
             throw new VendiroException($errorMessage);
         }
@@ -113,7 +113,7 @@ class Product
             $this->logger->critical('Vendiro load product went wrong: ' . $exception->getMessage(), ['sku' => $sku]);
 
             $errorMessage = __(
-                "The order could not be imported. The requested product SKU " . $sku . " wasn't found."
+                "The order could not be imported. The requested product wasn't found. [SKU: " . $sku . "]"
             );
             throw new VendiroException($errorMessage);
         }
