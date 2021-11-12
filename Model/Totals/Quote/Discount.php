@@ -36,15 +36,24 @@ use Magento\Quote\Api\Data\ShippingAssignmentInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\Total;
 use Magento\Quote\Model\Quote\Address\Total\AbstractTotal;
+use Magento\SalesRule\Model\DeltaPriceRound;
+use Magento\SalesRule\Model\Validator;
 
 class Discount extends AbstractTotal
 {
     const VENDIRO_DISCOUNT_LABEL = 'Vendiro';
+    const DELTA_ROUND_TYPE = 'vendiro';
+    const DELTA_ROUND_BASE_TYPE = 'vendiro_base';
 
     /**
      * @var PriceCurrencyInterface
      */
     private $priceCurrency;
+
+    /**
+     * @var DeltaPriceRound
+     */
+    private $deltaPriceRound;
 
     /**
      * @param PriceCurrencyInterface $priceCurrency
@@ -53,11 +62,15 @@ class Discount extends AbstractTotal
      * However, Magento's Total classes work in a way that this is necessary, even Magento itself does this.
      */
     //@codingStandardsIgnoreLine
-    public function __construct(PriceCurrencyInterface $priceCurrency)
+    public function __construct(
+        PriceCurrencyInterface $priceCurrency,
+        DeltaPriceRound $deltaPriceRound
+    )
     {
         $this->setCode('vendirodiscount');
 
         $this->priceCurrency = $priceCurrency;
+        $this->deltaPriceRound = $deltaPriceRound;
     }
 
     /**
@@ -70,6 +83,11 @@ class Discount extends AbstractTotal
     public function collect(Quote $quote, ShippingAssignmentInterface $shippingAssignment, Total $total)
     {
         parent::collect($quote, $shippingAssignment, $total);
+
+        $items = $quote->getAllVisibleItems();
+        if (!$items || count($items) === 0) {
+            return $this;
+        }
 
         // there's no need to keep going if no discount has been set
         if ($this->hasNoVendiroDiscount($quote)) {
@@ -87,18 +105,6 @@ class Discount extends AbstractTotal
 
     /**
      * @param Quote $quote
-     *
-     * @return bool
-     */
-    private function hasNoVendiroDiscount($quote)
-    {
-        $baseDiscount = $quote->getVendiroDiscount();
-
-        return ($baseDiscount === null || $baseDiscount == 0);
-    }
-
-    /**
-     * @param Quote $quote
      * @param Total $total
      *
      * @return float|int
@@ -112,12 +118,61 @@ class Discount extends AbstractTotal
             $baseDiscount = $baseDiscount * -1;
         }
 
-        // A discount might already exist, which we don't want to discard
-        if ($total->getDiscountDescription()) {
-            $baseDiscount = $total->getDiscountAmount() + $baseDiscount;
-        }
+        return $baseDiscount + $total->getBaseDiscountAmount();
+    }
 
-        return $baseDiscount;
+    /**
+     * @param Quote $quote
+     *
+     * @return bool
+     */
+    private function hasNoVendiroDiscount($quote)
+    {
+        $baseDiscount = $quote->getVendiroDiscount();
+
+        return ($baseDiscount === null || $baseDiscount == 0);
+    }
+
+
+    /**
+     * Return item base price
+     *
+     * @see Validator::getItemBasePrice()
+     * @param Quote\Item\AbstractItem $item
+     * @return float
+     */
+    public function getItemPrice($item)
+    {
+        $price = $item->getDiscountCalculationPrice();
+        return $price !== null ? $item->getDiscountCalculationPrice() : $item->getCalculationPrice();
+    }
+
+    /**
+     * Return discount item qty
+     *
+     * @see Validator::getItemQty
+     * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
+     * @return int
+     */
+    public function getItemQty($item)
+    {
+        return $item->getTotalQty();
+    }
+
+    /**
+     * @param $items
+     *
+     * @return float|int
+     */
+    protected function getTotalPrice($items) {
+        $totalAmount = 0;
+        foreach ($items as $item) {
+            $itemPrice = $this->getItemPrice($item);
+            $itemQty = $this->getItemQty($item);
+
+            $totalAmount += $itemPrice * $itemQty;
+        }
+        return $totalAmount;
     }
 
     /**
@@ -130,18 +185,23 @@ class Discount extends AbstractTotal
     {
         $discount =  $this->priceCurrency->convert($baseDiscount);
 
-        $items = $quote->getItems();
-
-        foreach ($items as $item) {
-            if ($item->getPrice() < 0) {
-                continue;
-            }
-
-            $item->setDiscountAmount(-$discount);
-            $item->setBaseDiscountAmount(-$baseDiscount);
-            $item->setOriginalDiscountAmount(-$discount);
-            $item->setBaseOriginalDiscountAmount(-$baseDiscount);
+        // Visible items are the items shown in cart, we apply our discount on those "total" rows
+        $items = $quote->getAllVisibleItems();
+        if (!$items || count($items) === 0) {
+            return;
         }
+
+        $totalPrice = $this->getTotalPrice($items);
+        foreach ($items as $item) {
+            $itemPrice = $this->getItemPrice($item);
+            $itemQty = $this->getItemQty($item);
+
+            $ratio = $itemPrice * $itemQty / $totalPrice;
+
+            $item->setDiscountAmount(-$this->deltaPriceRound->round($discount * $ratio, self::DELTA_ROUND_TYPE));
+            $item->setBaseDiscountAmount(-$this->deltaPriceRound->round($baseDiscount * $ratio, self::DELTA_ROUND_BASE_TYPE));
+        }
+
 
         $total->setDiscountAmount($discount);
         $total->setBaseDiscountAmount($baseDiscount);
@@ -164,7 +224,7 @@ class Discount extends AbstractTotal
     public function fetch(Quote $quote, Total $total)
     {
         $result = null;
-        $amount = $total->getDiscountAmount();
+        $amount = $total->getTotalAmount($this->getCode());
 
         if ($amount != 0) {
             $description = $total->getDiscountDescription();
