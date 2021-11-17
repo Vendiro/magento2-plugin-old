@@ -139,10 +139,10 @@ class CartManager
             $this->logger->critical('Vendiro import add product went wrong: ' . $exception->getMessage(), ['sku' => $product->getSku()]);
 
             $errorMessage = __(
-                $exception->getMessage() . "  [SKU: " . $product->getSku() . "]"
+                $exception->getMessage() . "  [SKU: %1]", $product->getSku()
             );
 
-            throw new VendiroException(__($errorMessage));
+            throw new VendiroException($errorMessage);
         }
     }
 
