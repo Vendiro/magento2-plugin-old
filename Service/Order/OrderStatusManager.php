@@ -91,7 +91,8 @@ class OrderStatusManager
         try {
             $this->historyRepository->save($orderHistoryComment);
         } catch (CouldNotSaveException $exception) {
-            $this->logger->critical('Vendiro add history comment went wrong: ' . $exception->getMessage());
+            $this->logger->critical('Vendiro add history comment went wrong: ' .
+                        $exception->getMessage(), ['orderId' => $orderId]);
         }
     }
 
@@ -103,7 +104,6 @@ class OrderStatusManager
     public function getIncrementId($orderId)
     {
         $order = $this->orderRepository->get($orderId);
-
         return $order->getIncrementId();
     }
 
@@ -126,9 +126,10 @@ class OrderStatusManager
     }
 
     /**
-     * @param int $orderId
+     * @param int   $orderId
+     * @param array $vendiroOrder
      */
-    public function createInvoice($orderId)
+    public function createInvoice($orderId, $vendiroOrder)
     {
         /** @var OrderInterface|Order $order */
         $order = $this->orderRepository->get($orderId);
@@ -137,6 +138,7 @@ class OrderStatusManager
             return;
         }
 
+        $order->setVendiroDiscount($vendiroOrder['discount']);
         $this->registerInvoiceAndTransaction($order);
     }
 
@@ -151,10 +153,10 @@ class OrderStatusManager
             $invoice->register();
             $order->setIsInProcess(true);
             $invoice->save();
-
             $transaction = $this->transaction->addObject($invoice);
             $transaction->addObject($invoice->getOrder());
             $transaction->save();
+
         } catch (LocalizedException $exception) {
             $message = 'Could not create an invoice for order #' . $order->getId() . ': ' . $exception->getMessage();
             $this->logger->critical($message);

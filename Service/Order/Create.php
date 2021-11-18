@@ -77,7 +77,7 @@ class Create
     }
 
     /**
-     * @param $vendiroOrder
+     * @param array $vendiroOrder
      *
      * @return int|string
      * @throws VendiroException
@@ -98,7 +98,7 @@ class Create
         $newOrderId = $this->prepareAndPlaceOrder($vendiroOrder);
 
         if ($newOrderId) {
-            $this->orderStatusManager->createInvoice($newOrderId);
+            $this->orderStatusManager->createInvoice($newOrderId, $vendiroOrder);
             $this->updateOrderCommentAndStatus($newOrderId, $vendiroOrder);
 
             return $this->orderStatusManager->getIncrementId($newOrderId);
@@ -106,7 +106,7 @@ class Create
     }
 
     /**
-     * @param $vendiroOrder
+     * @param array $vendiroOrder
      *
      * @return bool|int
      * @throws \TIG\Vendiro\Exception
@@ -123,9 +123,15 @@ class Create
             $this->coreSession->setFulfilmentByMarketplace(true);
         }
 
-        $newOrderId = $this->placeOrder($vendiroOrder['marketplace']['reference']);
-
-        $this->coreSession->unsFulfilmentByMarketplace();
+        try {
+            $newOrderId = $this->placeOrder($vendiroOrder);
+        } catch (\Exception $e) {
+            $this->logger->debug('prepareAndPlaceOrder went wrong for ' . $vendiroOrder['marketplace_order_id']);
+            $exceptionMessage = __($e->getMessage() . ' [Ref: %1]', $vendiroOrder['marketplace_order_id']);
+            throw new VendiroException($exceptionMessage);
+        } finally {
+            $this->coreSession->unsFulfilmentByMarketplace();
+        }
 
         return $newOrderId;
     }
@@ -164,17 +170,17 @@ class Create
     }
 
     /**
-     * @param $storeCode
+     * @param array $vendiroOrder
      *
      * @return bool|int
      * @throws VendiroException
      */
-    private function placeOrder($storeCode)
+    private function placeOrder($vendiroOrder)
     {
         $newOrderId = false;
 
         try {
-            $newOrderId = $this->cart->placeOrder($storeCode);
+            $newOrderId = $this->cart->placeOrder($vendiroOrder);
         } catch (\Exception $exception) {
             throw new VendiroException(__($exception->getMessage()));
         }

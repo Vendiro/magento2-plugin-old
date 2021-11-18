@@ -39,6 +39,8 @@ use TIG\Vendiro\Model\TrackQueueRepository;
 
 class Save
 {
+    const VENDIRO_SHIPPING_METHOD = 'tig_vendiro_shipping';
+
     /** @var TrackQueueRepository $trackQueueRepository */
     private $trackQueueRepository;
 
@@ -60,6 +62,8 @@ class Save
     /**
      * @param      $subject
      * @param null $shipment
+     *
+     * @return mixed
      */
     public function beforeSave($subject, $shipment = null)
     {
@@ -69,11 +73,11 @@ class Save
 
         $order = $shipment->getOrder();
 
-        if ($order->getShippingMethod() != 'tig_vendiro_shipping') {
-            return;
+        if ($order->getShippingMethod() === self::VENDIRO_SHIPPING_METHOD) {
+            $this->saveVendiroCarrier($shipment);
         }
 
-        $this->saveVendiroCarrier($shipment);
+        return [$shipment];
     }
 
     /**
@@ -89,6 +93,7 @@ class Save
      * @param      $subject
      * @param null $shipment
      *
+     * @return null
      * @throws \Exception
      */
     public function afterSave($subject, $shipment = null)
@@ -96,12 +101,21 @@ class Save
         $order = $shipment->getOrder();
         $shippingMethod = $order->getShippingMethod();
 
-        if ($shippingMethod !== 'tig_vendiro_shipping') {
-            return;
+        if ($shippingMethod === self::VENDIRO_SHIPPING_METHOD) {
+            $tracks = $this->getTracks($subject, $shipment);
+            $this->saveTracks($tracks);
         }
 
-        $tracks = $this->getTracks($subject, $shipment);
+        return $shipment;
+    }
 
+    /**
+     * @param $tracks
+     *
+     * @throws \Exception
+     */
+    public function saveTracks($tracks)
+    {
         foreach ($tracks as $track) {
             $this->saveTrack($track);
         }
@@ -121,7 +135,7 @@ class Save
             $tracks = $shipment->getTracks();
         }
 
-        if (!$tracks) {
+        if (!$tracks && $subject instanceof ShipmentInterface) {
             $tracks = $subject->getTracks();
         }
 
