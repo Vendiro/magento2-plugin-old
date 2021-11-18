@@ -133,28 +133,31 @@ class Discount extends AbstractTotal
         return ($baseDiscount === null || $baseDiscount == 0);
     }
 
-
     /**
      * Return item base price
+     *
+     * This is a copy of the CartPriceRule calculation
      *
      * @see Validator::getItemBasePrice()
      * @param Quote\Item\AbstractItem $item
      * @return float
      */
-    public function getItemPrice($item)
+    private function getItemPrice($item)
     {
         $price = $item->getDiscountCalculationPrice();
-        return $price !== null ? $item->getDiscountCalculationPrice() : $item->getCalculationPrice();
+        return $price !== null ? $price : $item->getCalculationPrice();
     }
 
     /**
      * Return discount item qty
      *
+     * This is a copy of the CartPriceRule calculation
+     *
      * @see Validator::getItemQty
      * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
      * @return int
      */
-    public function getItemQty($item)
+    private function getItemQty($item)
     {
         return $item->getTotalQty();
     }
@@ -164,7 +167,7 @@ class Discount extends AbstractTotal
      *
      * @return float|int
      */
-    protected function getTotalPrice($items) {
+    private function getTotalPrice($items) {
         $totalAmount = 0;
         foreach ($items as $item) {
             $itemPrice = $this->getItemPrice($item);
