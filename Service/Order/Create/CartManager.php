@@ -105,12 +105,14 @@ class CartManager
             $cartId = $this->cartManagement->createEmptyCart();
             $this->cart = $this->cartRepository->get($cartId);
         } catch (NoSuchEntityException $exception) {
-            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
+            $this->logger->critical('Vendiro import create cart went wrong: ' . $exception->getMessage(), ['storeCode' => $storeCode]);
 
-            $errorMessage = __("The order could not be exported. The store that was requested wasn't found.");
+            $errorMessage = __(
+                "The store that was requested wasn't found. [StoreCode: " . $storeCode . "]"
+            );
             throw new \TIG\Vendiro\Exception($errorMessage);
         } catch (LocalizedException $exception) {
-            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
+            $this->logger->critical('Vendiro import create cart went wrong: ' . $exception->getMessage(), ['storeCode' => $storeCode]);
             return;
         }
 
@@ -134,8 +136,13 @@ class CartManager
             $quoteItem = $this->cart->getItemByProduct($product);
             $quoteItem->setNoDiscount(1);
         } catch (LocalizedException $exception) {
-            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
-            throw new VendiroException(__($exception->getMessage()));
+            $this->logger->critical('Vendiro import add product went wrong: ' . $exception->getMessage(), ['sku' => $product->getSku()]);
+
+            $errorMessage = __(
+                $exception->getMessage() . "  [SKU: %1]", $product->getSku()
+            );
+
+            throw new VendiroException($errorMessage);
         }
     }
 
@@ -179,7 +186,7 @@ class CartManager
         try {
             $payment->importData(['method' => $method]);
         } catch (LocalizedException $exception) {
-            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
+            $this->logger->critical('Vendiro import set payment method went wrong: ' . $exception->getMessage(), ['payment_method' => $method]);
         }
     }
 
@@ -206,7 +213,7 @@ class CartManager
             $this->cart->setVendiroDiscount($vendiroOrder['discount']);
             $orderId = $this->cartManagement->placeOrder($this->cart->getId());
         } catch (LocalizedException $exception) {
-            $this->logger->critical('Vendiro import went wrong: ' . $exception->getMessage());
+            $this->logger->critical('Vendiro import place order went wrong: ' . $exception->getMessage());
             throw new VendiroException(__($exception->getMessage()));
         }
 

@@ -123,9 +123,15 @@ class Create
             $this->coreSession->setFulfilmentByMarketplace(true);
         }
 
-        $newOrderId = $this->placeOrder($vendiroOrder);
-
-        $this->coreSession->unsFulfilmentByMarketplace();
+        try {
+            $newOrderId = $this->placeOrder($vendiroOrder);
+        } catch (\Exception $e) {
+            $this->logger->debug('prepareAndPlaceOrder went wrong for ' . $vendiroOrder['marketplace']['reference']);
+            $exceptionMessage = __($e->getMessage() . ' [Ref: ' . $vendiroOrder['marketplace']['reference'] . ']');
+            throw new VendiroException($exceptionMessage);
+        } finally {
+            $this->coreSession->unsFulfilmentByMarketplace();
+        }
 
         return $newOrderId;
     }

@@ -112,12 +112,17 @@ class Data
      * @param $trackQueueItem
      *
      * @return array
+     *
+     * @throws VendiroException
      */
     public function getTracks($trackQueueItem)
     {
-        $data = [];
-
+        $data  = [];
         $track = $this->getTrack($trackQueueItem);
+
+        if ($track === null) {
+            throw new VendiroException(__('Sales Shipment Track not found'));
+        }
 
         $shipmentCode = $track->getTrackNumber();
         $incrementId = $this->getIncrementId($trackQueueItem);
@@ -190,23 +195,24 @@ class Data
     /**
      * @param $trackQueueItem
      *
+     * @throws \Zend_Http_Client_Exception
      */
     public function shipmentCall($trackQueueItem)
     {
-        $data = $this->getTracks($trackQueueItem);
+         try {
+             $data = $this->getTracks($trackQueueItem);
 
-        try {
-            $this->confirmShipmentCall(
-                $data['order_ref'],
-                $data['carrier_id'],
-                $data['shipment_code'],
-                $data['carrier_name']
-            );
+             $this->confirmShipmentCall(
+                 $data['order_ref'],
+                 $data['carrier_id'],
+                 $data['shipment_code'],
+                 $data['carrier_name']
+             );
             $this->saveTrackItem($trackQueueItem);
         } catch (CouldNotSaveException $exception) {
-            $this->logger->addNotice('Could not confirm Vendiro shipment');
+            $this->logger->addNotice('Could not confirm Vendiro shipment', $trackQueueItem->getData());
         } catch (VendiroException $exception) {
-            $this->logger->notice($exception->getMessage());
+            $this->logger->notice($exception->getMessage(), $trackQueueItem->getData());
         }
     }
 
