@@ -126,8 +126,8 @@ class Create
         try {
             $newOrderId = $this->placeOrder($vendiroOrder);
         } catch (\Exception $e) {
-            $this->logger->debug('prepareAndPlaceOrder went wrong for ' . $vendiroOrder['marketplace']['reference']);
-            $exceptionMessage = __($e->getMessage() . ' [Ref: ' . $vendiroOrder['marketplace']['reference'] . ']');
+            $this->logger->debug('prepareAndPlaceOrder went wrong for ' . $vendiroOrder['marketplace_order_id']);
+            $exceptionMessage = __($e->getMessage() . ' [Ref: %1]', $vendiroOrder['marketplace_order_id']);
             throw new VendiroException($exceptionMessage);
         } finally {
             $this->coreSession->unsFulfilmentByMarketplace();

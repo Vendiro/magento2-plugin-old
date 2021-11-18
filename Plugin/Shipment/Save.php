@@ -77,7 +77,7 @@ class Save
             $this->saveVendiroCarrier($shipment);
         }
 
-        return null;
+        return [$shipment];
     }
 
     /**
