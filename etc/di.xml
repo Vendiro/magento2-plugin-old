@@ -41,6 +41,8 @@
     <preference for="TIG\Vendiro\Api\Data\TrackQueueInterface" type="TIG\Vendiro\Model\TrackQueue" />
     <preference for="TIG\Vendiro\Api\StockRepositoryInterface" type="TIG\Vendiro\Model\StockRepository" />
     <preference for="TIG\Vendiro\Api\Data\StockInterface" type="TIG\Vendiro\Model\Stock" />
+    <preference for="TIG\Vendiro\Api\Data\MarketplaceInterface" type="TIG\Vendiro\Model\Marketplace" />
+    <preference for="TIG\Vendiro\Api\MarketplaceRepositoryInterface" type="TIG\Vendiro\Model\MarketplaceRepository" />
 
     <type name="TIG\Vendiro\Setup\InstallSchema">
         <arguments>
@@ -60,6 +62,9 @@
             <argument name="upgradeSchemaObjects" xsi:type="array">
                 <item name="v1.2.0" xsi:type="array">
                     <item name="UpgradeOrderTable" xsi:type="object">TIG\Vendiro\Setup\V111\Schema\UpgradeOrderTable</item>
+                </item>
+                <item name="v1.3.2" xsi:type="array">
+                    <item name="InstallMarketplacesTable" xsi:type="object">TIG\Vendiro\Setup\V132\Schema\InstallMarketplacesTable</item>
                 </item>
             </argument>
         </arguments>

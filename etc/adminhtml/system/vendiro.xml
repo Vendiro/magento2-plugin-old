@@ -78,6 +78,9 @@
         <field id="get_carriers" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <frontend_model>TIG\Vendiro\Block\Adminhtml\Config\Carrier\Carriers</frontend_model>
         </field>
+        <field id="get_marketplaces" translate="label" type="button" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <frontend_model>TIG\Vendiro\Block\Adminhtml\Config\Marketplaces\Marketplaces</frontend_model>
+        </field>
     </group>
 
     <group id="advanced" translate="label comment" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -116,6 +119,12 @@
         <field id="vendiro_update_carriers" translate="label comment" sortOrder="60" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Vendiro carriers update</label>
             <comment><![CDATA[Default setting: 0 0 * * *]]></comment>
+            <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
+        </field>
+
+        <field id="vendiro_update_marketplaces" translate="label comment" sortOrder="70" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Vendiro marketplaces update</label>
+            <comment><![CDATA[Default setting: */5 * * * *]]></comment>
             <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
         </field>
 
