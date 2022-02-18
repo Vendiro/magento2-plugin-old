@@ -61,6 +61,9 @@
                 <item name="v1.2.0" xsi:type="array">
                     <item name="UpgradeOrderTable" xsi:type="object">TIG\Vendiro\Setup\V111\Schema\UpgradeOrderTable</item>
                 </item>
+                <item name="v1.3.2" xsi:type="array">
+                    <item name="InstallInvoicesTable" xsi:type="object">TIG\Vendiro\Setup\V132\Schema\InstallInvoicesTable</item>
+                </item>
             </argument>
         </arguments>
     </type>
