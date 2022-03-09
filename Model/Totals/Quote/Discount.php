@@ -187,7 +187,7 @@ class Discount extends AbstractTotal
     private function applyDiscount($baseDiscount, $quote, $total)
     {
         //only calculate discount when there is an amount
-        if ($total->getTotalAmount('subtotal')) {
+        if (!$total->getTotalAmount('subtotal')) {
             return;
         }
 
