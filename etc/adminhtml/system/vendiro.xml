@@ -128,6 +128,12 @@
             <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
         </field>
 
+        <field id="vendiro_send_invoice" translate="label comment" sortOrder="80" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Vendiro send invoice</label>
+            <comment><![CDATA[Default setting: */5 * * * *]]></comment>
+            <backend_model>TIG\Vendiro\Model\Config\CronConfig</backend_model>
+        </field>
+
     </group>
 
 </include>

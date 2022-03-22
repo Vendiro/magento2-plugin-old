@@ -155,6 +155,14 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getInvoicesToSend()
+    {
+        return $this->getByFieldWithValue('invoice_send', '1', 'null', 'neq');
+    }
+
+    /**
      * @param OrderInterface $order
      *
      * @return bool

@@ -36,10 +36,11 @@ use TIG\Vendiro\Api\Data\MarketplaceInterface;
 
 class Marketplace extends AbstractModel implements MarketplaceInterface
 {
-    const FIELD_MARKETPLACE_ID = 'marketplace_id';
-    const FIELD_COUNTRY_CODE   = 'country_code';
-    const FIELD_CURRENCY       = 'currency';
-    const FIELD_NAME           = 'name';
+    const FIELD_MARKETPLACE_ID         = 'marketplace_id';
+    const FIELD_COUNTRY_CODE           = 'country_code';
+    const FIELD_CURRENCY               = 'currency';
+    const FIELD_NAME                   = 'name';
+    const FIELD_ALLOWED_DOCUMENT_TYPES = 'allowed_document_types';
 
     // @codingStandardsIgnoreLine
     protected function _construct()
@@ -84,11 +85,9 @@ class Marketplace extends AbstractModel implements MarketplaceInterface
     }
 
     /**
-     * @param $value
-     *
      * @return string
      */
-    public function getCurrency($value)
+    public function getCurrency()
     {
         return $this->getData(self::FIELD_CURRENCY);
     }
@@ -100,7 +99,7 @@ class Marketplace extends AbstractModel implements MarketplaceInterface
      */
     public function setCurrency($value)
     {
-        return $this->setData(self::FIELD_CURRENCY);
+        return $this->setData(self::FIELD_CURRENCY, $value);
     }
 
     /**
@@ -110,16 +109,32 @@ class Marketplace extends AbstractModel implements MarketplaceInterface
      */
     public function setName($value)
     {
-        return $this->setData(self::FIELD_NAME);
+        return $this->setData(self::FIELD_NAME, $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->getData(self::FIELD_NAME);
     }
 
     /**
      * @param $value
      *
+     * @return MarketplaceInterface|Marketplace
+     */
+    public function setAllowedDocumentTypes($value)
+    {
+        return $this->setData(self::FIELD_ALLOWED_DOCUMENT_TYPES, $value);
+    }
+
+    /**
      * @return string
      */
-    public function getName($value)
+    public function getAllowedDocumentTypes()
     {
-        return $this->getData(self::FIELD_NAME);
+        return $this->getData(self::FIELD_ALLOWED_DOCUMENT_TYPES);
     }
 }

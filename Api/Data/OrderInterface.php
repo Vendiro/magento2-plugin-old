@@ -121,6 +121,30 @@ interface OrderInterface
     /**
      * @return string
      */
+    public function getMarketplaceId();
+
+    /**
+     * @param $value
+     *
+     * @return OrderInterface
+     */
+    public function setMarketplaceId($value);
+
+    /**
+     * @return string
+     */
+    public function getInvoiceSend();
+
+    /**
+     * @param $value
+     *
+     * @return OrderInterface
+     */
+    public function setInvoiceSend($value);
+
+    /**
+     * @return string
+     */
     public function getCreatedAt();
 
     /**

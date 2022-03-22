@@ -70,11 +70,9 @@ interface MarketplaceInterface
     public function setCountryCode($value);
 
     /**
-     * @param $value
-     *
      * @return string
      */
-    public function getCurrency($value);
+    public function getCurrency();
 
     /**
      * @param $value
@@ -84,11 +82,9 @@ interface MarketplaceInterface
     public function setCurrency($value);
 
     /**
-     * @param $value
-     *
      * @return string
      */
-    public function getName($value);
+    public function getName();
 
     /**
      * @param $value
@@ -96,4 +92,16 @@ interface MarketplaceInterface
      * @return \TIG\Vendiro\Api\Data\MarketplaceInterface
      */
     public function setName($value);
+
+    /**
+     * @return string
+     */
+    public function getAllowedDocumentTypes();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\Vendiro\Api\Data\MarketplaceInterface
+     */
+    public function setAllowedDocumentTypes($value);
 }

@@ -154,6 +154,7 @@ class Import
         $vendiroOrder->setMarketplaceOrderid($order['marketplace_order_id']);
         $vendiroOrder->setMarketplaceName($order['marketplace']['name']);
         $vendiroOrder->setMarketplaceReference($order['marketplace']['reference']);
+        $vendiroOrder->setMarketplaceId($order['marketplace']['id']);
         $vendiroOrder->setStatus(QueueStatus::QUEUE_STATUS_IMPORTED);
         $this->saveVendiroOrder($vendiroOrder);
     }

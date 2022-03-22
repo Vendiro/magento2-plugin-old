@@ -65,6 +65,7 @@
                 </item>
                 <item name="v1.3.2" xsi:type="array">
                     <item name="InstallMarketplacesTable" xsi:type="object">TIG\Vendiro\Setup\V132\Schema\InstallMarketplacesTable</item>
+                    <item name="UpgradeOrderTable" xsi:type="object">TIG\Vendiro\Setup\V132\Schema\UpgradeOrderTable</item>
                 </item>
             </argument>
         </arguments>

@@ -105,4 +105,20 @@ class MarketplaceRepository extends AbstractRepository implements MarketplaceRep
     {
         return $this->getByFieldWithValue('marketplace_id', $marketplaceIds, 0, 'in');
     }
+
+    /**
+     * @param $marketplaceId
+     *
+     * @return Marketplace
+     */
+    public function getByMarketplaceId($marketplaceId)
+    {
+        $foundMarketplace = $this->getByFieldWithValue('marketplace_id', $marketplaceId);
+
+        if (is_array($foundMarketplace)) {
+            $foundMarketplace = array_shift($foundMarketplace);
+        }
+
+        return $foundMarketplace;
+    }
 }

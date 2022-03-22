@@ -22,5 +22,8 @@
         <job name="vendiro_update_marketplaces" instance="TIG\Vendiro\Cron\Marketplaces" method="updateMarketplaces">
             <schedule>*/5 * * * *</schedule>
         </job>
+        <job name="vendiro_send_invoice" instance="TIG\Vendiro\Cron\Invoice" method="sendInvoices">
+            <schedule>*/5 * * * *</schedule>
+        </job>
     </group>
 </config>

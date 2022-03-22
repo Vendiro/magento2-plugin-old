@@ -33,6 +33,9 @@
 
 namespace TIG\Vendiro\Service\Marketplaces;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Serialize\SerializerInterface;
+use TIG\Vendiro\Api\Data\MarketplaceInterface;
 use TIG\Vendiro\Api\MarketplaceRepositoryInterface;
 use TIG\Vendiro\Exception;
 use TIG\Vendiro\Logging\Log;
@@ -43,6 +46,9 @@ class Data
     /** @var Log $logger */
     private $logger;
 
+    /** @var SerializerInterface */
+    private $serializer;
+
     /** @var GetMarketplaces $getCarriers */
     private $getMarketplaces;
 
@@ -50,16 +56,19 @@ class Data
     private $marketplaceRepositoryInterface;
 
     /**
-     * @param Log                                         $logger
-     * @param GetMarketplaces                             $getMarketplaces
-     * @param MarketplaceRepositoryInterface              $marketplaceRepositoryInterface
+     * @param Log                            $logger
+     * @param SerializerInterface            $serializer
+     * @param GetMarketplaces                $getMarketplaces
+     * @param MarketplaceRepositoryInterface $marketplaceRepositoryInterface
      */
     public function __construct(
         Log $logger,
+        SerializerInterface $serializer,
         GetMarketplaces $getMarketplaces,
         MarketplaceRepositoryInterface $marketplaceRepositoryInterface
     ) {
         $this->logger                         = $logger;
+        $this->serializer                     = $serializer;
         $this->getMarketplaces                = $getMarketplaces;
         $this->marketplaceRepositoryInterface = $marketplaceRepositoryInterface;
     }
@@ -98,7 +107,13 @@ class Data
             return false;
         }
 
-        return $marketplaces;
+        $marketplacesIndex = [];
+
+        foreach ($marketplaces as $marketplace) {
+            $marketplacesIndex[$marketplace['id']] = $marketplace;
+        }
+
+        return $marketplacesIndex;
     }
 
     /**
@@ -128,11 +143,14 @@ class Data
     private function saveMarketplace($marketplace)
     {
         try {
+            $documentTypesEncoded = $this->serializer->serialize($marketplace['allowed_document_types']);
+
             $marketplaceModel = $this->marketplaceRepositoryInterface->create();
             $marketplaceModel->setMarketplaceId($marketplace['id']);
             $marketplaceModel->setCountryCode($marketplace['country_code']);
             $marketplaceModel->setCurrency($marketplace['currency']);
             $marketplaceModel->setName($marketplace['name']);
+            $marketplaceModel->setAllowedDocumentTypes($documentTypesEncoded);
             $this->marketplaceRepositoryInterface->save($marketplaceModel);
         } catch (\Exception $exception) {
             // @codingStandardsIgnoreLine
@@ -141,14 +159,23 @@ class Data
     }
 
     /**
-     * @param $duplicateMarketplce
-     * @param $marketplace
+     * @param MarketpLaceInterface $duplicateMarketplace
+     * @param                      $marketplace
+     *
+     * @throws Exception
      */
-    public function updateMarketplace($duplicateMarketplce, $marketplace)
+    public function updateMarketplace($duplicateMarketplace, $marketplace)
     {
-        if ($duplicateMarketplce->getMarketplace() != $marketplace) {
-            $duplicateMarketplce->setMarketplace($marketplace);
-            $this->marketplaceRepositoryInterface->save($duplicateMarketplce);
+        try {
+            $documentTypesEncoded = $this->serializer->serialize($marketplace['allowed_document_types']);
+
+            $duplicateMarketplace->setCountryCode($marketplace['country_code']);
+            $duplicateMarketplace->setCurrency($marketplace['currency']);
+            $duplicateMarketplace->setName($marketplace['name']);
+            $duplicateMarketplace->setAllowedDocumentTypes($documentTypesEncoded);
+            $this->marketplaceRepositoryInterface->save($duplicateMarketplace);
+        } catch (CouldNotSaveException $exception) {
+            throw new Exception(__($exception->getMessage()));
         }
     }
 }
