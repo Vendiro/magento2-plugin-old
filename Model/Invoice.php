@@ -47,7 +47,7 @@ class Invoice extends AbstractModel implements InvoiceInterface
     const FIELD_INVOICE_ID = 'invoice_id';
     const FIELD_ORDER_ID = 'order_id';
     const FIELD_MARKETPLACE_ID = 'marketplace_id';
-    const FIELD_MARKETPLACE_ORDER_ID = 'marketplace_order_id';
+    const FIELD_MARKETPLACE_ORDER_ID = 'marketplace_orderid';
 
     protected function _construct()
     {

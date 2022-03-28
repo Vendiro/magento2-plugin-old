@@ -50,7 +50,7 @@ class Order extends AbstractModel implements OrderInterface
     const FIELD_MARKETPLACE_REFERENCE = 'marketplace_reference';
     const FIELD_STATUS = 'status';
     const FIELD_MARKETPLACE_ID = 'marketplace_id';
-    const FIELD_INVOICE_SEND = 'invoice_send';
+    const FIELD_VENDIRO_INVOICE_ID = 'vendiro_invoice_id';
     const FIELD_CREATED_AT = 'created_at';
 
     protected function _construct()
@@ -183,9 +183,9 @@ class Order extends AbstractModel implements OrderInterface
     /**
      * @return int
      */
-    public function getInvoiceSend()
+    public function getVendiroInvoiceId()
     {
-        return $this->getData(self::FIELD_INVOICE_SEND);
+        return $this->getData(self::FIELD_VENDIRO_INVOICE_ID);
     }
 
     /**
@@ -193,9 +193,9 @@ class Order extends AbstractModel implements OrderInterface
      *
      * @return \TIG\Vendiro\Api\Data\OrderInterface
      */
-    public function setInvoiceSend($value)
+    public function setVendiroInvoiceId($value)
     {
-        return $this->setData(self::FIELD_INVOICE_SEND, $value);
+        return $this->setData(self::FIELD_VENDIRO_INVOICE_ID, $value);
     }
 
     /**

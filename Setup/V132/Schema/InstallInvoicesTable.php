@@ -51,6 +51,6 @@ class InstallInvoicesTable extends AbstractTableInstaller
         $this->addIndex($columns);
         $this->addInt('order_id', 'Order Id', 64, false);
         $this->addInt('marketplace_id', 'Marketplace Id', 64, false);
-        $this->addInt('marketplace_orderid', 'Marketplace Order Id', 64, false);
+        $this->addText('marketplace_orderid', 'Marketplace Order Id', 64, false);
     }
 }

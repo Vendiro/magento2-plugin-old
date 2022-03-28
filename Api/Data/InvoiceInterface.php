@@ -43,7 +43,7 @@ interface InvoiceInterface
      *
      * @return InvoiceInterface
      */
-    public function setInvoiceId();
+    public function setInvoiceId($value);
 
     /**
      * @return int
@@ -55,7 +55,7 @@ interface InvoiceInterface
      *
      * @return InvoiceInterface
      */
-    public function setOrderId();
+    public function setOrderId($value);
 
     /**
      * @return int
@@ -66,7 +66,7 @@ interface InvoiceInterface
      *
      * @return InvoiceInterface
      */
-    public function setMarketplaceId();
+    public function setMarketplaceId($value);
 
     /**
      * @return int
@@ -78,5 +78,5 @@ interface InvoiceInterface
      *
      * @return InvoiceInterface
      */
-    public function setMarketplaceOrderId();
+    public function setMarketplaceOrderId($value);
 }

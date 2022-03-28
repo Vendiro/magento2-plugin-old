@@ -41,7 +41,7 @@ class UpgradeOrderTable extends AbstractColumnInstaller
     // @codingStandardsIgnoreLine
     protected $columns = [
         'marketplace_id',
-        'invoice_send'
+        'vendiro_invoice_id'
     ];
 
     /**
@@ -61,13 +61,13 @@ class UpgradeOrderTable extends AbstractColumnInstaller
     /**
      * @return array
      */
-    public function installInvoiceSendColumn()
+    public function installVendiroInvoiceIdColumn()
     {
         return [
             'type' => Table::TYPE_INTEGER,
-            'nullable' => false,
-            'default' => 0,
-            'comment' => 'Invoice Send to Vendiro',
+            'nullable' => true,
+            'default' => null,
+            'comment' => 'Vendiro Invoice ID',
             'after' => 'marketplace_id',
         ];
     }

@@ -133,14 +133,14 @@ interface OrderInterface
     /**
      * @return string
      */
-    public function getInvoiceSend();
+    public function getVendiroInvoiceId();
 
     /**
      * @param $value
      *
      * @return OrderInterface
      */
-    public function setInvoiceSend($value);
+    public function setVendiroInvoiceId($value);
 
     /**
      * @return string

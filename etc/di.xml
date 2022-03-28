@@ -43,6 +43,8 @@
     <preference for="TIG\Vendiro\Api\Data\StockInterface" type="TIG\Vendiro\Model\Stock" />
     <preference for="TIG\Vendiro\Api\Data\MarketplaceInterface" type="TIG\Vendiro\Model\Marketplace" />
     <preference for="TIG\Vendiro\Api\MarketplaceRepositoryInterface" type="TIG\Vendiro\Model\MarketplaceRepository" />
+    <preference for="TIG\Vendiro\Api\Data\InvoiceInterface" type="TIG\Vendiro\Model\Invoice" />
+    <preference for="TIG\Vendiro\Api\InvoiceRepositoryInterface" type="TIG\Vendiro\Model\InvoiceRepository" />
 
     <type name="TIG\Vendiro\Setup\InstallSchema">
         <arguments>

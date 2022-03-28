@@ -31,11 +31,14 @@
  */
 namespace TIG\Vendiro\Service\Invoice;
 
+use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Sales\Model\Order\Invoice as MagentoInvoice;
 use Magento\Sales\Model\Order\Pdf\Invoice;
 use TIG\Vendiro\Api\Data\OrderInterface;
+use TIG\Vendiro\Api\InvoiceRepositoryInterface;
 use TIG\Vendiro\Api\OrderRepositoryInterface;
 use TIG\Vendiro\Logging\Log;
+use TIG\Vendiro\Model\InvoiceRepository;
 use TIG\Vendiro\Webservices\Endpoints\AddDocument;
 
 class Data
@@ -45,6 +48,9 @@ class Data
 
     /** @var OrderRepositoryInterface $orderRepository */
     private $orderRepository;
+
+    /** @var InvoiceRepositoryInterface|InvoiceRepository */
+    private $invoiceRepository;
 
     /** @var Validate */
     private $validate;
@@ -56,21 +62,24 @@ class Data
     private $addDocument;
 
     /**
-     * @param Log                      $logger
-     * @param OrderRepositoryInterface $orderRepository
-     * @param Validate                 $validate
-     * @param Invoice                  $pdfInvoice
-     * @param AddDocument              $addDocument
+     * @param Log                        $logger
+     * @param OrderRepositoryInterface   $orderRepository
+     * @param InvoiceRepositoryInterface $invoiceRepository
+     * @param Validate                   $validate
+     * @param Invoice                    $pdfInvoice
+     * @param AddDocument                $addDocument
      */
     public function __construct(
         Log $logger,
         OrderRepositoryInterface $orderRepository,
+        InvoiceRepositoryInterface $invoiceRepository,
         Validate $validate,
         Invoice $pdfInvoice,
         AddDocument $addDocument
     ) {
         $this->logger = $logger;
         $this->orderRepository = $orderRepository;
+        $this->invoiceRepository = $invoiceRepository;
         $this->validate = $validate;
         $this->pdfInvoice = $pdfInvoice;
         $this->addDocument = $addDocument;
@@ -122,8 +131,7 @@ class Data
         }
 
         if (!array_key_exists('message', $result)) {
-            $vendiroOrder->setInvoiceSend(1);
-            $this->orderRepository->save($vendiroOrder);
+            $this->saveInvoice($vendiroOrder, $invoice->getEntityId());
         }
     }
 
@@ -147,5 +155,29 @@ class Data
         ];
 
         return $requestData;
+    }
+
+    /**
+     * @param OrderInterface $vendiroOrder
+     * @param int|string     $magentoInvoiceId
+     */
+    private function saveInvoice($vendiroOrder, $magentoInvoiceId)
+    {
+        /** @var \TIG\Vendiro\Model\Invoice $vendiroInvoice */
+        $vendiroInvoice = $this->invoiceRepository->create();
+
+        $vendiroInvoice->setInvoiceId($magentoInvoiceId);
+        $vendiroInvoice->setOrderId($vendiroOrder->getVendiroId());
+        $vendiroInvoice->setMarketplaceId($vendiroOrder->getMarketplaceId());
+        $vendiroInvoice->setMarketplaceOrderId($vendiroOrder->getMarketplaceOrderid());
+
+        try {
+            $vendiroInvoice = $this->invoiceRepository->save($vendiroInvoice);
+
+            $vendiroOrder->setVendiroInvoiceId($vendiroInvoice->getEntityId());
+            $this->orderRepository->save($vendiroOrder);
+        } catch (CouldNotSaveException $exception) {
+            $this->logger->notice('Could not save Vendiro Invoice Data: ' . $exception->getMessage());
+        }
     }
 }
