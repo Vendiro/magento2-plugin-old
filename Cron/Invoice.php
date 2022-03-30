@@ -31,26 +31,26 @@
  */
 namespace TIG\Vendiro\Cron;
 
-use TIG\Vendiro\Model\Config\Provider\General\Configuration;
+use TIG\Vendiro\Model\Config\Provider\ApiConfiguration;
 use TIG\Vendiro\Service\Invoice\Data as InvoiceService;
 
 class Invoice
 {
-    /** @var Configuration $configuration */
-    private $configuration;
+    /** @var ApiConfiguration */
+    private $apiConfiguration;
 
     /** @var InvoiceService $invoiceService */
     private $invoiceService;
 
     /**
-     * @param Configuration  $configuration
-     * @param InvoiceService $invoiceService
+     * @param ApiConfiguration $apiConfiguration
+     * @param InvoiceService   $invoiceService
      */
     public function __construct(
-        Configuration $configuration,
+        ApiConfiguration $apiConfiguration,
         InvoiceService $invoiceService
     ) {
-        $this->configuration = $configuration;
+        $this->apiConfiguration = $apiConfiguration;
         $this->invoiceService = $invoiceService;
     }
 
@@ -59,7 +59,7 @@ class Invoice
      */
     public function sendInvoices()
     {
-        if (!$this->configuration->isEnabled()) {
+        if (!$this->apiConfiguration->canSendInvoices()) {
             return;
         }
 

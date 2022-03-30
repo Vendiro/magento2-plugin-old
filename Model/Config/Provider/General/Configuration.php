@@ -43,6 +43,7 @@ class Configuration extends AbstractConfigProvider
 
     const VENDIRO_ORDER_IMPORT_ENABLED      = 'tig_vendiro/vendiro/orders';
     const VENDIRO_REGISTER_SHIPMENT_ENABLED = 'tig_vendiro/vendiro/shipment';
+    const VENDIRO_SEND_INVOICE_ENABLED      = 'tig_vendiro/vendiro/invoice';
     const VENDIRO_UPDATE_INVENTORY_ENABLED  = 'tig_vendiro/vendiro/inventory';
     const VENDIRO_INVENTORY_QUANTITY_TYPE   = 'tig_vendiro/vendiro/inventory_quantity';
     const VENDIRO_DEFAULT_SHIPPING_METHOD = 'tig_vendiro/vendiro/default_shipment_method';
@@ -137,6 +138,16 @@ class Configuration extends AbstractConfigProvider
     public function isRegisterShipmentEnabled($store = null)
     {
         return $this->getConfigValue(static::VENDIRO_REGISTER_SHIPMENT_ENABLED, $store);
+    }
+
+    /**
+     * @param null $store
+     *
+     * @return mixed
+     */
+    public function isSendInvoiceEnabled($store = null)
+    {
+        return $this->getConfigValue(static::VENDIRO_SEND_INVOICE_ENABLED, $store);
     }
 
     /**

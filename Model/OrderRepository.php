@@ -159,7 +159,7 @@ class OrderRepository extends AbstractRepository implements OrderRepositoryInter
      */
     public function getInvoicesToSend()
     {
-        return $this->getByFieldWithValue('vendiro_invoice_id', null, 'null');
+        return $this->getByFieldWithValue('vendiro_invoice_id', true, 'null', 'null');
     }
 
     /**

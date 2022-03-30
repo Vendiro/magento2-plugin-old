@@ -13,17 +13,14 @@
         <job name="vendiro_confirm_shipments" instance="TIG\Vendiro\Cron\TrackTrace" method="confirmShipment">
             <schedule>*/5 * * * *</schedule>
         </job>
-        <job name="vendiro_update_carriers" instance="TIG\Vendiro\Cron\Carrier" method="updateCarriers">
-            <schedule>0 0 * * *</schedule>
-        </job>
         <job name="vendiro_force_queue_stock" instance="TIG\Vendiro\Cron\Stock" method="forceStockQueue">
             <schedule>0 6 * * *</schedule>
         </job>
-        <job name="vendiro_update_marketplaces" instance="TIG\Vendiro\Cron\Marketplaces" method="updateMarketplaces">
-            <schedule>*/5 * * * *</schedule>
-        </job>
         <job name="vendiro_send_invoice" instance="TIG\Vendiro\Cron\Invoice" method="sendInvoices">
             <schedule>*/5 * * * *</schedule>
+        </job>
+        <job name="vendiro_update_information" instance="TIG\Vendiro\Cron\Information" method="updateInformation">
+            <schedule>0 0 * * *</schedule>
         </job>
     </group>
 </config>

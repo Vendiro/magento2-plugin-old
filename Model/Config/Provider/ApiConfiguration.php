@@ -103,6 +103,14 @@ class ApiConfiguration extends AbstractConfigProvider
     /**
      * @return bool
      */
+    public function canSendInvoices()
+    {
+        return ($this->configuration->isEnabled() && $this->configuration->isSendInvoiceEnabled());
+    }
+
+    /**
+     * @return bool
+     */
     public function canUpdateInventory()
     {
         return ($this->configuration->isEnabled() && $this->configuration->isUpdateInventoryEnabled());

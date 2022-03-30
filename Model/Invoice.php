@@ -33,7 +33,6 @@ namespace TIG\Vendiro\Model;
 
 use Magento\Framework\Model\AbstractModel;
 use TIG\Vendiro\Api\Data\InvoiceInterface;
-use TIG\Vendiro\Api\Data\OrderInterface;
 
 // @codingStandardsIgnoreFile
 

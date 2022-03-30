@@ -29,18 +29,18 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Block\Adminhtml\Config\Marketplaces;
+namespace TIG\Vendiro\Block\Adminhtml\Config\Information;
 
 use Magento\Backend\Block\Widget\Button;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Exception\LocalizedException;
 
-class Marketplaces extends Field
+class Information extends Field
 {
     /** @var string */
     //@codingStandardsIgnoreLine
-    protected $_template = 'TIG_Vendiro::marketplaces/marketplaces.phtml';
+    protected $_template = 'TIG_Vendiro::config/information.phtml';
 
     /**
      * Remove scope label
@@ -76,7 +76,7 @@ class Marketplaces extends Field
      */
     public function getAjaxUrl()
     {
-        return $this->getUrl('tig_vendiro/config_marketplaces/Marketplaces');
+        return $this->getUrl('tig_vendiro/config_information/Information');
     }
 
     /**
@@ -92,9 +92,9 @@ class Marketplaces extends Field
         $buttonBlock = $layout->createBlock(Button::class);
         $buttonBlock->setData(
             [
-                'id' => 'get_marketplaces',
+                'id' => 'get_information',
                 //@codingStandardsIgnoreLine
-                'label' => __('Update Vendiro marketplaces'),
+                'label' => __('Update Vendiro Information'),
             ]
         );
 
