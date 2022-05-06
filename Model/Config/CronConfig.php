@@ -84,7 +84,7 @@ class CronConfig extends Value
      */
     public function afterSave()
     {
-        $results = preg_split('#\s+#', $this->getValue(), null, PREG_SPLIT_NO_EMPTY);
+        $results = preg_split('#\s+#', $this->getValue(), -1, PREG_SPLIT_NO_EMPTY);
 
         if (count($results) < 5 || count($results) > 6) {
             throw new CronException(__('Invalid cron expression: %1', $this->getValue()));
