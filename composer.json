@@ -2,8 +2,9 @@
     "name": "tig/vendiro-magento2",
     "description": "TIG Magento 2 Vendiro extension",
     "require": {
-        "php": "~7.1|~7.2|~7.3|~7.4",
-        "magento/framework": "~101.0|~102.0|~103.0"
+        "php": "~7.1|~7.2|~7.3|~7.4|^8.0",
+        "magento/framework": "~101.0|~102.0|~103.0",
+        "youwe/testing-suite": "^2.13"
     },
     "type": "magento2-module",
     "license": "CC-BY-NC-ND-3.0",
@@ -39,9 +40,7 @@
         }
     },
     "require-dev": {
-        "object-calisthenics/phpcs-calisthenics-rules": "^2.0",
-        "magento/marketplace-eqp": "^1.0",
-        "satooshi/php-coveralls": "^1.0"
+        "magento/marketplace-eqp": "^1.0"
     },
     "repositories": {
         "magento": {
