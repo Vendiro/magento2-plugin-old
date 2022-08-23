@@ -2,7 +2,7 @@
     "name": "tig/vendiro-magento2",
     "description": "TIG Magento 2 Vendiro extension",
     "require": {
-        "php": "~7.1|~7.2|~7.3|~7.4",
+        "php": "~7.1|~7.2|~7.3|~7.4|~8.1",
         "magento/framework": "~101.0|~102.0|~103.0"
     },
     "type": "magento2-module",
