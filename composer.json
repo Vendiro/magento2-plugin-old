@@ -39,7 +39,9 @@
         }
     },
     "require-dev": {
-        "magento/marketplace-eqp": "^1.0"
+        "object-calisthenics/phpcs-calisthenics-rules": "^3.7",
+        "magento/magento-coding-standard": "*",
+        "phpunit/phpunit": "^9.0"
     },
     "repositories": {
         "magento": {
