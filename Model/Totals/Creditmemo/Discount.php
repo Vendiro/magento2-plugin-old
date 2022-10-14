@@ -99,7 +99,7 @@ class Discount extends AbstractTotal
         $foundVendiroOrders = $this->orderRepository->getByFieldWithValue('order_id', $order->getIncrementId());
 
         //Validate if order came from Vendiro
-        if (empty($foundVendiroOrders) || strpos($order->getDiscountDescription(), "Vendiro") === false) {
+        if (empty($foundVendiroOrders) || strpos((string)$order->getDiscountDescription(), "Vendiro") === false) {
             return false;
         }
 
