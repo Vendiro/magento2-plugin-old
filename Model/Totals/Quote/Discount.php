@@ -41,7 +41,7 @@ use Magento\SalesRule\Model\Validator;
 
 class Discount extends AbstractTotal
 {
-    const VENDIRO_DISCOUNT_LABEL = 'Vendiro';
+    const VENDIRO_DISCOUNT_LABEL = 'Total';
     const DELTA_ROUND_TYPE = 'vendiro';
     const DELTA_ROUND_BASE_TYPE = 'vendiro_base';
 
