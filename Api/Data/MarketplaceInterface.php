@@ -31,8 +31,7 @@
  */
 namespace TIG\Vendiro\Api\Data;
 
-// @codingStandardsIgnoreFile
-interface OrderInterface
+interface MarketplaceInterface
 {
     /**
      * @return int
@@ -42,115 +41,67 @@ interface OrderInterface
     /**
      * @param int $entityId
      *
-     * @return OrderInterface
+     * @return \TIG\Vendiro\Api\Data\MarketplaceInterface
      */
     public function setEntityId($entityId);
 
     /**
      * @return int
      */
-    public function getOrderId();
-
-    /**
-     * @param $value
-     *
-     * @return OrderInterface
-     */
-    public function setOrderId($value);
-
-    /**
-     * @return int
-     */
-    public function getVendiroId();
-
-    /**
-     * @param $value
-     *
-     * @return OrderInterface
-     */
-    public function setVendiroId($value);
-
-    /**
-     * @return string
-     */
-    public function getMarketplaceOrderid();
-
-    /**
-     * @param $value
-     *
-     * @return OrderInterface
-     */
-    public function setMarketplaceOrderid($value);
-
-    /**
-     * @return string
-     */
-    public function getMarketplaceName();
-
-    /**
-     * @param $value
-     *
-     * @return OrderInterface
-     */
-    public function setMarketplaceName($value);
-
-    /**
-     * @return string
-     */
-    public function getMarketplaceReference();
-
-    /**
-     * @param $value
-     *
-     * @return OrderInterface
-     */
-    public function setMarketplaceReference($value);
-
-    /**
-     * @return string
-     */
-    public function getStatus();
-
-    /**
-     * @param $value
-     *
-     * @return OrderInterface
-     */
-    public function setStatus($value);
-
-    /**
-     * @return string
-     */
     public function getMarketplaceId();
 
     /**
      * @param $value
      *
-     * @return OrderInterface
+     * @return \TIG\Vendiro\Api\Data\MarketplaceInterface
      */
     public function setMarketplaceId($value);
 
     /**
      * @return string
      */
-    public function getVendiroInvoiceId();
+    public function getCountryCode();
 
     /**
      * @param $value
      *
-     * @return OrderInterface
+     * @return \TIG\Vendiro\Api\Data\MarketplaceInterface
      */
-    public function setVendiroInvoiceId($value);
+    public function setCountryCode($value);
 
     /**
      * @return string
      */
-    public function getCreatedAt();
+    public function getCurrency();
 
     /**
      * @param $value
      *
-     * @return OrderInterface
+     * @return \TIG\Vendiro\Api\Data\MarketplaceInterface
      */
-    public function setCreatedAt($value);
+    public function setCurrency($value);
+
+    /**
+     * @return string
+     */
+    public function getName();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\Vendiro\Api\Data\MarketplaceInterface
+     */
+    public function setName($value);
+
+    /**
+     * @return string
+     */
+    public function getAllowedDocumentTypes();
+
+    /**
+     * @param $value
+     *
+     * @return \TIG\Vendiro\Api\Data\MarketplaceInterface
+     */
+    public function setAllowedDocumentTypes($value);
 }

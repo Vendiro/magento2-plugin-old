@@ -95,6 +95,11 @@ interface OrderRepositoryInterface
     public function getNewOrders();
 
     /**
+     * @return array
+     */
+    public function getInvoicesToSend();
+
+    /**
      * @param     $orderId
      *
      * @return OrderInterface|null

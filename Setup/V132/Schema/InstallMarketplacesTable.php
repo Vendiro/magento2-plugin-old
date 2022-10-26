@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  *
  *          ..::..
@@ -30,13 +29,29 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="TIG_Vendiro" setup_version="1.3.2">
-        <sequence>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Payment"/>
-            <module name="Magento_CatalogInventory"/>
-        </sequence>
-    </module>
-</config>
+namespace TIG\Vendiro\Setup\V132\Schema;
+
+use TIG\Vendiro\Setup\AbstractTableInstaller;
+
+class InstallMarketplacesTable extends AbstractTableInstaller
+{
+    const TABLE_NAME = 'tig_vendiro_marketplaces';
+
+    /**
+     * @return void
+     * @throws \Zend_Db_Exception
+     */
+    // @codingStandardsIgnoreLine
+    protected function defineTable()
+    {
+        $columns = ['marketplace_id'];
+
+        $this->addEntityId();
+        $this->addInt('marketplace_id', 'marketplace id');
+        $this->addIndex($columns);
+        $this->addText('country_code', 'country_code', 64, false);
+        $this->addText('currency', 'currency', 64, false);
+        $this->addText('name', 'name', 64, false);
+        $this->addText('allowed_document_types', 'allowed document types', 64, true);
+    }
+}
