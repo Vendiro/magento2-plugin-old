@@ -186,6 +186,11 @@ class Discount extends AbstractTotal
     // @codingStandardsIgnoreStart
     private function applyDiscount($baseDiscount, $quote, $total)
     {
+        //only calculate discount when there is an amount
+        if (!$total->getTotalAmount('subtotal')) {
+            return;
+        }
+
         $discount =  $this->priceCurrency->convert($baseDiscount);
 
         // Visible items are the items shown in cart, we apply our discount on those "total" rows
