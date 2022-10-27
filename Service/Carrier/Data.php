@@ -88,6 +88,8 @@ class Data
      */
     public function getCarriers()
     {
+        $requestData = ['limit' => 250];
+        $this->getCarriers->setRequestData($requestData);
         $carriers = $this->getCarriers->call();
 
         if (array_key_exists('message', $carriers)) {
