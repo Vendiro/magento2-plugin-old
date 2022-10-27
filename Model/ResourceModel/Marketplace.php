@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *          ..::..
@@ -29,40 +30,16 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
+namespace TIG\Vendiro\Model\ResourceModel;
 
-namespace TIG\Vendiro\Cron;
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
-use TIG\Vendiro\Model\Config\Provider\General\Configuration;
-use TIG\Vendiro\Service\Carrier\Data as CarrierService;
-
-class Carrier
+class Marketplace extends AbstractDb
 {
-    /** @var Configuration $configuration */
-    private $configuration;
-
-    /** @var CarrierService $carrierService */
-    private $carrierService;
-
-    /**
-     * Carrier constructor.
-     *
-     * @param Configuration  $configuration
-     * @param CarrierService $carrierService
-     */
-    public function __construct(
-        Configuration $configuration,
-        CarrierService $carrierService
-    ) {
-        $this->configuration = $configuration;
-        $this->carrierService = $carrierService;
-    }
-
-    public function updateCarriers()
+    // @codingStandardsIgnoreLine
+    protected function _construct()
     {
-        if (!$this->configuration->isEnabled()) {
-            return;
-        }
-
-        $this->carrierService->updateCarriers();
+        // @codingStandardsIgnoreLine
+        $this->_init('tig_vendiro_marketplaces', 'entity_id');
     }
 }

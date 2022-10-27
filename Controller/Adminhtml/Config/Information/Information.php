@@ -29,23 +29,35 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
-namespace TIG\Vendiro\Controller\Adminhtml\Config\Carrier;
+namespace TIG\Vendiro\Controller\Adminhtml\Config\Information;
 
 use Magento\Backend\App\Action;
-use TIG\Vendiro\Service\Carrier\Data;
+use Magento\Backend\App\Action\Context;
+use TIG\Vendiro\Service\Carrier\Data as CarrierData;
+use TIG\Vendiro\Service\Marketplaces\Data as MarketplaceData;
 
-class Carriers extends Action
+class Information extends Action
 {
-    /** @var Data */
-    private $data;
+    /** @var CarrierData $carrierData */
+    private $carrierData;
 
+    /** @var MarketplaceData */
+    private $marketplaceData;
+
+    /**
+     * @param Context         $context
+     * @param CarrierData     $carrierData
+     * @param MarketplaceData $marketplaceData
+     */
     public function __construct(
-        Action\Context $context,
-        Data $data
+        Context $context,
+        CarrierData $carrierData,
+        MarketplaceData $marketplaceData
     ) {
         parent::__construct($context);
 
-        $this->data = $data;
+        $this->carrierData = $carrierData;
+        $this->marketplaceData = $marketplaceData;
     }
 
     /**
@@ -57,13 +69,13 @@ class Carriers extends Action
         $result = [
             'error' => true,
             //@codingStandardsIgnoreLine
-            'message' => __('Your Vendiro shipment providers could not be retreived.')
+            'message' => __('Your Vendiro information could not be retreived.')
         ];
 
-        if ($this->updateCarriers()) {
+        if ($this->updateCarriers() && $this->updateMarketplaces()) {
             $result['error'] = false;
             //@codingStandardsIgnoreLine
-            $result['message'] = __('Your Vendiro shipment providers are successfully updated. Save your changes and refresh the page.');
+            $result['message'] = __('Your Vendiro information is successfully updated. Save your changes and refresh the page.');
         }
 
         $response = $this->getResponse();
@@ -78,12 +90,29 @@ class Carriers extends Action
     {
         $hasCarriers = false;
 
-        $carriers = $this->data->updateCarriers();
+        $carriers = $this->carrierData->updateCarriers();
 
         if ($carriers === null) {
             $hasCarriers = true;
         }
 
         return $hasCarriers;
+    }
+
+    /**
+     * @return bool
+     * @throws \TIG\Vendiro\Exception
+     */
+    private function updateMarketplaces()
+    {
+        $hasMarketplaces = false;
+
+        $marketplaces = $this->marketplaceData->updateMarketplaces();
+
+        if ($marketplaces === null) {
+            $hasMarketplaces = true;
+        }
+
+        return $hasMarketplaces;
     }
 }

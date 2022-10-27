@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  *
  *          ..::..
@@ -30,13 +29,28 @@
  * @copyright   Copyright (c) Total Internet Group B.V. https://tig.nl/copyright
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="TIG_Vendiro" setup_version="1.3.2">
-        <sequence>
-            <module name="Magento_Sales"/>
-            <module name="Magento_Payment"/>
-            <module name="Magento_CatalogInventory"/>
-        </sequence>
-    </module>
-</config>
+namespace TIG\Vendiro\Setup\V132\Schema;
+
+use TIG\Vendiro\Setup\AbstractTableInstaller;
+
+class InstallInvoicesTable extends AbstractTableInstaller
+{
+    const TABLE_NAME = 'tig_vendiro_invoice';
+
+    /**
+     * @return void
+     * @throws \Zend_Db_Exception
+     */
+    // @codingStandardsIgnoreLine
+    protected function defineTable()
+    {
+        $columns = ['invoice_id'];
+
+        $this->addEntityId();
+        $this->addInt('invoice_id', 'invoice_id');
+        $this->addIndex($columns);
+        $this->addInt('order_id', 'Order Id', 64, false);
+        $this->addInt('marketplace_id', 'Marketplace Id', 64, false);
+        $this->addText('marketplace_orderid', 'Marketplace Order Id', 64, false);
+    }
+}

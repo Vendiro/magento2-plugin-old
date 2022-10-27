@@ -30,11 +30,10 @@
  * @license     http://creativecommons.org/licenses/by-nc-nd/3.0/nl/deed.en_US
  */
 ?>
-
-<?php /** @var $block \TIG\Vendiro\Block\Adminhtml\Config\Carrier\Carriers */ ?>
+<?php /** @var $block \TIG\Vendiro\Block\Adminhtml\Config\Information\Information */ ?>
 
 <?php echo $block->getButtonHtml() ?>
-<span id="carrier_message_span" class="message_span">
+<span id="information_message_span" class="message_span">
     <span class="validation-message error" style="display: none;"></span>
     <span class="validation-message success" style="display: none;"></span>
 </span>
@@ -44,7 +43,7 @@
         'jquery',
         'prototype'
     ], function(jQuery){
-        jQuery('#get_carriers').click(function () {
+        jQuery('#get_information').click(function () {
             var params = {
                 form_key: "<?php echo $block->getFormKey() ?>",
                 isAjax: true
@@ -57,16 +56,15 @@
                 dataType: 'json'
             }).done(function (response) {
                 if(response.error === true) {
-                    jQuery('#carrier_message_span .success').hide();
-                    jQuery('#carrier_message_span .error').text(response.message).fadeIn(200);
+                    jQuery('#information_message_span .success').hide();
+                    jQuery('#information_message_span .error').text(response.message).fadeIn(200);
                 } else {
-                    jQuery('#carrier_message_span .error').hide();
-                    jQuery('#carrier_message_span .success').text(response.message).fadeIn(200);
+                    jQuery('#information_message_span .error').hide();
+                    jQuery('#information_message_span .success').text(response.message).fadeIn(200);
                 }
-            })
-            .fail(function () {
-                jQuery('#carrier_message_span .success').hide();
-                jQuery('#carrier_message_span .error').text('Fields already in database, could not run the update.').fadeIn(200);
+            }).fail(function () {
+                jQuery('#information_message_span .success').hide();
+                jQuery('#information_message_span .error').text('Fields already in database, could not run the update.').fadeIn(200);
             });
         });
 
