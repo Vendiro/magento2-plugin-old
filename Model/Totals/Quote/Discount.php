@@ -41,7 +41,7 @@ use Magento\SalesRule\Model\Validator;
 
 class Discount extends AbstractTotal
 {
-    const VENDIRO_DISCOUNT_LABEL = 'Vendiro';
+    const VENDIRO_DISCOUNT_LABEL = 'Total';
     const DELTA_ROUND_TYPE = 'vendiro';
     const DELTA_ROUND_BASE_TYPE = 'vendiro_base';
 
@@ -186,6 +186,11 @@ class Discount extends AbstractTotal
     // @codingStandardsIgnoreStart
     private function applyDiscount($baseDiscount, $quote, $total)
     {
+        //only calculate discount when there is an amount
+        if (!$total->getTotalAmount('subtotal')) {
+            return;
+        }
+
         $discount =  $this->priceCurrency->convert($baseDiscount);
 
         // Visible items are the items shown in cart, we apply our discount on those "total" rows

@@ -251,7 +251,8 @@ class CartManager
             'country_id' => $address['country'],
             'postcode' => $address['postalcode'],
             'telephone' => $address['phone'],
-            'email' => $address['email']
+            'email' => $address['email'],
+            'vat_id' => $address['vat_number']
         ];
 
         return $newAddress;
